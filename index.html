@@ -1,71 +1,466 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Drought by ChrisMahlke</title>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<!--The viewport meta tag is used to improve the presentation and behavior of the samples
+	  on iOS devices-->
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+	<title>Layout with Overview Map</title>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>Drought</h1>
-        <p></p>
+	<link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.10/js/dojo/dijit/themes/nihilo/nihilo.css">
+	<link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.10/js/esri/css/esri.css">
+	<link rel="stylesheet" type="text/css" href="css/layout.css">
+	<link rel="stylesheet" type="text/css" href="css/charts.css">
 
-        <p class="view"><a href="https://github.com/ChrisMahlke/drought">View the Project on GitHub <small>ChrisMahlke/drought</small></a></p>
+	<script src="http://js.arcgis.com/3.10/"></script>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="js/crossfilter.v1.min.js"></script>
+	<script src="js/main.js"></script>
+</head>
 
+<script>
 
-        <ul>
-          <li><a href="https://github.com/ChrisMahlke/drought/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/ChrisMahlke/drought/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/ChrisMahlke/drought">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+// (It's CSV, but GitHub Pages only gzip's JSON at the moment.)
+d3.csv("flights-3m.json", function (error, flights) {
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+	// Various formatters.
+	var formatNumber = d3.format(",d"),
+			formatChange = d3.format("+,d"),
+			formatDate = d3.time.format("%B %d, %Y"),
+			formatTime = d3.time.format("%I:%M %p");
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+	// A nest operator, for grouping the flight list.
+	var nestByDate = d3.nest()
+			.key(function (d) {
+				return d3.time.day(d.date);
+			});
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+	// A little coercion, since the CSV is untyped.
+	flights.forEach(function (d, i) {
+		d.index = i;
+		d.date = parseDate(d.date);
+		d.delay = +d.delay;
+		d.distance = +d.distance;
+	});
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+	// Create the crossfilter for the relevant dimensions and groups.
+	var flight = crossfilter(flights),
+			all = flight.groupAll(),
+			date = flight.dimension(function (d) {
+				return d.date;
+			}),
+			dates = date.group(d3.time.day),
+			hour = flight.dimension(function (d) {
+				return d.date.getHours() + d.date.getMinutes() / 60;
+			}),
+			hours = hour.group(Math.floor),
+			delay = flight.dimension(function (d) {
+				return Math.max(-60, Math.min(149, d.delay));
+			}),
+			delays = delay.group(function (d) {
+				return Math.floor(d / 10) * 10;
+			}),
+			distance = flight.dimension(function (d) {
+				return Math.min(1999, d.distance);
+			}),
+			distances = distance.group(function (d) {
+				return Math.floor(d / 50) * 50;
+			});
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+	var charts = [
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+		barChart()
+				.dimension(hour)
+				.group(hours)
+				.x(d3.scale.linear()
+				.domain([0, 24])
+				.rangeRound([0, 10 * 24])),
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+		barChart()
+				.dimension(delay)
+				.group(delays)
+				.x(d3.scale.linear()
+				.domain([-60, 150])
+				.rangeRound([0, 10 * 21])),
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+		barChart()
+				.dimension(distance)
+				.group(distances)
+				.x(d3.scale.linear()
+				.domain([0, 2000])
+				.rangeRound([0, 10 * 40])),
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+		barChart()
+				.dimension(date)
+				.group(dates)
+				.round(d3.time.day.round)
+				.x(d3.time.scale()
+				.domain([new Date(2001, 0, 1), new Date(2001, 3, 1)])
+				.rangeRound([0, 10 * 90]))
+				.filter([new Date(2001, 1, 1), new Date(2001, 2, 1)])
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+	];
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/ChrisMahlke">ChrisMahlke</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+	// Given our array of charts, which we assume are in the same order as the
+	// .chart elements in the DOM, bind the charts to the DOM and render them.
+	// We also listen to the chart's brush events to update the display.
+	var chart = d3.selectAll(".chart")
+			.data(charts)
+			.each(function (chart) {
+				chart.on("brush", renderAll).on("brushend", renderAll);
+			});
+
+	// Render the initial lists.
+	var list = d3.selectAll(".list")
+			.data([flightList]);
+
+	// Render the total.
+	d3.selectAll("#total")
+			.text(formatNumber(flight.size()));
+
+	renderAll();
+
+	// Renders the specified chart or list.
+	function render(method) {
+		d3.select(this).call(method);
+	}
+
+	// Whenever the brush moves, re-rendering everything.
+	function renderAll() {
+		chart.each(render);
+		list.each(render);
+		d3.select("#active").text(formatNumber(all.value()));
+	}
+
+	// Like d3.time.format, but faster.
+	function parseDate(d) {
+		return new Date(2001,
+				d.substring(0, 2) - 1,
+				d.substring(2, 4),
+				d.substring(4, 6),
+				d.substring(6, 8));
+	}
+
+	window.filter = function (filters) {
+		filters.forEach(function (d, i) {
+			charts[i].filter(d);
+		});
+		renderAll();
+	};
+
+	window.reset = function (i) {
+		charts[i].filter(null);
+		renderAll();
+	};
+
+	function flightList(div) {
+		var flightsByDate = nestByDate.entries(date.top(40));
+
+		div.each(function () {
+			var date = d3.select(this).selectAll(".date")
+					.data(flightsByDate, function (d) {
+						return d.key;
+					});
+
+			date.enter().append("div")
+					.attr("class", "date")
+					.append("div")
+					.attr("class", "day")
+					.text(function (d) {
+						return formatDate(d.values[0].date);
+					});
+
+			date.exit().remove();
+
+			var flight = date.order().selectAll(".flight")
+					.data(function (d) {
+						return d.values;
+					}, function (d) {
+						return d.index;
+					});
+
+			var flightEnter = flight.enter().append("div")
+					.attr("class", "flight");
+
+			flightEnter.append("div")
+					.attr("class", "time")
+					.text(function (d) {
+						return formatTime(d.date);
+					});
+
+			flightEnter.append("div")
+					.attr("class", "origin")
+					.text(function (d) {
+						return d.origin;
+					});
+
+			flightEnter.append("div")
+					.attr("class", "destination")
+					.text(function (d) {
+						return d.destination;
+					});
+
+			flightEnter.append("div")
+					.attr("class", "distance")
+					.text(function (d) {
+						return formatNumber(d.distance) + " mi.";
+					});
+
+			flightEnter.append("div")
+					.attr("class", "delay")
+					.classed("early", function (d) {
+						return d.delay < 0;
+					})
+					.text(function (d) {
+						return formatChange(d.delay) + " min.";
+					});
+
+			flight.exit().remove();
+
+			flight.order();
+		});
+	}
+
+	function barChart() {
+		if (!barChart.id) barChart.id = 0;
+
+		var margin = {top:10, right:10, bottom:20, left:10},
+				x,
+				y = d3.scale.linear().range([100, 0]),
+				id = barChart.id++,
+				axis = d3.svg.axis().orient("bottom"),
+				brush = d3.svg.brush(),
+				brushDirty,
+				dimension,
+				group,
+				round;
+
+		function chart(div) {
+			var width = x.range()[1],
+					height = y.range()[0];
+
+			y.domain([0, group.top(1)[0].value]);
+
+			div.each(function () {
+				var div = d3.select(this),
+						g = div.select("g");
+
+				// Create the skeletal chart.
+				if (g.empty()) {
+					div.select(".title").append("a")
+							.attr("href", "javascript:reset(" + id + ")")
+							.attr("class", "reset")
+							.text("reset")
+							.style("display", "none");
+
+					g = div.append("svg")
+							.attr("width", width + margin.left + margin.right)
+							.attr("height", height + margin.top + margin.bottom)
+							.append("g")
+							.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+					g.append("clipPath")
+							.attr("id", "clip-" + id)
+							.append("rect")
+							.attr("width", width)
+							.attr("height", height);
+
+					g.selectAll(".bar")
+							.data(["background", "foreground"])
+							.enter().append("path")
+							.attr("class", function (d) {
+								return d + " bar";
+							})
+							.datum(group.all());
+
+					g.selectAll(".foreground.bar")
+							.attr("clip-path", "url(#clip-" + id + ")");
+
+					g.append("g")
+							.attr("class", "axis")
+							.attr("transform", "translate(0," + height + ")")
+							.call(axis);
+
+					// Initialize the brush component with pretty resize handles.
+					var gBrush = g.append("g").attr("class", "brush").call(brush);
+					gBrush.selectAll("rect").attr("height", height);
+					gBrush.selectAll(".resize").append("path").attr("d", resizePath);
+				}
+
+				// Only redraw the brush if set externally.
+				if (brushDirty) {
+					brushDirty = false;
+					g.selectAll(".brush").call(brush);
+					div.select(".title a").style("display", brush.empty() ? "none" : null);
+					if (brush.empty()) {
+						g.selectAll("#clip-" + id + " rect")
+								.attr("x", 0)
+								.attr("width", width);
+					} else {
+						var extent = brush.extent();
+						g.selectAll("#clip-" + id + " rect")
+								.attr("x", x(extent[0]))
+								.attr("width", x(extent[1]) - x(extent[0]));
+					}
+				}
+
+				g.selectAll(".bar").attr("d", barPath);
+			});
+
+			function barPath(groups) {
+				var path = [],
+						i = -1,
+						n = groups.length,
+						d;
+				while (++i < n) {
+					d = groups[i];
+					path.push("M", x(d.key), ",", height, "V", y(d.value), "h9V", height);
+				}
+				return path.join("");
+			}
+
+			function resizePath(d) {
+				var e = +(d == "e"),
+						x = e ? 1 : -1,
+						y = height / 3;
+				return "M" + (.5 * x) + "," + y
+						+ "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
+						+ "V" + (2 * y - 6)
+						+ "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y)
+						+ "Z"
+						+ "M" + (2.5 * x) + "," + (y + 8)
+						+ "V" + (2 * y - 8)
+						+ "M" + (4.5 * x) + "," + (y + 8)
+						+ "V" + (2 * y - 8);
+			}
+		}
+
+		brush.on("brushstart.chart", function () {
+			var div = d3.select(this.parentNode.parentNode.parentNode);
+			div.select(".title a").style("display", null);
+		});
+
+		brush.on("brush.chart", function () {
+			var g = d3.select(this.parentNode),
+					extent = brush.extent();
+			if (round) g.select(".brush")
+					.call(brush.extent(extent = extent.map(round)))
+					.selectAll(".resize")
+					.style("display", null);
+			g.select("#clip-" + id + " rect")
+					.attr("x", x(extent[0]))
+					.attr("width", x(extent[1]) - x(extent[0]));
+			dimension.filterRange(extent);
+		});
+
+		brush.on("brushend.chart", function () {
+			if (brush.empty()) {
+				var div = d3.select(this.parentNode.parentNode.parentNode);
+				div.select(".title a").style("display", "none");
+				div.select("#clip-" + id + " rect").attr("x", null).attr("width", "100%");
+				dimension.filterAll();
+			}
+		});
+
+		chart.margin = function (_) {
+			if (!arguments.length) return margin;
+			margin = _;
+			return chart;
+		};
+
+		chart.x = function (_) {
+			if (!arguments.length) return x;
+			x = _;
+			axis.scale(x);
+			brush.x(x);
+			return chart;
+		};
+
+		chart.y = function (_) {
+			if (!arguments.length) return y;
+			y = _;
+			return chart;
+		};
+
+		chart.dimension = function (_) {
+			if (!arguments.length) return dimension;
+			dimension = _;
+			return chart;
+		};
+
+		chart.filter = function (_) {
+			if (_) {
+				brush.extent(_);
+				dimension.filterRange(_);
+			} else {
+				brush.clear();
+				dimension.filterAll();
+			}
+			brushDirty = true;
+			return chart;
+		};
+
+		chart.group = function (_) {
+			if (!arguments.length) return group;
+			group = _;
+			return chart;
+		};
+
+		chart.round = function (_) {
+			if (!arguments.length) return round;
+			round = _;
+			return chart;
+		};
+
+		return d3.rebind(chart, brush, "on");
+	}
+});
+
+</script>
+
+<body class="nihilo">
+<div id="mainWindow" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="design:'headline', gutters:false"
+	 style="width:100%; height:100%;">
+
+	<div id="header" class="roundedCorners" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'top'">
+        <span>
+          This is the header section
+        </span>
+	</div>
+
+	<div id="leftPane" class="roundedCorners" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'left'"
+		 style="width:275px;">
+		This is the left section
+	</div>
+
+	<div id="centerPane" data-dojo-type="dijit.layout.BorderContainer" class="roundedCorners"
+		 data-dojo-props="region:'center', gutters:false">
+		<div id="map" data-dojo-type="dijit.layout.ContentPane" class="shadow" data-dojo-props="region:'center'"
+			 style="position:relative; overflow:hidden;"></div>
+
+		<div id="footer" class="roundedCorners" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'bottom'">
+			<div id="charts">
+				<div id="hour-chart" class="chart">
+					<div class="title">Time of Day</div>
+				</div>
+				<div id="delay-chart" class="chart">
+					<div class="title">Arrival Delay (min.)</div>
+				</div>
+				<div id="distance-chart" class="chart">
+					<div class="title">Distance (mi.)</div>
+				</div>
+				<div id="date-chart" class="chart">
+					<div class="title">Date</div>
+				</div>
+			</div>
+
+			<aside id="totals"><span id="active">-</span> of <span id="total">-</span> flights selected.</aside>
+
+			<!--<div id="lists">
+				<div id="flight-list" class="list"></div>
+			</div>-->
+		</div>
+	</div>
+</div>
+</body>
 </html>

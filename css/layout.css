@@ -1,0 +1,42 @@
+html, body, #map {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: 'Open Sans', sans-serif;
+	color: #333;
+	font-size: 1.0em;
+}
+
+body {
+	overflow: hidden;
+}
+
+#header {
+	height: 30px;
+	overflow: auto;
+	padding: 0.5em;
+	font-size: 1.2em;
+}
+
+
+#leftPane {
+	border: solid 1px #80a8c1;
+	margin: 5px;
+}
+
+#centerPane {
+	border: none;
+}
+
+#footer {
+	border: solid 1px #80a8c1;
+	margin: 5px;
+	height: 400px;
+	font-size: 0.8em;
+}
+
+#map {
+	margin: 5px;
+	border: solid 1px #80a8c1;
+}
