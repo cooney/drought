@@ -35,7 +35,8 @@ require([
 				countyLayerUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
 				identifyUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
 				identifyTask,
-				identifyParams;
+				identifyParams,
+				selectedFIPS;
 
 		init();
 
@@ -56,7 +57,7 @@ require([
 			identifyParams = new IdentifyParameters();
 			identifyParams.tolerance = 3;
 			identifyParams.returnGeometry = true;
-			identifyParams.layerIds = [0, 2];
+			identifyParams.layerIds = [3];
 			identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
 			identifyParams.width = map.width;
 			identifyParams.height = map.height;
@@ -65,7 +66,7 @@ require([
 				identifyParams.geometry = event.mapPoint;
 				identifyParams.mapExtent = map.extent;
 				identifyTask.execute(identifyParams, function (results) {
-					console.log(results);
+					selectedFIPS = results[0].feature.attributes.ID;
 				});
 			}
 		}
