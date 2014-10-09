@@ -4,6 +4,7 @@ require([
 	"dijit/registry",
 	"dojo/_base/array",
 	"dojo/_base/declare",
+	"dojo/_base/json",
 	"dojo/_base/lang",
 	"dojo/_base/window",
 	"dojo/Deferred",
@@ -20,11 +21,14 @@ require([
 	"dojo/store/Observable",
 	"esri/map",
 	"esri/layers/ArcGISDynamicMapServiceLayer",
+	"esri/request",
 	"esri/tasks/IdentifyTask",
 	"esri/tasks/IdentifyParameters",
+	"esri/tasks/query",
+	"esri/tasks/QueryTask",
 	"dojo/parser",
 	"dojo/ready"
-], function (BorderContainer, ContentPane, registry, array, declare, lang, win, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, all, query, Memory, Observable, Map, ArcGISDynamicMapServiceLayer, IdentifyTask, IdentifyParameters, parser, ready) {
+], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, all, query, Memory, Observable, Map, ArcGISDynamicMapServiceLayer, request, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
 
 	parser.parse();
 
@@ -36,7 +40,8 @@ require([
 				identifyUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
 				identifyTask,
 				identifyParams,
-				selectedFIPS;
+				selectedFIPS,
+				chart;
 
 		init();
 
@@ -48,10 +53,12 @@ require([
 			});
 
 			countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
-				useMapImage:true
+				useMapImage:true,
+				opacity:0.0
 			});
 			map.addLayer(countyLayer);
 			map.on("click", doIdentify);
+			map.on("load", mapLoadedHandler);
 
 			identifyTask = new IdentifyTask(identifyUrl);
 			identifyParams = new IdentifyParameters();
@@ -62,11 +69,107 @@ require([
 			identifyParams.width = map.width;
 			identifyParams.height = map.height;
 
+			function mapLoadedHandler() {
+				chart = c3.generate({
+					data:{
+						columns:[
+							['data1', 30, 200, 100, 400, 150, 250],
+							['data2', 50, 20, 10, 40, 15, 25]
+						],
+						types:{
+							data1:'area-spline',
+							data2:'area-spline'
+							// 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
+						},
+						groups:[
+							['data1', 'data2']
+						],
+						onclick:function (d, element) {
+							console.log("onclick", d, element);
+						},
+						onmouseover:function (d) {
+							console.log("onmouseover", d);
+						},
+						onmouseout:function (d) {
+							console.log("onmouseout", d);
+						}
+					}
+				});
+			}
+
 			function doIdentify(event) {
 				identifyParams.geometry = event.mapPoint;
 				identifyParams.mapExtent = map.extent;
 				identifyTask.execute(identifyParams, function (results) {
 					selectedFIPS = results[0].feature.attributes.ID;
+					var qt = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/CntyDroughtTime/FeatureServer/0");
+					var query = new Query();
+					query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
+					query.returnGeometry = false;
+					query.outFields = ["*"];
+					qt.execute(query, function (result) {
+						console.log(result.features);
+						var selectedCountyName = result.features[0].attributes["CountyCategories_name"];
+						var selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
+						var columnData = [];
+						var data1 = ['data1'];
+						var data2 = ['data2'];
+						var data3 = ['data3'];
+						var data4 = ['data4'];
+						array.forEach(result.features, function (feature) {
+							console.log(feature.attributes);
+							data1.push(feature.attributes["CountyCategories_D0"]);
+							data2.push(feature.attributes["CountyCategories_D1"]);
+							data3.push(feature.attributes["CountyCategories_D2"]);
+							data4.push(feature.attributes["CountyCategories_D3"]);
+						});
+						columnData.push(data1);
+						columnData.push(data2);
+						columnData.push(data3);
+						columnData.push(data4);
+						console.log(columnData);
+
+						chart = c3.generate({
+							data:{
+								columns: columnData,
+								types:{
+									data1:'area-spline',
+									data2:'area-spline',
+									data3:'area-spline',
+									data4:'area-spline'
+									// 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
+								},
+								groups:[
+									['data1', 'data2', 'data3', 'data4']
+								],
+								onclick:function (d, element) {
+									console.log("onclick", d, element);
+								},
+								onmouseover:function (d) {
+									console.log("onmouseover", d);
+								},
+								onmouseout:function (d) {
+									console.log("onmouseout", d);
+								}
+							},
+							legend: {
+								show: false
+							}
+						});
+
+						/*chart.load({
+							columns:columnData,
+							types:{
+								data1:'area-spline',
+								data2:'area-spline'
+								// 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
+							},
+							groups:[
+								['data1', 'data2']
+							]
+						});*/
+						dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
+					});
 				});
 			}
 		}

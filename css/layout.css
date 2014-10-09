@@ -40,3 +40,7 @@ body {
 	margin: 5px;
 	border: solid 1px #80a8c1;
 }
+
+#countyName {
+	margin-left: 25px;
+}
