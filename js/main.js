@@ -129,14 +129,14 @@ require([
 							var utcSeconds = feature.attributes["CountyCategories_Date"];
 							var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
 							console.log(d.getFullYear());
-							xAxis.push(d.getFullYear());
+							xAxis.push(d);
 							data0.push(feature.attributes["CountyCategories_D0"]);
 							data1.push(feature.attributes["CountyCategories_D1"]);
 							data2.push(feature.attributes["CountyCategories_D2"]);
 							data3.push(feature.attributes["CountyCategories_D3"]);
 							data4.push(feature.attributes["CountyCategories_D4"]);
 						});
-						columnData.push(xAxis);
+						//columnData.push(xAxis);
 						columnData.push(data0);
 						columnData.push(data1);
 						columnData.push(data2);
@@ -146,7 +146,6 @@ require([
 
 						chart = c3.generate({
 							data:{
-								x: 'x',
 								columns:columnData,
 								types:{
 									data0:'area-spline',
@@ -170,15 +169,6 @@ require([
 							},
 							legend:{
 								show:false
-							},
-							axis:{
-								x:{
-									type: "timeseries",
-									tick:{
-										count:10,
-										format:'%Y'
-									}
-								}
 							}
 						});
 						dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
