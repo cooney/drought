@@ -7,6 +7,7 @@ require([
 	"dojo/_base/json",
 	"dojo/_base/lang",
 	"dojo/_base/window",
+	"dojo/date",
 	"dojo/Deferred",
 	"dojo/dom",
 	"dojo/dom-attr",
@@ -28,7 +29,7 @@ require([
 	"esri/tasks/QueryTask",
 	"dojo/parser",
 	"dojo/ready"
-], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, all, query, Memory, Observable, Map, ArcGISDynamicMapServiceLayer, request, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
+], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, all, query, Memory, Observable, Map, ArcGISDynamicMapServiceLayer, request, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
 
 	parser.parse();
 
@@ -73,18 +74,22 @@ require([
 				chart = c3.generate({
 					data:{
 						columns:[
-							['data1', 0, 100],
-							['data2', 0, 100],
-							['data3', 0, 100],
-							['data4', 0, 100]
+							['data0', 0, 0],
+							['data1', 0, 0],
+							['data2', 0, 0],
+							['data3', 0, 0],
+							['data4', 0, 0]
 						],
 						types:{
+							data0:'area-spline',
 							data1:'area-spline',
-							data2:'area-spline'
+							data2:'area-spline',
+							data3:'area-spline',
+							data4:'area-spline'
 							// 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
 						},
 						groups:[
-							['data1', 'data2']
+							['data0', 'data1', 'data2', 'data3', 'data4']
 						],
 						onclick:function (d, element) {
 							console.log("onclick", d, element);
@@ -114,17 +119,25 @@ require([
 						var selectedCountyName = result.features[0].attributes["CountyCategories_name"];
 						var selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
 						var columnData = [];
-						var data1 = ['data1'];
-						var data2 = ['data2'];
-						var data3 = ['data3'];
-						var data4 = ['data4'];
+						var xAxis = ['x'];
+						var data0 = ['D0'];
+						var data1 = ['D1'];
+						var data2 = ['D2'];
+						var data3 = ['D3'];
+						var data4 = ['D4'];
 						array.forEach(result.features, function (feature) {
-							console.log(feature.attributes);
-							data1.push(feature.attributes["CountyCategories_D0"]);
-							data2.push(feature.attributes["CountyCategories_D1"]);
-							data3.push(feature.attributes["CountyCategories_D2"]);
-							data4.push(feature.attributes["CountyCategories_D3"]);
+							var utcSeconds = feature.attributes["CountyCategories_Date"];
+							var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
+							console.log(d.getFullYear());
+							xAxis.push(d.getFullYear());
+							data0.push(feature.attributes["CountyCategories_D0"]);
+							data1.push(feature.attributes["CountyCategories_D1"]);
+							data2.push(feature.attributes["CountyCategories_D2"]);
+							data3.push(feature.attributes["CountyCategories_D3"]);
+							data4.push(feature.attributes["CountyCategories_D4"]);
 						});
+						columnData.push(xAxis);
+						columnData.push(data0);
 						columnData.push(data1);
 						columnData.push(data2);
 						columnData.push(data3);
@@ -133,43 +146,41 @@ require([
 
 						chart = c3.generate({
 							data:{
-								columns: columnData,
+								x: 'x',
+								columns:columnData,
 								types:{
+									data0:'area-spline',
 									data1:'area-spline',
 									data2:'area-spline',
 									data3:'area-spline',
 									data4:'area-spline'
-									// 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
 								},
 								groups:[
-									['data1', 'data2', 'data3', 'data4']
+									['data0', 'data1', 'data2', 'data3', 'data4']
 								],
 								onclick:function (d, element) {
 									console.log("onclick", d, element);
 								},
 								onmouseover:function (d) {
-									console.log("onmouseover", d);
+									//console.log("onmouseover", d);
 								},
 								onmouseout:function (d) {
-									console.log("onmouseout", d);
+									//console.log("onmouseout", d);
 								}
 							},
-							legend: {
-								show: false
+							legend:{
+								show:false
+							},
+							axis:{
+								x:{
+									type: "timeseries",
+									tick:{
+										count:10,
+										format:'%Y'
+									}
+								}
 							}
 						});
-
-						/*chart.load({
-							columns:columnData,
-							types:{
-								data1:'area-spline',
-								data2:'area-spline'
-								// 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
-							},
-							groups:[
-								['data1', 'data2']
-							]
-						});*/
 						dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 					});
 				});
