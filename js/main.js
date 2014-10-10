@@ -120,102 +120,117 @@ require([
 				identifyParams.geometry = event.mapPoint;
 				identifyParams.mapExtent = map.extent;
 				identifyTask.execute(identifyParams, function (results) {
-					selectedFIPS = results[0].feature.attributes.ID;
-					var qt = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/CntyDroughtTime/FeatureServer/0");
-					var query = new Query();
-					query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
-					query.returnGeometry = false;
-					query.outFields = ["*"];
-					qt.execute(query, function (result) {
-						console.log(result.features);
-						var selectedCountyName = result.features[0].attributes["CountyCategories_name"];
-						var selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
-						var columnData = [];
-						var xAxis = ['x'];
-						var data0 = ['D0'];
-						var data1 = ['D1'];
-						var data2 = ['D2'];
-						var data3 = ['D3'];
-						var data4 = ['D4'];
-						array.forEach(result.features, function (feature) {
-							var utcSeconds = feature.attributes["CountyCategories_Date"];
-							var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
-							xAxis.push(d);
-							data0.push(feature.attributes["CountyCategories_D0"]);
-							data1.push(feature.attributes["CountyCategories_D1"]);
-							data2.push(feature.attributes["CountyCategories_D2"]);
-							data3.push(feature.attributes["CountyCategories_D3"]);
-							data4.push(feature.attributes["CountyCategories_D4"]);
-						});
-						columnData.push(xAxis);
-						columnData.push(data0);
-						columnData.push(data1);
-						columnData.push(data2);
-						columnData.push(data3);
-						columnData.push(data4);
-						console.log(columnData);
+							selectedFIPS = results[0].feature.attributes.ID;
+							var qt = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/CntyDroughtTime/FeatureServer/0");
+							var query = new Query();
+							query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
+							query.returnGeometry = false;
+							query.outFields = ["*"];
+							qt.execute(query, function (result) {
+								console.log(result.features);
+								var selectedCountyName = result.features[0].attributes["CountyCategories_name"];
+								var selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
+								var columnData = [];
+								var xAxis = ['x'];
+								var data0 = ['D0'];
+								var data1 = ['D1'];
+								var data2 = ['D2'];
+								var data3 = ['D3'];
+								var data4 = ['D4'];
+								array.forEach(result.features, function (feature) {
+									var utcSeconds = feature.attributes["CountyCategories_Date"];
+									var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
+									xAxis.push(d);
+									data0.push(feature.attributes["CountyCategories_D0"]);
+									data1.push(feature.attributes["CountyCategories_D1"]);
+									data2.push(feature.attributes["CountyCategories_D2"]);
+									data3.push(feature.attributes["CountyCategories_D3"]);
+									data4.push(feature.attributes["CountyCategories_D4"]);
+								});
+								columnData.push(xAxis);
+								columnData.push(data0);
+								columnData.push(data1);
+								columnData.push(data2);
+								columnData.push(data3);
+								columnData.push(data4);
+								console.log(columnData);
 
-						chart = c3.generate({
-							data:{
-								x:'x',
-								colors:{
-									D0:'#FBF8C3',
-									D1:'#FAD59E',
-									D2:'#F3B174',
-									D3:'#E48275',
-									D4:'#D35560'
-								},
-								columns:columnData,
-								types:{
-									D0:'area-spline',
-									D1:'area-spline',
-									D2:'area-spline',
-									D3:'area-spline',
-									D4:'area-spline'
-								},
-								groups:[
-									['data0', 'data1', 'data2', 'data3', 'data4']
-								],
-								grid:{
-									x:{
-										lines:[
-											{value:2000, text:""},
-											{value:2002, text:"" }
-										]
+								chart = c3.generate({
+									data:{
+										x:'x',
+										colors:{
+											D0:'#FBF8C3',
+											D1:'#FAD59E',
+											D2:'#F3B174',
+											D3:'#E48275',
+											D4:'#D35560'
+										},
+										columns:columnData,
+										types:{
+											D0:'area-spline',
+											D1:'area-spline',
+											D2:'area-spline',
+											D3:'area-spline',
+											D4:'area-spline'
+										},
+										groups:[
+											['data0', 'data1', 'data2', 'data3', 'data4']
+										],
+										grid:{
+											x:{
+												lines:[
+													{value:2000, text:""},
+													{value:2002, text:"" }
+												]
+											}
+										},
+										names:{
+											D0:"",
+											D1:"",
+											D2:"",
+											D3:"",
+											D4:"severe"
+										}
+									},
+									size:{
+										height:150
+									},
+									axis:{
+										x:{
+											type:"timeseries",
+											tick:{
+												count:15,
+												format:"%Y"
+											}
+										}
+									},
+									tooltip:{
+										format:{
+											title:function (d) {
+												return d.getMonth() + "/" + d.getDay() + "/" + d.getFullYear();
+											}
+											/*,
+											 value: function(value, ratio, id) {
+											 //var format = d3.format('%');
+											 return format(value);
+											 }*/
+										}
+									},
+									legend:{
+										show:false
+									},
+									point:{
+										show:false
 									}
-								}
-							},
-							axis:{
-								x:{
-									type:"timeseries",
-									tick:{
-										count:15,
-										format:"%Y"
-									}
-								}
-							},
-							tooltip : {
-								format: {
-									title: function (d) {
-										return d.getMonth() + "/" + d.getDay() + "/" + d.getFullYear();
-									}/*,
-									value: function(value, ratio, id) {
-										//var format = d3.format('%');
-						                return format(value);
-									}*/
-								}
-							},
-							legend:{
-								show:false
-							},
-							point:{
-								show:false
-							}
-						});
-						dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
-					});
-				});
+								});
+								dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
+							});
+						}
+
+				)
+				;
 			}
 		}
 	});
-});
+})
+;
