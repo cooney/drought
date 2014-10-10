@@ -159,6 +159,13 @@ require([
 						chart = c3.generate({
 							data:{
 								x:'x',
+								colors:{
+									D0:'#FBF8C3',
+									D1:'#FAD59E',
+									D2:'#F3B174',
+									D3:'#E48275',
+									D4:'#D35560'
+								},
 								columns:columnData,
 								types:{
 									D0:'area-spline',
@@ -170,18 +177,30 @@ require([
 								groups:[
 									['data0', 'data1', 'data2', 'data3', 'data4']
 								],
-								legend:{
-									show:false
-								},
-								axis:{
+								grid:{
 									x:{
-										type:"timeseries",
-										tick:{
-											count:15,
-											format:"%m-%d-%Y"
-										}
+										lines:[
+											{value:2000, text:""},
+											{value:2002, text:"" }
+										]
 									}
 								}
+							},
+							axis:{
+								x:{
+									type:"timeseries",
+									tick:{
+										count:15,
+										format:"%Y"
+									}
+								}
+							},
+
+							legend:{
+								show:false
+							},
+							point:{
+								show:false
 							}
 						});
 						dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
