@@ -41,6 +41,10 @@ body {
 	border: solid 1px #80a8c1;
 }
 
+#chart {
+ background-color: rgb(247, 247, 247);
+}
+
 #countyName {
 	margin-left: 25px;
 }
