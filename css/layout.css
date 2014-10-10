@@ -41,6 +41,24 @@ body {
 	border: solid 1px #80a8c1;
 }
 
+#pieChartContianer {
+	position: absolute;
+	z-index: 100;
+	left: 5px;
+	top: 5px;
+	width: 250px;
+	height: 300px;
+	background-color: grey;
+	opacity: 0.95;
+	border-radius: 4px;
+}
+
+#pieChartHeader {
+	height: 40px;
+	width: 100%;
+	background-color: #e0e0e0;
+}
+
 #chart {
  background-color: rgb(247, 247, 247);
 }
