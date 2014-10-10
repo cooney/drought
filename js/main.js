@@ -71,37 +71,49 @@ require([
 			identifyParams.height = map.height;
 
 			function mapLoadedHandler() {
-				chart = c3.generate({
-					data:{
-						columns:[
-							['data0', 0, 0],
-							['data1', 0, 0],
-							['data2', 0, 0],
-							['data3', 0, 0],
-							['data4', 0, 0]
-						],
-						types:{
-							data0:'area-spline',
-							data1:'area-spline',
-							data2:'area-spline',
-							data3:'area-spline',
-							data4:'area-spline'
-							// 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
-						},
-						groups:[
-							['data0', 'data1', 'data2', 'data3', 'data4']
-						],
-						onclick:function (d, element) {
-							console.log("onclick", d, element);
-						},
-						onmouseover:function (d) {
-							console.log("onmouseover", d);
-						},
-						onmouseout:function (d) {
-							console.log("onmouseout", d);
-						}
-					}
-				});
+				/*chart = c3.generate({
+				 data:{
+				 x: 'x',
+				 columns:[
+				 ['data0', 0, 0],
+				 ['data1', 0, 0],
+				 ['data2', 0, 0],
+				 ['data3', 0, 0],
+				 ['data4', 0, 0]
+				 ],
+				 types:{
+				 data0:'area-spline',
+				 data1:'area-spline',
+				 data2:'area-spline',
+				 data3:'area-spline',
+				 data4:'area-spline'
+				 // 'line', 'spline', 'step', 'area', 'area-step' are also available to stack
+				 },
+				 groups:[
+				 ['data0', 'data1', 'data2', 'data3', 'data4']
+				 ],
+				 onclick:function (d, element) {
+				 console.log("onclick", d, element);
+				 },
+				 onmouseover:function (d) {
+				 console.log("onmouseover", d);
+				 },
+				 onmouseout:function (d) {
+				 console.log("onmouseout", d);
+				 }
+				 },
+				 legend:{
+				 show:false
+				 },
+				 axis:{
+				 x:{
+				 type:"timeseries",
+				 tick:{
+				 count:10
+				 }
+				 }
+				 }
+				 });*/
 			}
 
 			function doIdentify(event) {
@@ -128,7 +140,7 @@ require([
 						array.forEach(result.features, function (feature) {
 							var utcSeconds = feature.attributes["CountyCategories_Date"];
 							var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
-							console.log(d.getFullYear());
+							console.log(d.getFullYear().toString());
 							xAxis.push(d);
 							data0.push(feature.attributes["CountyCategories_D0"]);
 							data1.push(feature.attributes["CountyCategories_D1"]);
@@ -136,7 +148,7 @@ require([
 							data3.push(feature.attributes["CountyCategories_D3"]);
 							data4.push(feature.attributes["CountyCategories_D4"]);
 						});
-						//columnData.push(xAxis);
+						columnData.push(xAxis);
 						columnData.push(data0);
 						columnData.push(data1);
 						columnData.push(data2);
@@ -146,29 +158,30 @@ require([
 
 						chart = c3.generate({
 							data:{
+								x:'x',
 								columns:columnData,
 								types:{
-									data0:'area-spline',
-									data1:'area-spline',
-									data2:'area-spline',
-									data3:'area-spline',
-									data4:'area-spline'
+									D0:'area-spline',
+									D1:'area-spline',
+									D2:'area-spline',
+									D3:'area-spline',
+									D4:'area-spline'
 								},
 								groups:[
 									['data0', 'data1', 'data2', 'data3', 'data4']
 								],
-								onclick:function (d, element) {
-									console.log("onclick", d, element);
+								legend:{
+									show:false
 								},
-								onmouseover:function (d) {
-									//console.log("onmouseover", d);
-								},
-								onmouseout:function (d) {
-									//console.log("onmouseout", d);
+								axis:{
+									x:{
+										type:"timeseries",
+										tick:{
+											count:15,
+											format:"%m-%d-%Y"
+										}
+									}
 								}
-							},
-							legend:{
-								show:false
 							}
 						});
 						dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
