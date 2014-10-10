@@ -140,7 +140,6 @@ require([
 						array.forEach(result.features, function (feature) {
 							var utcSeconds = feature.attributes["CountyCategories_Date"];
 							var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
-							console.log(d.getFullYear().toString());
 							xAxis.push(d);
 							data0.push(feature.attributes["CountyCategories_D0"]);
 							data1.push(feature.attributes["CountyCategories_D1"]);
@@ -195,7 +194,17 @@ require([
 									}
 								}
 							},
-
+							tooltip : {
+								format: {
+									title: function (d) {
+										return d.getMonth() + "/" + d.getDay() + "/" + d.getFullYear();
+									}/*,
+									value: function(value, ratio, id) {
+										//var format = d3.format('%');
+						                return format(value);
+									}*/
+								}
+							},
 							legend:{
 								show:false
 							},
