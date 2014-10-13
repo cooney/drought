@@ -16,21 +16,24 @@ require([
 	"dojo/json",
 	"dojo/number",
 	"dojo/on",
-	"dojo/promise/all",
 	"dojo/query",
-	"dojo/store/Memory",
-	"dojo/store/Observable",
+	"esri/graphic",
 	"esri/map",
 	"esri/layers/ArcGISDynamicMapServiceLayer",
 	"esri/layers/FeatureLayer",
 	"esri/request",
+	"esri/symbols/SimpleFillSymbol",
+	"esri/symbols/SimpleLineSymbol",
+	"esri/renderers/SimpleRenderer",
+	"esri/Color",
 	"esri/tasks/IdentifyTask",
 	"esri/tasks/IdentifyParameters",
 	"esri/tasks/query",
 	"esri/tasks/QueryTask",
 	"dojo/parser",
-	"dojo/ready"
-], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, all, query, Memory, Observable, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
+	"dojo/ready",
+	"esri/IdentityManager"
+], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, query, Graphic, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request, SimpleFillSymbol, SimpleLineSymbol, SimpleRenderer, Color, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
 
 	parser.parse();
 
@@ -51,7 +54,7 @@ require([
 			map = new Map("map", {
 				basemap:"gray",
 				center:[-96.767578, 39.655399],
-				zoom:4
+				zoom:5
 			});
 
 			countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
@@ -89,6 +92,17 @@ require([
 							query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
 							query.returnGeometry = false;
 							query.outFields = ["*"];
+
+							map.graphics.clear();
+							var highlightSymbol = new SimpleFillSymbol(
+									SimpleFillSymbol.STYLE_SOLID,
+									new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+											new Color([255, 255, 255, 0.35]), 1),
+									new Color([125, 125, 125, 0.30])
+							);
+							var highlightGraphic = new Graphic(results[0].feature.geometry, highlightSymbol);
+							map.graphics.add(highlightGraphic);
+
 							qt.execute(query, function (result) {
 								console.log(result.features);
 								var selectedCountyName = result.features[0].attributes["CountyCategories_name"];
@@ -147,6 +161,17 @@ require([
 										],
 										onclick:function (d, element) {
 											console.log("onclick", d, element);
+
+											var qt1 = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/ArcGIS/rest/services/USADroughtOverlayNew/FeatureServer/1");
+											var query1 = new Query();
+											//query1.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
+											query1.time = "1359072000000%2C1359676800000";//1359072000000 + "," + 1359676800000;
+											query1.returnGeometry = true;
+											query1.outFields = ["*"];
+											qt1.execute(query1, function (result) {
+												console.log(result);
+											});
+
 										},
 										grid:{
 											x:{
@@ -201,41 +226,41 @@ require([
 								});
 
 
-								var x = c3.generate({
-									bindto:'#pieChart',
-									data:{
-										colors:{
-											Dry:'#FBF8C3',
-											Moderate:'#FAD59E',
-											Severe:'#F3B174',
-											Extreme:'#E48275',
-											Exceptional:'#D35560'
-										},
-										columns:[
-											["Dry", 21],
-											["Moderate", 0],
-											["Severe", 2],
-											["Extreme", 40],
-											["Exceptional", 20]
-										],
-										type:'donut',
-										onclick:function (d, i) {
-											console.log("onclick", d, i);
-										},
-										onmouseover:function (d, i) {
-											console.log("onmouseover", d, i);
-										},
-										onmouseout:function (d, i) {
-											console.log("onmouseout", d, i);
-										}
-									},
-									size:{
-										width:200
-									},
-									legend:{
-										show:false
-									}
-								});
+								/*var x = c3.generate({
+								 bindto:'#pieChart',
+								 data:{
+								 colors:{
+								 Dry:'#FBF8C3',
+								 Moderate:'#FAD59E',
+								 Severe:'#F3B174',
+								 Extreme:'#E48275',
+								 Exceptional:'#D35560'
+								 },
+								 columns:[
+								 ["Dry", 21],
+								 ["Moderate", 0],
+								 ["Severe", 2],
+								 ["Extreme", 40],
+								 ["Exceptional", 20]
+								 ],
+								 type:'donut',
+								 onclick:function (d, i) {
+								 console.log("onclick", d, i);
+								 },
+								 onmouseover:function (d, i) {
+								 console.log("onmouseover", d, i);
+								 },
+								 onmouseout:function (d, i) {
+								 console.log("onmouseout", d, i);
+								 }
+								 },
+								 size:{
+								 width:200
+								 },
+								 legend:{
+								 show:false
+								 }
+								 });*/
 
 								dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 							});
