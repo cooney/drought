@@ -44,8 +44,8 @@ body {
 #pieChartContianer {
 	position: absolute;
 	z-index: 100;
-	left: 5px;
-	top: 5px;
+	left: 10px;
+	top: 10px;
 	width: 250px;
 	height: 300px;
 	background-color: grey;
@@ -56,7 +56,7 @@ body {
 #pieChartHeader {
 	height: 40px;
 	width: 100%;
-	background-color: #e0e0e0;
+	background-color: #ffffff;
 }
 
 #chart {
@@ -64,5 +64,7 @@ body {
 }
 
 #countyName {
-	margin-left: 25px;
+	margin-left: 15px;
+	margin-top: 15px;
+	color: white;
 }

@@ -22,6 +22,7 @@ require([
 	"dojo/store/Observable",
 	"esri/map",
 	"esri/layers/ArcGISDynamicMapServiceLayer",
+	"esri/layers/FeatureLayer",
 	"esri/request",
 	"esri/tasks/IdentifyTask",
 	"esri/tasks/IdentifyParameters",
@@ -29,7 +30,7 @@ require([
 	"esri/tasks/QueryTask",
 	"dojo/parser",
 	"dojo/ready"
-], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, all, query, Memory, Observable, Map, ArcGISDynamicMapServiceLayer, request, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
+], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, all, query, Memory, Observable, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
 
 	parser.parse();
 
@@ -71,46 +72,11 @@ require([
 			identifyParams.height = map.height;
 
 			function mapLoadedHandler() {
-				/*var pieChart = c3.generate({
-					data:{
-						columns:[
-							['data1', 30],
-							['data2', 120]
-						],
-						type:'donut',
-						onclick:function (d, i) {
-							console.log("onclick", d, i);
-						},
-						onmouseover:function (d, i) {
-							console.log("onmouseover", d, i);
-						},
-						onmouseout:function (d, i) {
-							console.log("onmouseout", d, i);
-						}
-					},
-					donut:{
-						title:""
-					}
+				/*var testLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
+					mode:FeatureLayer.MODE_SNAPSHOT,
+					outFields:["*"]
 				});
-
-				setTimeout(function () {
-					pieChart.load({
-						columns:[
-							["setosa", 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2, 0.4, 0.4, 0.3, 0.3, 0.3, 0.2, 0.4, 0.2, 0.5, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.4, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2, 0.3, 0.3, 0.2, 0.6, 0.4, 0.3, 0.2, 0.2, 0.2, 0.2],
-							["versicolor", 1.4, 1.5, 1.5, 1.3, 1.5, 1.3, 1.6, 1.0, 1.3, 1.4, 1.0, 1.5, 1.0, 1.4, 1.3, 1.4, 1.5, 1.0, 1.5, 1.1, 1.8, 1.3, 1.5, 1.2, 1.3, 1.4, 1.4, 1.7, 1.5, 1.0, 1.1, 1.0, 1.2, 1.6, 1.5, 1.6, 1.5, 1.3, 1.3, 1.3, 1.2, 1.4, 1.2, 1.0, 1.3, 1.2, 1.3, 1.3, 1.1, 1.3],
-							["virginica", 2.5, 1.9, 2.1, 1.8, 2.2, 2.1, 1.7, 1.8, 1.8, 2.5, 2.0, 1.9, 2.1, 2.0, 2.4, 2.3, 1.8, 2.2, 2.3, 1.5, 2.3, 2.0, 2.0, 1.8, 2.1, 1.8, 1.8, 1.8, 2.1, 1.6, 1.9, 2.0, 2.2, 1.5, 1.4, 2.3, 2.4, 1.8, 1.8, 2.1, 2.4, 2.3, 1.9, 2.3, 2.5, 2.3, 1.9, 2.0, 2.3, 1.8],
-						]
-					});
-				}, 1500);
-
-				setTimeout(function () {
-					pieChart.unload({
-						ids:'data1'
-					});
-					pieChart.unload({
-						ids:'data2'
-					});
-				}, 2500);*/
+				map.addLayer(testLayer);*/
 			}
 
 			function doIdentify(event) {
@@ -153,6 +119,7 @@ require([
 								console.log(columnData);
 
 								chart = c3.generate({
+									bindto:'#chart',
 									data:{
 										x:'x',
 										colors:{
@@ -163,6 +130,11 @@ require([
 											D4:'#D35560'
 										},
 										columns:columnData,
+										selection:{
+											enabled:true,
+											grouped:true,
+											multiple:false
+										},
 										types:{
 											D0:'area-spline',
 											D1:'area-spline',
@@ -173,6 +145,9 @@ require([
 										groups:[
 											['data0', 'data1', 'data2', 'data3', 'data4']
 										],
+										onclick:function (d, element) {
+											console.log("onclick", d, element);
+										},
 										grid:{
 											x:{
 												lines:[
@@ -199,6 +174,9 @@ require([
 												count:15,
 												format:"%Y"
 											}
+										},
+										y:{
+											show:false
 										}
 									},
 									tooltip:{
@@ -217,9 +195,48 @@ require([
 										show:false
 									},
 									point:{
+										r:1,
+										show:true
+									}
+								});
+
+
+								var x = c3.generate({
+									bindto:'#pieChart',
+									data:{
+										colors:{
+											Dry:'#FBF8C3',
+											Moderate:'#FAD59E',
+											Severe:'#F3B174',
+											Extreme:'#E48275',
+											Exceptional:'#D35560'
+										},
+										columns:[
+											["Dry", 21],
+											["Moderate", 0],
+											["Severe", 2],
+											["Extreme", 40],
+											["Exceptional", 20]
+										],
+										type:'donut',
+										onclick:function (d, i) {
+											console.log("onclick", d, i);
+										},
+										onmouseover:function (d, i) {
+											console.log("onmouseover", d, i);
+										},
+										onmouseout:function (d, i) {
+											console.log("onmouseout", d, i);
+										}
+									},
+									size:{
+										width:200
+									},
+									legend:{
 										show:false
 									}
 								});
+
 								dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 							});
 						}
