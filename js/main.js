@@ -24,6 +24,7 @@ require([
 	"esri/request",
 	"esri/symbols/SimpleFillSymbol",
 	"esri/symbols/SimpleLineSymbol",
+	"esri/TimeExtent",
 	"esri/renderers/SimpleRenderer",
 	"esri/Color",
 	"esri/tasks/IdentifyTask",
@@ -33,7 +34,8 @@ require([
 	"dojo/parser",
 	"dojo/ready",
 	"esri/IdentityManager"
-], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, query, Graphic, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request, SimpleFillSymbol, SimpleLineSymbol, SimpleRenderer, Color, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
+], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, query, Graphic, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request,
+			 SimpleFillSymbol, SimpleLineSymbol, TimeExtent, SimpleRenderer, Color, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
 
 	parser.parse();
 
@@ -76,10 +78,10 @@ require([
 
 			function mapLoadedHandler() {
 				/*var testLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
-					mode:FeatureLayer.MODE_SNAPSHOT,
-					outFields:["*"]
-				});
-				map.addLayer(testLayer);*/
+				 mode:FeatureLayer.MODE_SNAPSHOT,
+				 outFields:["*"]
+				 });
+				 map.addLayer(testLayer);*/
 			}
 
 			function doIdentify(event) {
@@ -162,16 +164,25 @@ require([
 										onclick:function (d, element) {
 											console.log("onclick", d, element);
 
-											var qt1 = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/ArcGIS/rest/services/USADroughtOverlayNew/FeatureServer/1");
-											var query1 = new Query();
-											//query1.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
-											query1.time = "1359072000000%2C1359676800000";//1359072000000 + "," + 1359676800000;
-											query1.returnGeometry = true;
-											query1.outFields = ["*"];
-											qt1.execute(query1, function (result) {
-												console.log(result);
+											var testLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
+												mode:FeatureLayer.MODE_SNAPSHOT,
+												outFields:["*"]
+											});
+											var timeExtent = new TimeExtent(1359072000000, 1359676800000);
+											var timeQuery = new Query();
+											timeQuery.timeExtent = timeExtent;
+											testLayer.queryFeatures(timeQuery, function (featureSet) {
+												console.log(featureSet);
 											});
 
+											/*var query1 = new Query();
+											 query1.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
+											 query1.time = 1359072000000;//1359072000000 + "," + 1359676800000;
+											 query1.returnGeometry = true;
+											 query1.outFields = ["*"];
+											 qt1.execute(query1, function (result) {
+											 console.log(result);
+											 });*/
 										},
 										grid:{
 											x:{
@@ -262,7 +273,7 @@ require([
 								 }
 								 });*/
 
-								dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
+								//dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 							});
 						}
 
