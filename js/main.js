@@ -49,6 +49,7 @@ require([
 				identifyUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
 				identifyTask,
 				identifyParams,
+				selectedDate,
 				selectedPoint,
 				selectedFIPS,
 				chart,
@@ -186,12 +187,13 @@ require([
 										],
 										onclick:function (d, element) {
 											console.log(d.x);
-											var selectedDate = new Date(d.x);
-											console.log(selectedDate.getDay());
+											selectedDate = new Date(d.x);
+											var day = selectedDate.getDate();
 											var month = monthNames[selectedDate.getMonth()];
 											var yr = selectedDate.getFullYear();
-											dom.byId("selectedDateRange").innerHTML = month + " " + yr;
-											//console.log(element);
+
+											dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
+
 											droughtOverlayLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
 												mode:FeatureLayer.MODE_SNAPSHOT,
 												outFields:["*"]
@@ -236,7 +238,10 @@ require([
 									tooltip:{
 										format:{
 											title:function (d) {
-												return d.getMonth() + "/" + d.getDay() + "/" + d.getFullYear();
+												var day = d.getDate();
+												var month = monthNames[d.getMonth()];
+												var yr = d.getFullYear();
+												return month + " " + day + ", " + yr;
 											}
 											/*,
 											 value: function(value, ratio, id) {
