@@ -21,7 +21,8 @@
 </head>
 
 <body class="nihilo">
-<div id="mainWindow" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="design:'headline', gutters:false" style="width:100%; height:100%;">
+<div id="mainWindow" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="design:'headline', gutters:false"
+	 style="width:100%; height:100%;">
 
 	<!--<div id="header" class="roundedCorners" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'top'">
         <span>
@@ -39,19 +40,30 @@
 		<div id="map" data-dojo-type="dijit.layout.ContentPane" class="shadow" data-dojo-props="region:'center'"
 			 style="position:relative; overflow:hidden;"></div>
 
-		<!--<div id="pieChartContianer">
+		<div id="pieChartContianer">
 			<div id="pieChartHeader">
 				<img src="esri-logo.jpg" style="height:100%">
+
 				<div style="margin-top: -35px; margin-left: 85px;">
 					<span style="color: red; font-size: 1.25em;">Drought </span>
-				<span style="font-size: 1.25em;">Tracker</span>
+					<span style="font-size: 1.25em;">Tracker</span>
 				</div>
+			</div>
+
+			<div id="instructions">
+				Choose a
+				<input type="radio" name="level" id="radioCounty" checked value="county"/>
+				<label for="radioCounty">county</label>
+				<input type="radio" name="level" id="radioState" checked value="state"/>
+				<label for="radioState">state</label>
+				<div id="search"></div>
 			</div>
 			<div id="countyName"></div>
 			<div id="pieChart"></div>
-		</div>-->
+		</div>
 
-		<div id="footer" class="roundedCorners" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'bottom'">
+		<div id="footer" class="roundedCorners" data-dojo-type="dijit.layout.ContentPane"
+			 data-dojo-props="region:'bottom'">
 			<div id="chart"></div>
 		</div>
 	</div>

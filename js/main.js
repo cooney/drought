@@ -1,6 +1,7 @@
 require([
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
+	"dijit/form/RadioButton",
 	"dijit/registry",
 	"dojo/_base/array",
 	"dojo/_base/declare",
@@ -17,6 +18,7 @@ require([
 	"dojo/number",
 	"dojo/on",
 	"dojo/query",
+	"esri/dijit/Geocoder",
 	"esri/graphic",
 	"esri/map",
 	"esri/layers/ArcGISDynamicMapServiceLayer",
@@ -34,8 +36,7 @@ require([
 	"dojo/parser",
 	"dojo/ready",
 	"esri/IdentityManager"
-], function (BorderContainer, ContentPane, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, query, Graphic, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request,
-			 SimpleFillSymbol, SimpleLineSymbol, TimeExtent, SimpleRenderer, Color, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
+], function (BorderContainer, ContentPane, RadioButton, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, query, Geocoder, Graphic, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request, SimpleFillSymbol, SimpleLineSymbol, TimeExtent, SimpleRenderer, Color, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
 
 	parser.parse();
 
@@ -43,6 +44,7 @@ require([
 
 		var map,
 				countyLayer,
+				droughtOverlayLayer,
 				countyLayerUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
 				identifyUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
 				identifyTask,
@@ -54,6 +56,23 @@ require([
 		init();
 
 		function init() {
+			var radioCounty = new RadioButton({
+				checked:true,
+				value:"county",
+				name:"level"
+			}, "radioCounty").startup();
+
+			var radioState = new RadioButton({
+				checked:false,
+				value:"state",
+				name:"level"
+			}, "radioState").startup();
+
+			var geocoder = new Geocoder({
+				map:map
+			}, "search");
+			geocoder.startup();
+
 			map = new Map("map", {
 				basemap:"gray",
 				center:[-96.767578, 39.655399],
@@ -101,7 +120,7 @@ require([
 							var highlightSymbol = new SimpleFillSymbol(
 									SimpleFillSymbol.STYLE_SOLID,
 									new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-											new Color([255, 255, 255, 0.35]), 1),
+											new Color([255, 0, 0, 0.95]), 1),
 									new Color([125, 125, 125, 0.30])
 							);
 							var highlightGraphic = new Graphic(results[0].feature.geometry, highlightSymbol);
@@ -166,23 +185,15 @@ require([
 										onclick:function (d, element) {
 											console.log(d.x);
 											//console.log(element);
-
-											var testLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
+											droughtOverlayLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
 												mode:FeatureLayer.MODE_SNAPSHOT,
 												outFields:["*"]
 											});
 											var startDate = new Date(d.x);
 											var endDate = new Date(d.x);
-											var timeExtent = new TimeExtent(startDate ,endDate);
-											testLayer.setTimeDefinition(timeExtent);
-											map.addLayer(testLayer);
-
-											/*var timeQuery = new Query();
-											timeQuery.geometry = selectedPoint;
-											timeQuery.timeExtent = timeExtent;
-											testLayer.queryFeatures(timeQuery, function (featureSet) {
-												console.log(featureSet);
-											});*/
+											var timeExtent = new TimeExtent(startDate, endDate);
+											droughtOverlayLayer.setTimeDefinition(timeExtent);
+											map.addLayer(droughtOverlayLayer);
 										},
 										grid:{
 											x:{
@@ -273,7 +284,7 @@ require([
 								 }
 								 });*/
 
-								//dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
+								dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 							});
 						}
 
