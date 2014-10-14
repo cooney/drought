@@ -71,7 +71,8 @@ body {
 #selectedDateRange {
 	margin-left: 10px;
 	margin-top: 5px;
-	color: white;
+	font-size: 0.90em;
+	color: rgb(210, 210, 210);
 }
 
 #instructions {

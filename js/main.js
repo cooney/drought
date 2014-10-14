@@ -54,7 +54,6 @@ require([
 				chart,
 				monthNames = [ "January", "February", "March", "April", "May", "June",
 					"July", "August", "September", "October", "November", "December" ];
-		;
 
 		init();
 
@@ -188,8 +187,7 @@ require([
 										onclick:function (d, element) {
 											console.log(d.x);
 											var selectedDate = new Date(d.x);
-											console.log(selectedDate.getFullYear());
-											console.log(selectedDate.getUTCFullYear());
+											console.log(selectedDate.getDay());
 											var month = monthNames[selectedDate.getMonth()];
 											var yr = selectedDate.getFullYear();
 											dom.byId("selectedDateRange").innerHTML = month + " " + yr;
