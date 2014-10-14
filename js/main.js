@@ -105,11 +105,7 @@ require([
 			identifyParams.height = map.height;
 
 			function mapLoadedHandler() {
-				/*var testLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
-				 mode:FeatureLayer.MODE_SNAPSHOT,
-				 outFields:["*"]
-				 });
-				 map.addLayer(testLayer);*/
+				
 			}
 
 			function doIdentify(event) {
