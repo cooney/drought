@@ -63,8 +63,14 @@ body {
 }
 
 #countyName {
-	margin-left: 15px;
-	margin-top: 15px;
+	margin-left: 10px;
+	margin-top: 5px;
+	color: white;
+}
+
+#selectedDateRange {
+	margin-left: 10px;
+	margin-top: 5px;
 	color: white;
 }
 
@@ -72,4 +78,12 @@ body {
 	padding: 8px;
 	color: #D0D0D0;
 	font-size: 0.9em;
+}
+
+#search {
+	margin-top: 5px;
+}
+
+.simpleGeocoder .esriGeocoder {
+	background-color: #989898;
 }

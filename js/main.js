@@ -184,6 +184,12 @@ require([
 										],
 										onclick:function (d, element) {
 											console.log(d.x);
+											var selectedDate = new Date(d.x);
+											console.log(selectedDate.getFullYear());
+											console.log(selectedDate.getUTCFullYear());
+											var month = selectedDate.getMonth();
+											var yr = selectedDate.getFullYear();
+											dom.byId("selectedDateRange").innerHTML = month + " " + yr;
 											//console.log(element);
 											droughtOverlayLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
 												mode:FeatureLayer.MODE_SNAPSHOT,
