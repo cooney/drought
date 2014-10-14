@@ -59,6 +59,11 @@ require([
 		init();
 
 		function init() {
+			droughtOverlayLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
+				mode:FeatureLayer.MODE_SNAPSHOT,
+				outFields:["*"]
+			});
+
 			var radioCounty = new RadioButton({
 				checked:true,
 				value:"county",
@@ -194,10 +199,6 @@ require([
 
 											dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
 
-											droughtOverlayLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
-												mode:FeatureLayer.MODE_SNAPSHOT,
-												outFields:["*"]
-											});
 											var startDate = new Date(d.x);
 											var endDate = new Date(d.x);
 											var timeExtent = new TimeExtent(startDate, endDate);
