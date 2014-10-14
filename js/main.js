@@ -51,7 +51,10 @@ require([
 				identifyParams,
 				selectedPoint,
 				selectedFIPS,
-				chart;
+				chart,
+				monthNames = [ "January", "February", "March", "April", "May", "June",
+					"July", "August", "September", "October", "November", "December" ];
+		;
 
 		init();
 
@@ -187,7 +190,7 @@ require([
 											var selectedDate = new Date(d.x);
 											console.log(selectedDate.getFullYear());
 											console.log(selectedDate.getUTCFullYear());
-											var month = selectedDate.getMonth();
+											var month = monthNames[selectedDate.getMonth()];
 											var yr = selectedDate.getFullYear();
 											dom.byId("selectedDateRange").innerHTML = month + " " + yr;
 											//console.log(element);
@@ -294,8 +297,7 @@ require([
 							});
 						}
 
-				)
-				;
+				);
 			}
 		}
 	});
