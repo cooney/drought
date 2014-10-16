@@ -100,12 +100,12 @@ require([
 			});
 
 			//arcgisUtils.createMap("20929a934fd24998ab0c1e4d770dff08", "map").then(function (response) {
-			 //map = response.map;
-			 //var startDate = new Date("8/29/2014");
-			 //var endDate = new Date("9/12/2014");
-			 //var timeExtent = new TimeExtent(startDate, endDate);
-			 //map.setTimeExtent(timeExtent);
-			 //});
+			//map = response.map;
+			//var startDate = new Date("8/29/2014");
+			//var endDate = new Date("9/12/2014");
+			//var timeExtent = new TimeExtent(startDate, endDate);
+			//map.setTimeExtent(timeExtent);
+			//});
 			// Mon Aug 25 2014 17:00:00 GMT-0700 (PDT)
 			// 1409270400000,1409875200000
 
@@ -128,13 +128,7 @@ require([
 			map.on("click", doIdentify);
 			map.on("load", mapLoadedHandler);
 
-			var geocoder = new Geocoder({
-				map:map,
-				arcgisGeocoder:{
-					placeholder:"Search"
-				}
-			}, "search");
-			geocoder.startup();
+			loadGeococder(map);
 
 			identifyTask = new IdentifyTask(identifyUrl);
 			identifyParams = new IdentifyParameters();
@@ -161,15 +155,7 @@ require([
 							query.returnGeometry = false;
 							query.outFields = ["*"];
 
-							map.graphics.clear();
-							var highlightSymbol = new SimpleFillSymbol(
-									SimpleFillSymbol.STYLE_SOLID,
-									new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-											new Color([255, 0, 0, 0.95]), 1),
-									new Color([125, 125, 125, 0.30])
-							);
-							var highlightGraphic = new Graphic(results[0].feature.geometry, highlightSymbol);
-							map.graphics.add(highlightGraphic);
+							addHighlightGraphic(map, results[0].feature.geometry);
 
 							qt.execute(query, function (result) {
 								var selectedCountyName = result.features[0].attributes["CountyCategories_name"],
@@ -249,7 +235,7 @@ require([
 												id:"scrubber",
 												style:{
 													"height":150 + "px",
-													"width":1 + "px",
+													"width":2 + "px",
 													"background-color":"rgb(60, 60, 60)",
 													"position":"absolute",
 													"z-index":"1000",
@@ -426,6 +412,28 @@ require([
 
 				);
 			}
+		}
+
+		function addHighlightGraphic(map, geometry) {
+			map.graphics.clear();
+			var highlightSymbol = new SimpleFillSymbol(
+					SimpleFillSymbol.STYLE_SOLID,
+					new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+							new Color([255, 0, 0, 0.95]), 1),
+					new Color([125, 125, 125, 0.30])
+			);
+			var highlightGraphic = new Graphic(geometry, highlightSymbol);
+			map.graphics.add(highlightGraphic);
+		}
+
+		function loadGeococder(map) {
+			var geocoder = new Geocoder({
+				map:map,
+				arcgisGeocoder:{
+					placeholder:"Search"
+				}
+			}, "search");
+			geocoder.startup();
 		}
 	});
 })

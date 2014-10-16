@@ -29,15 +29,17 @@ body {
 }
 
 #footer {
-	border: solid 1px #80a8c1;
-	margin: 5px;
+	/*border: solid 1px #80a8c1;*/
+	margin-left: 5px;
+	margin-right: 5px;
 	height: 200px;
 	font-size: 0.8em;
 }
 
 #map {
-	margin: 5px;
-	border: solid 1px #80a8c1;
+	margin-left: 5px;
+	margin-right: 5px;
+	/*border: solid 1px #80a8c1;*/
 }
 
 #pieChartContianer {
@@ -89,9 +91,16 @@ body {
 	background-color: #989898;
 }
 
-.crap {
-	background-color: red !important;
-	width: 2px !important;
+
+
+/* vertical grid lines */
+.c3-grid line {
+	stroke: #808080 !important;
+	opacity: 0.5 !important;
+}
+
+.c3 path, .c3 line {
+	/*stroke: white !important;*/
 }
 
 /*#scrubber {
