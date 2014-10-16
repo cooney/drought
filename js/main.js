@@ -54,6 +54,7 @@ require([
 				selectedPoint,
 				selectedFIPS,
 				chart,
+				scrubberLocation = 0,
 				monthNames = [ "January", "February", "March", "April", "May", "June",
 					"July", "August", "September", "October", "November", "December" ],
 				lods = [
@@ -186,11 +187,11 @@ require([
 									data:{
 										x:'x',
 										colors:{
-											D0:'#FBF8C3',
-											D1:'#FAD59E',
-											D2:'#F3B174',
-											D3:'#E48275',
-											D4:'#D35560'
+											D0:'rgb(255, 255, 0)',
+											D1:'rgb(241, 202, 141)',
+											D2:'rgb(255, 170, 0)',
+											D3:'rgb(255, 85, 0)',
+											D4:'rgb(168, 0, 0)'
 										},
 										columns:columnData,
 										selection:{
@@ -224,6 +225,7 @@ require([
 											map.addLayer(droughtOverlayLayer);
 
 											domConstruct.destroy("scrubber");
+											scrubberLocation = element["cx"].baseVal.value;
 											var anchorNode = dom.byId("chart");
 											domConstruct.create("div", {
 												id:"scrubber",
@@ -233,7 +235,7 @@ require([
 													"background-color":"rgb(60, 60, 60)",
 													"position":"absolute",
 													"z-index":"1000",
-													"left":element["cx"].baseVal.value + "px",
+													"left":scrubberLocation + "px",
 													"top":0 + "px"
 												},
 												onmousedown:function (evt) {
@@ -301,7 +303,30 @@ require([
 									}
 								});
 
-
+								if (scrubberLocation > 0) {
+									var anchorNode = dom.byId("chart");
+									domConstruct.create("div", {
+										id:"scrubber",
+										style:{
+											"height":150 + "px",
+											"width":1 + "px",
+											"background-color":"rgb(60, 60, 60)",
+											"position":"absolute",
+											"z-index":"1000",
+											"left":scrubberLocation + "px",
+											"top":0 + "px"
+										},
+										onmousedown:function (evt) {
+											console.log(evt);
+										},
+										onmouseup:function (evt) {
+											console.log(evt);
+										},
+										onmousemove:function (evt) {
+											console.log(evt);
+										}
+									}, anchorNode);
+								}
 								/*var x = c3.generate({
 								 bindto:'#pieChart',
 								 data:{
