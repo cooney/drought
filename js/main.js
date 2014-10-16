@@ -18,6 +18,7 @@ require([
 	"dojo/number",
 	"dojo/on",
 	"dojo/query",
+	"esri/arcgis/utils",
 	"esri/dijit/Geocoder",
 	"esri/graphic",
 	"esri/map",
@@ -36,7 +37,7 @@ require([
 	"dojo/parser",
 	"dojo/ready",
 	"esri/IdentityManager"
-], function (BorderContainer, ContentPane, RadioButton, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, query, Geocoder, Graphic, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request, SimpleFillSymbol, SimpleLineSymbol, TimeExtent, SimpleRenderer, Color, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
+], function (BorderContainer, ContentPane, RadioButton, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, query, arcgisUtils, Geocoder, Graphic, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request, SimpleFillSymbol, SimpleLineSymbol, TimeExtent, SimpleRenderer, Color, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
 
 	parser.parse();
 
@@ -90,12 +91,39 @@ require([
 				name:"level"
 			}, "radioState").startup();
 
-			map = new Map("map", {
+			/*map = new Map("map", {
 				basemap:"gray",
 				center:[-96.767578, 39.655399],
 				zoom:0,
 				lods:lods
+			});*/
+
+			arcgisUtils.createMap("20929a934fd24998ab0c1e4d770dff08", "map").then(function (response) {
+				map = response.map;
 			});
+			// Mon Aug 25 2014 17:00:00 GMT-0700 (PDT)
+			// 1409270400000,1409875200000
+			var startDate = new Date(1409270400000);
+			var endDate = new Date(1409875200000);
+			var timeExtent = new TimeExtent(startDate, endDate);
+			//droughtOverlayLayer.setTimeDefinition(timeExtent);
+			//var timeExtent = new TimeExtent();
+  			//timeExtent.startTime = new Date("8/25/2014");
+  			map.setTimeExtent(timeExtent);
+			/*droughtOverlayLayer = new FeatureLayer(droughtOverlayUrl, {
+				mode:FeatureLayer.MODE_SNAPSHOT,
+				outFields:["*"]
+			});*/
+
+			// county layer
+			countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
+				useMapImage:true,
+				opacity:0.0
+			});
+			map.addLayer(countyLayer);
+
+			map.on("click", doIdentify);
+			map.on("load", mapLoadedHandler);
 
 			var geocoder = new Geocoder({
 				map:map,
@@ -104,19 +132,6 @@ require([
 				}
 			}, "search");
 			geocoder.startup();
-
-			droughtOverlayLayer = new FeatureLayer(droughtOverlayUrl, {
-				mode:FeatureLayer.MODE_SNAPSHOT,
-				outFields:["*"]
-			});
-
-			countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
-				useMapImage:true,
-				opacity:0.0
-			});
-			map.addLayer(countyLayer);
-			map.on("click", doIdentify);
-			map.on("load", mapLoadedHandler);
 
 			identifyTask = new IdentifyTask(identifyUrl);
 			identifyParams = new IdentifyParameters();
@@ -217,7 +232,7 @@ require([
 											var yr = selectedDate.getFullYear();
 
 											dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
-
+console.log(d);
 											var startDate = new Date(d.x);
 											var endDate = new Date(d.x);
 											var timeExtent = new TimeExtent(startDate, endDate);
