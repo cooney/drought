@@ -45,8 +45,10 @@ require([
 
 		var map,
 				countyLayer,
-				droughtOverlayUrl = "http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1",
-				droughtOverlayLayer,
+				dominantAreasOfImpactUrl = "http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/0",
+				dominantAreasOfImpactLayer,
+				droughtIntensityUrl = "http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1",
+				droughtIntensityLayer,
 				countyLayerUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
 				identifyUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
 				identifyTask,
@@ -91,29 +93,30 @@ require([
 				name:"level"
 			}, "radioState").startup();
 
-			/*map = new Map("map", {
-				basemap:"gray",
+			map = new Map("map", {
+				basemap:"topo",
 				center:[-96.767578, 39.655399],
-				zoom:0,
-				lods:lods
-			});*/
-
-			arcgisUtils.createMap("20929a934fd24998ab0c1e4d770dff08", "map").then(function (response) {
-				map = response.map;
+				zoom:5
 			});
+
+			//arcgisUtils.createMap("20929a934fd24998ab0c1e4d770dff08", "map").then(function (response) {
+			 //map = response.map;
+			 //var startDate = new Date("8/29/2014");
+			 //var endDate = new Date("9/12/2014");
+			 //var timeExtent = new TimeExtent(startDate, endDate);
+			 //map.setTimeExtent(timeExtent);
+			 //});
 			// Mon Aug 25 2014 17:00:00 GMT-0700 (PDT)
 			// 1409270400000,1409875200000
-			var startDate = new Date(1409270400000);
-			var endDate = new Date(1409875200000);
-			var timeExtent = new TimeExtent(startDate, endDate);
-			//droughtOverlayLayer.setTimeDefinition(timeExtent);
-			//var timeExtent = new TimeExtent();
-  			//timeExtent.startTime = new Date("8/25/2014");
-  			map.setTimeExtent(timeExtent);
-			/*droughtOverlayLayer = new FeatureLayer(droughtOverlayUrl, {
+
+			droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
 				mode:FeatureLayer.MODE_SNAPSHOT,
 				outFields:["*"]
-			});*/
+			});
+			dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
+				mode:FeatureLayer.MODE_SNAPSHOT,
+				outFields:["*"]
+			});
 
 			// county layer
 			countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
@@ -169,7 +172,6 @@ require([
 							map.graphics.add(highlightGraphic);
 
 							qt.execute(query, function (result) {
-								console.log(result.features);
 								var selectedCountyName = result.features[0].attributes["CountyCategories_name"],
 										selectedState = result.features[0].attributes["CountyCategories_stateAbb"],
 										columnData = [],
@@ -195,7 +197,6 @@ require([
 								columnData.push(data2);
 								columnData.push(data3);
 								columnData.push(data4);
-								console.log(columnData);
 
 								chart = c3.generate({
 									bindto:'#chart',
@@ -232,12 +233,14 @@ require([
 											var yr = selectedDate.getFullYear();
 
 											dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
-console.log(d);
+											console.log(d);
 											var startDate = new Date(d.x);
 											var endDate = new Date(d.x);
 											var timeExtent = new TimeExtent(startDate, endDate);
-											droughtOverlayLayer.setTimeDefinition(timeExtent);
-											map.addLayer(droughtOverlayLayer);
+											droughtIntensityLayer.setTimeDefinition(timeExtent);
+											dominantAreasOfImpactLayer.setTimeDefinition(timeExtent);
+											map.addLayer(droughtIntensityLayer);
+											map.addLayer(dominantAreasOfImpactLayer);
 
 											domConstruct.destroy("scrubber");
 											scrubberLocation = element["cx"].baseVal.value;
@@ -263,14 +266,6 @@ console.log(d);
 													console.log(evt);
 												}
 											}, anchorNode);
-										},
-										grid:{
-											x:{
-												lines:[
-													{value:2000, text:""},
-													{value:2002, text:"" }
-												]
-											}
 										},
 										names:{
 											D0:"Dry",
@@ -304,7 +299,6 @@ console.log(d);
 												return month + " " + day + ", " + yr;
 											},
 											value:function (value, ratio, id) {
-												//var format = d3.format('%');
 												return value + "%";
 											}
 										}
@@ -317,6 +311,54 @@ console.log(d);
 										show:true
 									}
 								});
+
+								chart.xgrids([
+									{
+										value:new Date("2000"), text:""
+									},
+									{
+										value:new Date("2001"), text:""
+									},
+									{
+										value:new Date("2002"), text:""
+									},
+									{
+										value:new Date("2003"), text:""
+									},
+									{
+										value:new Date("2004"), text:""
+									},
+									{
+										value:new Date("2005"), text:""
+									},
+									{
+										value:new Date("2006"), text:""
+									},
+									{
+										value:new Date("2007"), text:""
+									},
+									{
+										value:new Date("2008"), text:""
+									},
+									{
+										value:new Date("2009"), text:""
+									},
+									{
+										value:new Date("2010"), text:""
+									},
+									{
+										value:new Date("2011"), text:""
+									},
+									{
+										value:new Date("2012"), text:""
+									},
+									{
+										value:new Date("2013"), text:""
+									},
+									{
+										value:new Date("2014"), text:""
+									}
+								]);
 
 								if (scrubberLocation > 0) {
 									var anchorNode = dom.byId("chart");
