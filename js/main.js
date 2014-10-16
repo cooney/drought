@@ -44,6 +44,7 @@ require([
 
 		var map,
 				countyLayer,
+				droughtOverlayUrl = "http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1",
 				droughtOverlayLayer,
 				countyLayerUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
 				identifyUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
@@ -54,16 +55,28 @@ require([
 				selectedFIPS,
 				chart,
 				monthNames = [ "January", "February", "March", "April", "May", "June",
-					"July", "August", "September", "October", "November", "December" ];
+					"July", "August", "September", "October", "November", "December" ],
+				lods = [
+					{
+						"level":4,
+						"resolution":9783.93962049996,
+						"scale":3.6978595474472E7
+					},
+					{
+						"level":5,
+						"resolution":4891.96981024998,
+						"scale":1.8489297737236E7
+					},
+					{
+						"level":6,
+						"resolution":2445.98490512499,
+						"scale":9244648.868618
+					}
+				];
 
 		init();
 
 		function init() {
-			droughtOverlayLayer = new FeatureLayer("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1", {
-				mode:FeatureLayer.MODE_SNAPSHOT,
-				outFields:["*"]
-			});
-
 			var radioCounty = new RadioButton({
 				checked:true,
 				value:"county",
@@ -76,15 +89,24 @@ require([
 				name:"level"
 			}, "radioState").startup();
 
-			var geocoder = new Geocoder({
-				map:map
-			}, "search");
-			geocoder.startup();
-
 			map = new Map("map", {
 				basemap:"gray",
 				center:[-96.767578, 39.655399],
-				zoom:5
+				zoom:0,
+				lods:lods
+			});
+
+			var geocoder = new Geocoder({
+				map:map,
+				arcgisGeocoder:{
+					placeholder:"Search"
+				}
+			}, "search");
+			geocoder.startup();
+
+			droughtOverlayLayer = new FeatureLayer(droughtOverlayUrl, {
+				mode:FeatureLayer.MODE_SNAPSHOT,
+				outFields:["*"]
 			});
 
 			countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
@@ -105,11 +127,11 @@ require([
 			identifyParams.height = map.height;
 
 			function mapLoadedHandler() {
-				
+
 			}
 
 			function doIdentify(event) {
-				selectedPoint = event.mapPoint
+				selectedPoint = event.mapPoint;
 				identifyParams.geometry = selectedPoint;
 				identifyParams.mapExtent = map.extent;
 				identifyTask.execute(identifyParams, function (results) {
@@ -132,15 +154,15 @@ require([
 
 							qt.execute(query, function (result) {
 								console.log(result.features);
-								var selectedCountyName = result.features[0].attributes["CountyCategories_name"];
-								var selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
-								var columnData = [];
-								var xAxis = ['x'];
-								var data0 = ['D0'];
-								var data1 = ['D1'];
-								var data2 = ['D2'];
-								var data3 = ['D3'];
-								var data4 = ['D4'];
+								var selectedCountyName = result.features[0].attributes["CountyCategories_name"],
+										selectedState = result.features[0].attributes["CountyCategories_stateAbb"],
+										columnData = [],
+										xAxis = ['x'],
+										data0 = ['D0'],
+										data1 = ['D1'],
+										data2 = ['D2'],
+										data3 = ['D3'],
+										data4 = ['D4'];
 								array.forEach(result.features, function (feature) {
 									var utcSeconds = feature.attributes["CountyCategories_Date"];
 									var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
@@ -187,7 +209,7 @@ require([
 											['data0', 'data1', 'data2', 'data3', 'data4']
 										],
 										onclick:function (d, element) {
-											console.log(d.x);
+											console.log(element["cx"].baseVal.value);
 											selectedDate = new Date(d.x);
 											var day = selectedDate.getDate();
 											var month = monthNames[selectedDate.getMonth()];
@@ -200,6 +222,30 @@ require([
 											var timeExtent = new TimeExtent(startDate, endDate);
 											droughtOverlayLayer.setTimeDefinition(timeExtent);
 											map.addLayer(droughtOverlayLayer);
+
+											domConstruct.destroy("scrubber");
+											var anchorNode = dom.byId("chart");
+											domConstruct.create("div", {
+												id:"scrubber",
+												style:{
+													"height":150 + "px",
+													"width":1 + "px",
+													"background-color":"rgb(60, 60, 60)",
+													"position":"absolute",
+													"z-index":"1000",
+													"left":element["cx"].baseVal.value + "px",
+													"top":0 + "px"
+												},
+												onmousedown:function (evt) {
+													console.log(evt);
+												},
+												onmouseup:function (evt) {
+													console.log(evt);
+												},
+												onmousemove:function (evt) {
+													console.log(evt);
+												}
+											}, anchorNode);
 										},
 										grid:{
 											x:{
@@ -239,12 +285,11 @@ require([
 												var month = monthNames[d.getMonth()];
 												var yr = d.getFullYear();
 												return month + " " + day + ", " + yr;
+											},
+											value:function (value, ratio, id) {
+												//var format = d3.format('%');
+												return value + "%";
 											}
-											/*,
-											 value: function(value, ratio, id) {
-											 //var format = d3.format('%');
-											 return format(value);
-											 }*/
 										}
 									},
 									legend:{

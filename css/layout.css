@@ -88,3 +88,11 @@ body {
 .simpleGeocoder .esriGeocoder {
 	background-color: #989898;
 }
+
+/*#scrubber {
+	height: 100px;
+	width:3px;
+	background-color: red;
+	position: absolute;
+	z-index: 1000;
+}*/
