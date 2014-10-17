@@ -62,82 +62,98 @@ require([
 					"July", "August", "September", "October", "November", "December" ],
 				lods = [
 					{
-						"level":4,
-						"resolution":9783.93962049996,
-						"scale":3.6978595474472E7
+						"level": 4,
+						"resolution": 9783.93962049996,
+						"scale": 3.6978595474472E7
 					},
 					{
-						"level":5,
-						"resolution":4891.96981024998,
-						"scale":1.8489297737236E7
+						"level": 5,
+						"resolution": 4891.96981024998,
+						"scale": 1.8489297737236E7
 					},
 					{
-						"level":6,
-						"resolution":2445.98490512499,
-						"scale":9244648.868618
+						"level": 6,
+						"resolution": 2445.98490512499,
+						"scale": 9244648.868618
 					}
-				];
+				],
+				deferred;
 
 		init();
 
 		function init() {
 			var radioCounty = new RadioButton({
-				checked:true,
-				value:"county",
-				name:"level"
+				checked: true,
+				value: "county",
+				name: "level"
 			}, "radioCounty").startup();
 
 			var radioState = new RadioButton({
-				checked:false,
-				value:"state",
-				name:"level"
+				checked: false,
+				value: "state",
+				name: "level"
 			}, "radioState").startup();
 
-			map = new Map("map", {
-				basemap:"topo",
-				center:[-96.767578, 39.655399],
-				zoom:5
+			/*map = new Map("map", {
+			 basemap:"topo",
+			 center:[-96.767578, 39.655399],
+			 zoom:5
+			 });*/
+
+			var createMapOptions = {
+				mapOptions: {
+					slider: true
+				},
+				usePopupManager: true
+
+			};
+			var webMapItemID = "20929a934fd24998ab0c1e4d770dff08";
+			deferred = arcgisUtils.createMap(webMapItemID, "map", createMapOptions);
+			deferred.then(function (response) {
+				console.log(response);
+				map = response.map;
+				var startDate = new Date("8/29/2014");
+				var endDate = new Date("9/12/2014");
+				var timeExtent = new TimeExtent(startDate, endDate);
+				map.setTimeExtent(timeExtent);
+
+				droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
+					mode: FeatureLayer.MODE_SNAPSHOT,
+					outFields: ["*"]
+				});
+
+				dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
+					mode: FeatureLayer.MODE_SNAPSHOT,
+					outFields: ["*"]
+				});
+
+				countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
+					useMapImage: true,
+					opacity: 0.0
+				});
+				map.addLayer(countyLayer);
+
+				map.on("click", doIdentify);
+				map.on("load", mapLoadedHandler);
+
+				loadGeococder(map);
+
+				identifyTask = new IdentifyTask(identifyUrl);
+				identifyParams = new IdentifyParameters();
+				identifyParams.tolerance = 3;
+				identifyParams.returnGeometry = true;
+				identifyParams.layerIds = [3];
+				identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
+				identifyParams.width = map.width;
+				identifyParams.height = map.height;
+			}, function (error) {
+				console.log("Error: ", error.code, " Message: ", error.message);
+				deferred.cancel();
 			});
 
-			//arcgisUtils.createMap("20929a934fd24998ab0c1e4d770dff08", "map").then(function (response) {
-			//map = response.map;
-			//var startDate = new Date("8/29/2014");
-			//var endDate = new Date("9/12/2014");
-			//var timeExtent = new TimeExtent(startDate, endDate);
-			//map.setTimeExtent(timeExtent);
-			//});
 			// Mon Aug 25 2014 17:00:00 GMT-0700 (PDT)
 			// 1409270400000,1409875200000
 
-			droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
-				mode:FeatureLayer.MODE_SNAPSHOT,
-				outFields:["*"]
-			});
-			dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
-				mode:FeatureLayer.MODE_SNAPSHOT,
-				outFields:["*"]
-			});
-
-			// county layer
-			countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
-				useMapImage:true,
-				opacity:0.0
-			});
-			map.addLayer(countyLayer);
-
-			map.on("click", doIdentify);
-			map.on("load", mapLoadedHandler);
-
-			loadGeococder(map);
-
-			identifyTask = new IdentifyTask(identifyUrl);
-			identifyParams = new IdentifyParameters();
-			identifyParams.tolerance = 3;
-			identifyParams.returnGeometry = true;
-			identifyParams.layerIds = [3];
-			identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
-			identifyParams.width = map.width;
-			identifyParams.height = map.height;
 
 			function mapLoadedHandler() {
 
@@ -193,33 +209,33 @@ require([
 								columnData.push(data4);
 
 								chart = c3.generate({
-									bindto:'#chart',
-									data:{
-										x:'x',
-										colors:{
-											D0:'rgb(255, 255, 0)',
-											D1:'rgb(241, 202, 141)',
-											D2:'rgb(255, 170, 0)',
-											D3:'rgb(255, 85, 0)',
-											D4:'rgb(168, 0, 0)'
+									bindto: '#chart',
+									data: {
+										x: 'x',
+										colors: {
+											D0: 'rgb(255, 255, 0)',
+											D1: 'rgb(241, 202, 141)',
+											D2: 'rgb(255, 170, 0)',
+											D3: 'rgb(255, 85, 0)',
+											D4: 'rgb(168, 0, 0)'
 										},
-										columns:columnData,
-										selection:{
-											enabled:true,
-											grouped:true,
-											multiple:false
+										columns: columnData,
+										selection: {
+											enabled: true,
+											grouped: true,
+											multiple: false
 										},
-										types:{
-											D0:'area-spline',
-											D1:'area-spline',
-											D2:'area-spline',
-											D3:'area-spline',
-											D4:'area-spline'
+										types: {
+											D0: 'area-spline',
+											D1: 'area-spline',
+											D2: 'area-spline',
+											D3: 'area-spline',
+											D4: 'area-spline'
 										},
-										groups:[
+										groups: [
 											['data0', 'data1', 'data2', 'data3', 'data4']
 										],
-										onclick:function (d, element) {
+										onclick: function (d, element) {
 											console.log(element["cx"].baseVal.value);
 											selectedDate = new Date(d.x);
 											var day = selectedDate.getDate();
@@ -240,179 +256,144 @@ require([
 											scrubberLocation = element["cx"].baseVal.value;
 											var anchorNode = dom.byId("chart");
 											domConstruct.create("div", {
-												id:"scrubber",
-												style:{
-													"height":150 + "px",
-													"width":2 + "px",
-													"background-color":"rgb(60, 60, 60)",
-													"position":"absolute",
-													"z-index":"1000",
-													"left":scrubberLocation + "px",
-													"top":0 + "px"
+												id: "scrubber",
+												style: {
+													"height": 150 + "px",
+													"width": 2 + "px",
+													"background-color": "rgb(60, 60, 60)",
+													"position": "absolute",
+													"z-index": "1000",
+													"left": scrubberLocation + "px",
+													"top": 0 + "px"
 												},
-												onmousedown:function (evt) {
+												onmousedown: function (evt) {
 													console.log(evt);
 												},
-												onmouseup:function (evt) {
+												onmouseup: function (evt) {
 													console.log(evt);
 												},
-												onmousemove:function (evt) {
+												onmousemove: function (evt) {
 													console.log(evt);
 												}
 											}, anchorNode);
 										},
-										names:{
-											D0:"Dry",
-											D1:"Moderate",
-											D2:"Severe",
-											D3:"Extreme",
-											D4:"Exceptional"
+										names: {
+											D0: "Dry",
+											D1: "Moderate",
+											D2: "Severe",
+											D3: "Extreme",
+											D4: "Exceptional"
 										}
 									},
-									size:{
-										height:150
+									size: {
+										height: 150
 									},
-									axis:{
-										x:{
-											type:"timeseries",
-											tick:{
-												count:15,
-												format:"%Y"
+									axis: {
+										x: {
+											type: "timeseries",
+											tick: {
+												count: 15,
+												format: "%Y"
 											}
 										},
-										y:{
-											show:false
+										y: {
+											show: false
 										}
 									},
-									tooltip:{
-										format:{
-											title:function (d) {
+									tooltip: {
+										format: {
+											title: function (d) {
 												var day = d.getDate();
 												var month = monthNames[d.getMonth()];
 												var yr = d.getFullYear();
 												return month + " " + day + ", " + yr;
 											},
-											value:function (value, ratio, id) {
+											value: function (value, ratio, id) {
 												return value + "%";
 											}
 										}
 									},
-									legend:{
-										show:false
+									legend: {
+										show: false
 									},
-									point:{
-										r:1,
-										show:true
+									point: {
+										r: 1,
+										show: true
 									}
 								});
 
 								chart.xgrids([
 									{
-										value:new Date("2000"), text:""
+										value: new Date("2000"), text: ""
 									},
 									{
-										value:new Date("2001"), text:""
+										value: new Date("2001"), text: ""
 									},
 									{
-										value:new Date("2002"), text:""
+										value: new Date("2002"), text: ""
 									},
 									{
-										value:new Date("2003"), text:""
+										value: new Date("2003"), text: ""
 									},
 									{
-										value:new Date("2004"), text:""
+										value: new Date("2004"), text: ""
 									},
 									{
-										value:new Date("2005"), text:""
+										value: new Date("2005"), text: ""
 									},
 									{
-										value:new Date("2006"), text:""
+										value: new Date("2006"), text: ""
 									},
 									{
-										value:new Date("2007"), text:""
+										value: new Date("2007"), text: ""
 									},
 									{
-										value:new Date("2008"), text:""
+										value: new Date("2008"), text: ""
 									},
 									{
-										value:new Date("2009"), text:""
+										value: new Date("2009"), text: ""
 									},
 									{
-										value:new Date("2010"), text:""
+										value: new Date("2010"), text: ""
 									},
 									{
-										value:new Date("2011"), text:""
+										value: new Date("2011"), text: ""
 									},
 									{
-										value:new Date("2012"), text:""
+										value: new Date("2012"), text: ""
 									},
 									{
-										value:new Date("2013"), text:""
+										value: new Date("2013"), text: ""
 									},
 									{
-										value:new Date("2014"), text:""
+										value: new Date("2014"), text: ""
 									}
 								]);
 
 								if (scrubberLocation > 0) {
 									var anchorNode = dom.byId("chart");
 									domConstruct.create("div", {
-										id:"scrubber",
-										style:{
-											"height":150 + "px",
-											"width":1 + "px",
-											"background-color":"rgb(60, 60, 60)",
-											"position":"absolute",
-											"z-index":"1000",
-											"left":scrubberLocation + "px",
-											"top":0 + "px"
+										id: "scrubber",
+										style: {
+											"height": 150 + "px",
+											"width": 1 + "px",
+											"background-color": "rgb(60, 60, 60)",
+											"position": "absolute",
+											"z-index": "1000",
+											"left": scrubberLocation + "px",
+											"top": 0 + "px"
 										},
-										onmousedown:function (evt) {
+										onmousedown: function (evt) {
 											console.log(evt);
 										},
-										onmouseup:function (evt) {
+										onmouseup: function (evt) {
 											console.log(evt);
 										},
-										onmousemove:function (evt) {
+										onmousemove: function (evt) {
 											console.log(evt);
 										}
 									}, anchorNode);
 								}
-								/*var x = c3.generate({
-								 bindto:'#pieChart',
-								 data:{
-								 colors:{
-								 Dry:'#FBF8C3',
-								 Moderate:'#FAD59E',
-								 Severe:'#F3B174',
-								 Extreme:'#E48275',
-								 Exceptional:'#D35560'
-								 },
-								 columns:[
-								 ["Dry", 21],
-								 ["Moderate", 0],
-								 ["Severe", 2],
-								 ["Extreme", 40],
-								 ["Exceptional", 20]
-								 ],
-								 type:'donut',
-								 onclick:function (d, i) {
-								 console.log("onclick", d, i);
-								 },
-								 onmouseover:function (d, i) {
-								 console.log("onmouseover", d, i);
-								 },
-								 onmouseout:function (d, i) {
-								 console.log("onmouseout", d, i);
-								 }
-								 },
-								 size:{
-								 width:200
-								 },
-								 legend:{
-								 show:false
-								 }
-								 });*/
 
 								dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 							});
@@ -436,13 +417,12 @@ require([
 
 		function loadGeococder(map) {
 			var geocoder = new Geocoder({
-				map:map,
-				arcgisGeocoder:{
-					placeholder:"Search"
+				map: map,
+				arcgisGeocoder: {
+					placeholder: "Search"
 				}
 			}, "search");
 			geocoder.startup();
 		}
 	});
-})
-;
+});
