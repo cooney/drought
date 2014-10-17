@@ -144,6 +144,14 @@ require([
 			}
 
 			function doIdentify(event) {
+				var startDate = new Date("8/26/2014 UTC");
+				var endDate = new Date("9/1/2014 UTC");
+				var timeExtent = new TimeExtent(startDate, endDate);
+				droughtIntensityLayer.setTimeDefinition(timeExtent);
+				dominantAreasOfImpactLayer.setTimeDefinition(timeExtent);
+				map.addLayer(droughtIntensityLayer);
+				map.addLayer(dominantAreasOfImpactLayer);
+
 				selectedPoint = event.mapPoint;
 				identifyParams.geometry = selectedPoint;
 				identifyParams.mapExtent = map.extent;
