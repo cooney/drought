@@ -76,11 +76,14 @@ require([
 						"resolution":2445.98490512499,
 						"scale":9244648.868618
 					}
-				];
+				],
+				loadingIndicatorNode;
 
 		init();
 
 		function init() {
+			loadingIndicatorNode = dom.byId("loadingIndicator");
+
 			var radioCounty = new RadioButton({
 				checked:true,
 				value:"county",
@@ -109,16 +112,67 @@ require([
 			// Mon Aug 25 2014 17:00:00 GMT-0700 (PDT)
 			// 1409270400000,1409875200000
 
+			/*var createMapOptions = {
+			 mapOptions:{
+			 slider:true
+			 },
+			 usePopupManager:true
+
+			 };
+			 var webMapItemID = "20929a934fd24998ab0c1e4d770dff08";
+			 deferred = arcgisUtils.createMap(webMapItemID, "map", createMapOptions);
+			 deferred.then(function (response) {
+			 console.log(response);
+			 map = response.map;
+			 var startDate = new Date("8/29/2014");
+			 var endDate = new Date("9/12/2014");
+			 var timeExtent = new TimeExtent(startDate, endDate);
+			 map.setTimeExtent(timeExtent);
+
+			 droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
+			 mode:FeatureLayer.MODE_SNAPSHOT,
+			 outFields:["*"]
+			 });
+
+			 dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
+			 mode:FeatureLayer.MODE_SNAPSHOT,
+			 outFields:["*"]
+			 });
+
+			 countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
+			 useMapImage:true,
+			 opacity:0.0
+			 });
+			 map.addLayer(countyLayer);
+
+			 map.on("click", doIdentify);
+			 map.on("load", mapLoadedHandler);
+
+			 loadGeococder(map);
+
+			 identifyTask = new IdentifyTask(identifyUrl);
+			 identifyParams = new IdentifyParameters();
+			 identifyParams.tolerance = 3;
+			 identifyParams.returnGeometry = true;
+			 identifyParams.layerIds = [3];
+			 identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
+			 identifyParams.width = map.width;
+			 identifyParams.height = map.height;
+			 }, function (error) {
+			 console.log("Error: ", error.code, " Message: ", error.message);
+			 deferred.cancel();
+			 });*/
+
 			droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
 				mode:FeatureLayer.MODE_SNAPSHOT,
 				outFields:["*"]
 			});
+
 			dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
 				mode:FeatureLayer.MODE_SNAPSHOT,
 				outFields:["*"]
 			});
 
-			// county layer
 			countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
 				useMapImage:true,
 				opacity:0.0
@@ -140,10 +194,12 @@ require([
 			identifyParams.height = map.height;
 
 			function mapLoadedHandler() {
-
+				console.log("map loaded");
+				domStyle.set(loadingIndicatorNode, "display", "none");
 			}
 
 			function doIdentify(event) {
+				domStyle.set(loadingIndicatorNode, "display", "block");
 				var startDate = new Date("8/26/2014 UTC");
 				var endDate = new Date("9/1/2014 UTC");
 				var timeExtent = new TimeExtent(startDate, endDate);
@@ -378,43 +434,11 @@ require([
 										}
 									}, anchorNode);
 								}
-								/*var x = c3.generate({
-								 bindto:'#pieChart',
-								 data:{
-								 colors:{
-								 Dry:'#FBF8C3',
-								 Moderate:'#FAD59E',
-								 Severe:'#F3B174',
-								 Extreme:'#E48275',
-								 Exceptional:'#D35560'
-								 },
-								 columns:[
-								 ["Dry", 21],
-								 ["Moderate", 0],
-								 ["Severe", 2],
-								 ["Extreme", 40],
-								 ["Exceptional", 20]
-								 ],
-								 type:'donut',
-								 onclick:function (d, i) {
-								 console.log("onclick", d, i);
-								 },
-								 onmouseover:function (d, i) {
-								 console.log("onmouseover", d, i);
-								 },
-								 onmouseout:function (d, i) {
-								 console.log("onmouseout", d, i);
-								 }
-								 },
-								 size:{
-								 width:200
-								 },
-								 legend:{
-								 show:false
-								 }
-								 });*/
 
 								dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
+							}).then(function(response) {
+								console.log(response);
+								domStyle.set(loadingIndicatorNode, "display", "none");
 							});
 						}
 
