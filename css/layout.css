@@ -92,6 +92,7 @@ body {
 }
 
 #loadingIndicator {
+	display: none;
 	position: absolute;
 	padding-top: 50px;
 	z-index: 1000;
