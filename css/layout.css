@@ -93,6 +93,7 @@ body {
 
 #loadingIndicator {
 	position: absolute;
+	padding-top: 50px;
 	z-index: 1000;
 	/* bottom: 80px; */
 	width: 100%;

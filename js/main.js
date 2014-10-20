@@ -120,10 +120,10 @@ require([
 				var timeExtent = new TimeExtent(startDate, endDate);
 				map.setTimeExtent(timeExtent);
 
-				droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
+				/*droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
 					mode: FeatureLayer.MODE_SNAPSHOT,
 					outFields: ["*"]
-				});
+				});*/
 
 				/*var createMapOptions = {
 				 mapOptions:{
@@ -176,21 +176,15 @@ require([
 				 deferred.cancel();
 				 });*/
 
+				/*dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
+					mode: FeatureLayer.MODE_SNAPSHOT,
+					outFields: ["*"]
+				});*/
+
 				droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
 					mode: FeatureLayer.MODE_SNAPSHOT,
 					outFields: ["*"]
 				});
-
-				dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
-					mode: FeatureLayer.MODE_SNAPSHOT,
-					outFields: ["*"]
-				});
-
-				countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
-					useMapImage: true,
-					opacity: 0.0
-				});
-				map.addLayer(countyLayer);
 
 				dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
 					mode: FeatureLayer.MODE_SNAPSHOT,
