@@ -97,12 +97,6 @@ require([
 				name: "level"
 			}, "radioState").startup();
 
-			/*map = new Map("map", {
-			 basemap:"topo",
-			 center:[-96.767578, 39.655399],
-			 zoom:5
-			 });*/
-
 			var createMapOptions = {
 				mapOptions: {
 					slider: true
@@ -120,73 +114,12 @@ require([
 				var timeExtent = new TimeExtent(startDate, endDate);
 				map.setTimeExtent(timeExtent);
 
-				/*droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
-					mode: FeatureLayer.MODE_SNAPSHOT,
-					outFields: ["*"]
-				});*/
-
-				/*var createMapOptions = {
-				 mapOptions:{
-				 slider:true
-				 },
-				 usePopupManager:true
-
-				 };
-				 var webMapItemID = "20929a934fd24998ab0c1e4d770dff08";
-				 deferred = arcgisUtils.createMap(webMapItemID, "map", createMapOptions);
-				 deferred.then(function (response) {
-				 console.log(response);
-				 map = response.map;
-				 var startDate = new Date("8/29/2014");
-				 var endDate = new Date("9/12/2014");
-				 var timeExtent = new TimeExtent(startDate, endDate);
-				 map.setTimeExtent(timeExtent);
-
-				 droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
-				 mode:FeatureLayer.MODE_SNAPSHOT,
-				 outFields:["*"]
-				 });
-
-				 dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
-				 mode:FeatureLayer.MODE_SNAPSHOT,
-				 outFields:["*"]
-				 });
-
-				 countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
-				 useMapImage:true,
-				 opacity:0.0
-				 });
-				 map.addLayer(countyLayer);
-
-				 map.on("click", doIdentify);
-				 map.on("load", mapLoadedHandler);
-
-				 loadGeococder(map);
-
-				 identifyTask = new IdentifyTask(identifyUrl);
-				 identifyParams = new IdentifyParameters();
-				 identifyParams.tolerance = 3;
-				 identifyParams.returnGeometry = true;
-				 identifyParams.layerIds = [3];
-				 identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
-				 identifyParams.width = map.width;
-				 identifyParams.height = map.height;
-				 }, function (error) {
-				 console.log("Error: ", error.code, " Message: ", error.message);
-				 deferred.cancel();
-				 });*/
-
-				/*dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
-					mode: FeatureLayer.MODE_SNAPSHOT,
-					outFields: ["*"]
-				});*/
-
-				droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
+				droughtIntensityLayer = new FeatureLayer(response.itemInfo.itemData.operationalLayers[0].url, {
 					mode: FeatureLayer.MODE_SNAPSHOT,
 					outFields: ["*"]
 				});
 
-				dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
+				dominantAreasOfImpactLayer = new FeatureLayer(response.itemInfo.itemData.operationalLayers[1].url, {
 					mode: FeatureLayer.MODE_SNAPSHOT,
 					outFields: ["*"]
 				});
@@ -313,10 +246,12 @@ require([
 											var startDate = new Date(d.x);
 											var endDate = new Date(d.x);
 											var timeExtent = new TimeExtent(startDate, endDate);
-											droughtIntensityLayer.setTimeDefinition(timeExtent);
-											dominantAreasOfImpactLayer.setTimeDefinition(timeExtent);
-											map.addLayer(droughtIntensityLayer);
-											map.addLayer(dominantAreasOfImpactLayer);
+											//droughtIntensityLayer.setTimeDefinition(timeExtent);
+											//dominantAreasOfImpactLayer.setTimeDefinition(timeExtent);
+											//map.addLayer(droughtIntensityLayer);
+											//map.addLayer(dominantAreasOfImpactLayer);
+
+											map.setTimeExtent(timeExtent);
 
 											domConstruct.destroy("scrubber");
 											scrubberLocation = element["cx"].baseVal.value;
