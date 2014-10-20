@@ -77,11 +77,8 @@ require([
 						"scale": 9244648.868618
 					}
 				],
-<<<<<<< HEAD
-				deferred;
-=======
+				deferred,
 				loadingIndicatorNode;
->>>>>>> aaacaf8dcfd33c9b5265bf3279ad30d6027c5a24
 
 		init();
 
@@ -111,9 +108,8 @@ require([
 					slider: true
 				},
 				usePopupManager: true
-
-<<<<<<< HEAD
 			};
+
 			var webMapItemID = "20929a934fd24998ab0c1e4d770dff08";
 			deferred = arcgisUtils.createMap(webMapItemID, "map", createMapOptions);
 			deferred.then(function (response) {
@@ -128,74 +124,73 @@ require([
 					mode: FeatureLayer.MODE_SNAPSHOT,
 					outFields: ["*"]
 				});
-=======
-			/*var createMapOptions = {
-			 mapOptions:{
-			 slider:true
-			 },
-			 usePopupManager:true
 
-			 };
-			 var webMapItemID = "20929a934fd24998ab0c1e4d770dff08";
-			 deferred = arcgisUtils.createMap(webMapItemID, "map", createMapOptions);
-			 deferred.then(function (response) {
-			 console.log(response);
-			 map = response.map;
-			 var startDate = new Date("8/29/2014");
-			 var endDate = new Date("9/12/2014");
-			 var timeExtent = new TimeExtent(startDate, endDate);
-			 map.setTimeExtent(timeExtent);
+				/*var createMapOptions = {
+				 mapOptions:{
+				 slider:true
+				 },
+				 usePopupManager:true
 
-			 droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
-			 mode:FeatureLayer.MODE_SNAPSHOT,
-			 outFields:["*"]
-			 });
+				 };
+				 var webMapItemID = "20929a934fd24998ab0c1e4d770dff08";
+				 deferred = arcgisUtils.createMap(webMapItemID, "map", createMapOptions);
+				 deferred.then(function (response) {
+				 console.log(response);
+				 map = response.map;
+				 var startDate = new Date("8/29/2014");
+				 var endDate = new Date("9/12/2014");
+				 var timeExtent = new TimeExtent(startDate, endDate);
+				 map.setTimeExtent(timeExtent);
 
-			 dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
-			 mode:FeatureLayer.MODE_SNAPSHOT,
-			 outFields:["*"]
-			 });
+				 droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
+				 mode:FeatureLayer.MODE_SNAPSHOT,
+				 outFields:["*"]
+				 });
 
-			 countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
-			 useMapImage:true,
-			 opacity:0.0
-			 });
-			 map.addLayer(countyLayer);
+				 dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
+				 mode:FeatureLayer.MODE_SNAPSHOT,
+				 outFields:["*"]
+				 });
 
-			 map.on("click", doIdentify);
-			 map.on("load", mapLoadedHandler);
+				 countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
+				 useMapImage:true,
+				 opacity:0.0
+				 });
+				 map.addLayer(countyLayer);
 
-			 loadGeococder(map);
+				 map.on("click", doIdentify);
+				 map.on("load", mapLoadedHandler);
 
-			 identifyTask = new IdentifyTask(identifyUrl);
-			 identifyParams = new IdentifyParameters();
-			 identifyParams.tolerance = 3;
-			 identifyParams.returnGeometry = true;
-			 identifyParams.layerIds = [3];
-			 identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
-			 identifyParams.width = map.width;
-			 identifyParams.height = map.height;
-			 }, function (error) {
-			 console.log("Error: ", error.code, " Message: ", error.message);
-			 deferred.cancel();
-			 });*/
+				 loadGeococder(map);
 
-			droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
-				mode:FeatureLayer.MODE_SNAPSHOT,
-				outFields:["*"]
-			});
+				 identifyTask = new IdentifyTask(identifyUrl);
+				 identifyParams = new IdentifyParameters();
+				 identifyParams.tolerance = 3;
+				 identifyParams.returnGeometry = true;
+				 identifyParams.layerIds = [3];
+				 identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
+				 identifyParams.width = map.width;
+				 identifyParams.height = map.height;
+				 }, function (error) {
+				 console.log("Error: ", error.code, " Message: ", error.message);
+				 deferred.cancel();
+				 });*/
 
-			dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
-				mode:FeatureLayer.MODE_SNAPSHOT,
-				outFields:["*"]
-			});
+				droughtIntensityLayer = new FeatureLayer(droughtIntensityUrl, {
+					mode: FeatureLayer.MODE_SNAPSHOT,
+					outFields: ["*"]
+				});
 
-			countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
-				useMapImage:true,
-				opacity:0.0
-			});
-			map.addLayer(countyLayer);
->>>>>>> aaacaf8dcfd33c9b5265bf3279ad30d6027c5a24
+				dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
+					mode: FeatureLayer.MODE_SNAPSHOT,
+					outFields: ["*"]
+				});
+
+				countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
+					useMapImage: true,
+					opacity: 0.0
+				});
+				map.addLayer(countyLayer);
 
 				dominantAreasOfImpactLayer = new FeatureLayer(dominantAreasOfImpactUrl, {
 					mode: FeatureLayer.MODE_SNAPSHOT,
@@ -258,7 +253,7 @@ require([
 
 							addHighlightGraphic(map, results[0].feature.geometry);
 
-							qt.execute(query, function (result) {
+							qt.execute(query,function (result) {
 								var selectedCountyName = result.features[0].attributes["CountyCategories_name"],
 										selectedState = result.features[0].attributes["CountyCategories_stateAbb"],
 										columnData = [],
@@ -473,10 +468,10 @@ require([
 								}
 
 								dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
-							}).then(function(response) {
-								console.log(response);
-								domStyle.set(loadingIndicatorNode, "display", "none");
-							});
+							}).then(function (response) {
+										console.log(response);
+										domStyle.set(loadingIndicatorNode, "display", "none");
+									});
 						}
 
 				);
