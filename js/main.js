@@ -65,7 +65,8 @@ require([
 					"July", "August", "September", "October", "November", "December" ],
 				deferred,
 				loadingIndicatorNode,
-				columnData = [];
+				columnData = [],
+				currentData;
 
 		init();
 
@@ -148,193 +149,203 @@ require([
 			function layerAddHandler(layer) {
 				$("#draggable2").draggable({
 					axis:"x",
-					containment:"#chart",
-					scroll:false
+					containment:"#containment-wrapper",
+					scroll:false,
+					start:function () {
+						console.log("START");
+					},
+					drag:function () {
+						console.log("DRAGGING");
+					},
+					stop:function (e) {
+						console.log("STOP", e);
+						console.log(currentData);
+					}
 				});
 				console.log("layer added");
 				/*selectedCountyName = "";
-				selectedState = "";
-				xAxis = ['x'];
-				data0 = ['D0'];
-				data1 = ['D1'];
-				data2 = ['D2'];
-				data3 = ['D3'];
-				data4 = ['D4'];
-				array.forEach(result.features, function (feature) {
-					var utcSeconds = feature.attributes["CountyCategories_Date"];
-					var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
-					xAxis.push(d);
-					data0.push(feature.attributes["CountyCategories_D0"]);
-					data1.push(feature.attributes["CountyCategories_D1"]);
-					data2.push(feature.attributes["CountyCategories_D2"]);
-					data3.push(feature.attributes["CountyCategories_D3"]);
-					data4.push(feature.attributes["CountyCategories_D4"]);
-				});
-				columnData.push(xAxis);
-				columnData.push(data0);
-				columnData.push(data1);
-				columnData.push(data2);
-				columnData.push(data3);
-				columnData.push(data4);/*
+				 selectedState = "";
+				 xAxis = ['x'];
+				 data0 = ['D0'];
+				 data1 = ['D1'];
+				 data2 = ['D2'];
+				 data3 = ['D3'];
+				 data4 = ['D4'];
+				 array.forEach(result.features, function (feature) {
+				 var utcSeconds = feature.attributes["CountyCategories_Date"];
+				 var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
+				 xAxis.push(d);
+				 data0.push(feature.attributes["CountyCategories_D0"]);
+				 data1.push(feature.attributes["CountyCategories_D1"]);
+				 data2.push(feature.attributes["CountyCategories_D2"]);
+				 data3.push(feature.attributes["CountyCategories_D3"]);
+				 data4.push(feature.attributes["CountyCategories_D4"]);
+				 });
+				 columnData.push(xAxis);
+				 columnData.push(data0);
+				 columnData.push(data1);
+				 columnData.push(data2);
+				 columnData.push(data3);
+				 columnData.push(data4);/*
 
-				/*chart = c3.generate({
-					bindto:'#chart',
-					data:{
-						x:'x',
-						colors:{
-							D0:'rgb(255, 255, 0)',
-							D1:'rgb(241, 202, 141)',
-							D2:'rgb(255, 170, 0)',
-							D3:'rgb(255, 85, 0)',
-							D4:'rgb(168, 0, 0)'
-						},
-						columns:columnData,
-						selection:{
-							enabled:true,
-							grouped:true,
-							multiple:false
-						},
-						types:{
-							D0:'area-spline',
-							D1:'area-spline',
-							D2:'area-spline',
-							D3:'area-spline',
-							D4:'area-spline'
-						},
-						groups:[
-							['data0', 'data1', 'data2', 'data3', 'data4']
-						],
-						/*onclick:function (d, element) {
-							console.log(element["cx"].baseVal.value);
-							selectedDate = new Date(d.x);
-							var day = selectedDate.getDate();
-							var month = monthNames[selectedDate.getMonth()];
-							var yr = selectedDate.getFullYear();
+				 /*chart = c3.generate({
+				 bindto:'#chart',
+				 data:{
+				 x:'x',
+				 colors:{
+				 D0:'rgb(255, 255, 0)',
+				 D1:'rgb(241, 202, 141)',
+				 D2:'rgb(255, 170, 0)',
+				 D3:'rgb(255, 85, 0)',
+				 D4:'rgb(168, 0, 0)'
+				 },
+				 columns:columnData,
+				 selection:{
+				 enabled:true,
+				 grouped:true,
+				 multiple:false
+				 },
+				 types:{
+				 D0:'area-spline',
+				 D1:'area-spline',
+				 D2:'area-spline',
+				 D3:'area-spline',
+				 D4:'area-spline'
+				 },
+				 groups:[
+				 ['data0', 'data1', 'data2', 'data3', 'data4']
+				 ],
+				 /*onclick:function (d, element) {
+				 console.log(element["cx"].baseVal.value);
+				 selectedDate = new Date(d.x);
+				 var day = selectedDate.getDate();
+				 var month = monthNames[selectedDate.getMonth()];
+				 var yr = selectedDate.getFullYear();
 
-							dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
-							console.log(d);
-							var startDate = new Date(d.x);
-							var endDate = new Date(d.x);
-							var timeExtent = new TimeExtent(startDate, endDate);
+				 dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
+				 console.log(d);
+				 var startDate = new Date(d.x);
+				 var endDate = new Date(d.x);
+				 var timeExtent = new TimeExtent(startDate, endDate);
 
-							map.setTimeExtent(timeExtent);
+				 map.setTimeExtent(timeExtent);
 
-							domConstruct.destroy("scrubber");
-							scrubberLocation = element["cx"].baseVal.value;
-							var anchorNode = dom.byId("chart");
-							domConstruct.create("div", {
-								id:"scrubber",
-								style:{
-									"height":150 + "px",
-									"width":2 + "px",
-									"background-color":"rgb(60, 60, 60)",
-									"position":"absolute",
-									"z-index":"1000",
-									"left":scrubberLocation + "px",
-									"top":0 + "px"
-								},
-								onmousedown:function (evt) {
-									console.log(evt);
-								},
-								onmouseup:function (evt) {
-									console.log(evt);
-								},
-								onmousemove:function (evt) {
-									console.log(evt);
-								}
-							}, anchorNode);
-						},*/
+				 domConstruct.destroy("scrubber");
+				 scrubberLocation = element["cx"].baseVal.value;
+				 var anchorNode = dom.byId("chart");
+				 domConstruct.create("div", {
+				 id:"scrubber",
+				 style:{
+				 "height":150 + "px",
+				 "width":2 + "px",
+				 "background-color":"rgb(60, 60, 60)",
+				 "position":"absolute",
+				 "z-index":"1000",
+				 "left":scrubberLocation + "px",
+				 "top":0 + "px"
+				 },
+				 onmousedown:function (evt) {
+				 console.log(evt);
+				 },
+				 onmouseup:function (evt) {
+				 console.log(evt);
+				 },
+				 onmousemove:function (evt) {
+				 console.log(evt);
+				 }
+				 }, anchorNode);
+				 },*/
 				/*names:{
-							D0:"Dry",
-							D1:"Moderate",
-							D2:"Severe",
-							D3:"Extreme",
-							D4:"Exceptional"
-						}
-					},
-					size:{
-						height:150
-					},
-					axis:{
-						x:{
-							type:"timeseries",
-							tick:{
-								count:15,
-								format:"%Y"
-							}
-						},
-						y:{
-							show:false
-						}
-					},
-					tooltip:{
-						format:{
-							title:function (d) {
-								var day = d.getDate();
-								var month = monthNames[d.getMonth()];
-								var yr = d.getFullYear();
-								return month + " " + day + ", " + yr;
-							},
-							value:function (value, ratio, id) {
-								return value + "%";
-							}
-						}
-					},
-					legend:{
-						show:false
-					},
-					point:{
-						r:1,
-						show:true
-					}
-				});
-				chart.xgrids([
-					{
-						value:new Date("2000"), text:""
-					},
-					{
-						value:new Date("2001"), text:""
-					},
-					{
-						value:new Date("2002"), text:""
-					},
-					{
-						value:new Date("2003"), text:""
-					},
-					{
-						value:new Date("2004"), text:""
-					},
-					{
-						value:new Date("2005"), text:""
-					},
-					{
-						value:new Date("2006"), text:""
-					},
-					{
-						value:new Date("2007"), text:""
-					},
-					{
-						value:new Date("2008"), text:""
-					},
-					{
-						value:new Date("2009"), text:""
-					},
-					{
-						value:new Date("2010"), text:""
-					},
-					{
-						value:new Date("2011"), text:""
-					},
-					{
-						value:new Date("2012"), text:""
-					},
-					{
-						value:new Date("2013"), text:""
-					},
-					{
-						value:new Date("2014"), text:""
-					}
-				]);*/
+				 D0:"Dry",
+				 D1:"Moderate",
+				 D2:"Severe",
+				 D3:"Extreme",
+				 D4:"Exceptional"
+				 }
+				 },
+				 size:{
+				 height:150
+				 },
+				 axis:{
+				 x:{
+				 type:"timeseries",
+				 tick:{
+				 count:15,
+				 format:"%Y"
+				 }
+				 },
+				 y:{
+				 show:false
+				 }
+				 },
+				 tooltip:{
+				 format:{
+				 title:function (d) {
+				 var day = d.getDate();
+				 var month = monthNames[d.getMonth()];
+				 var yr = d.getFullYear();
+				 return month + " " + day + ", " + yr;
+				 },
+				 value:function (value, ratio, id) {
+				 return value + "%";
+				 }
+				 }
+				 },
+				 legend:{
+				 show:false
+				 },
+				 point:{
+				 r:1,
+				 show:true
+				 }
+				 });
+				 chart.xgrids([
+				 {
+				 value:new Date("2000"), text:""
+				 },
+				 {
+				 value:new Date("2001"), text:""
+				 },
+				 {
+				 value:new Date("2002"), text:""
+				 },
+				 {
+				 value:new Date("2003"), text:""
+				 },
+				 {
+				 value:new Date("2004"), text:""
+				 },
+				 {
+				 value:new Date("2005"), text:""
+				 },
+				 {
+				 value:new Date("2006"), text:""
+				 },
+				 {
+				 value:new Date("2007"), text:""
+				 },
+				 {
+				 value:new Date("2008"), text:""
+				 },
+				 {
+				 value:new Date("2009"), text:""
+				 },
+				 {
+				 value:new Date("2010"), text:""
+				 },
+				 {
+				 value:new Date("2011"), text:""
+				 },
+				 {
+				 value:new Date("2012"), text:""
+				 },
+				 {
+				 value:new Date("2013"), text:""
+				 },
+				 {
+				 value:new Date("2014"), text:""
+				 }
+				 ]);*/
 			}
 
 			function doIdentify(event) {
@@ -406,6 +417,7 @@ require([
 											['data0', 'data1', 'data2', 'data3', 'data4']
 										],
 										onclick:function (d, element) {
+											console.log(element);
 											console.log(element["cx"].baseVal.value);
 											selectedDate = new Date(d.x);
 											var day = selectedDate.getDate();
@@ -444,6 +456,9 @@ require([
 													console.log(evt);
 												}
 											}, anchorNode);
+										},
+										onmouseover:function (d) {
+											currentData = d;
 										},
 										names:{
 											D0:"Dry",
