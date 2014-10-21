@@ -146,6 +146,11 @@ require([
 			}
 
 			function layerAddHandler(layer) {
+				$("#draggable2").draggable({
+					axis:"x",
+					containment:"#chart",
+					scroll:false
+				});
 				console.log("layer added");
 				/*selectedCountyName = "";
 				selectedState = "";
@@ -239,7 +244,7 @@ require([
 								}
 							}, anchorNode);
 						},*/
-						/*names:{
+				/*names:{
 							D0:"Dry",
 							D1:"Moderate",
 							D2:"Severe",
