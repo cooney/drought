@@ -58,6 +58,26 @@
 			margin-right: 10px;
 		}
 
+		#no-results {
+			width: 100%;
+			height: 99%;
+			position: absolute;
+			background-color: #444444;
+			color: #d4d4d4;
+			opacity: 0.85;
+			/* margin-left: 10px; */
+			/* margin-right: 10px; */
+			display: none;
+			z-index: 1000;
+		}
+
+		#no-results-text {
+			font-size: 2.7em;
+			text-align: center;
+			margin-top: 30px;
+			border-radius: 4px;
+		}
+
 		h3 {
 			clear: left;
 		}
@@ -109,6 +129,11 @@
 					<div id="scrubberThumb"></div>
 				</div>
 			</div>
+
+			<div id="no-results">
+				<div id="no-results-text">No Results</div>
+			</div>
+
 			<div id="chart"></div>
 		</div>
 	</div>
