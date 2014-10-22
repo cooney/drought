@@ -149,7 +149,7 @@ require([
 			function layerAddHandler(layer) {
 				$("#draggable2").draggable({
 					axis: "x",
-					containment: "#containment-wrapper",
+					containment: "#chart",
 					scroll: false,
 					start: function () {
 						console.log("START");
@@ -244,7 +244,7 @@ require([
 										groups: [
 											['data0', 'data1', 'data2', 'data3', 'data4']
 										],
-										onclick: function (d, element) {
+										/*onclick: function (d, element) {
 											console.log(element);
 											console.log(element["cx"].baseVal.value);
 											selectedDate = new Date(d.x);
@@ -284,7 +284,7 @@ require([
 													console.log(evt);
 												}
 											}, anchorNode);
-										},
+										},*/
 										onmouseover: function (d) {
 											currentData = d;
 										},
