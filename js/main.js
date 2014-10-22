@@ -75,22 +75,22 @@ require([
 			//domStyle.set("loadingIndicator", "display", "none");
 
 			var radioCounty = new RadioButton({
-				checked:true,
-				value:"county",
-				name:"level"
+				checked: true,
+				value: "county",
+				name: "level"
 			}, "radioCounty").startup();
 
 			var radioState = new RadioButton({
-				checked:false,
-				value:"state",
-				name:"level"
+				checked: false,
+				value: "state",
+				name: "level"
 			}, "radioState").startup();
 
 			var createMapOptions = {
-				mapOptions:{
-					slider:true
+				mapOptions: {
+					slider: true
 				},
-				usePopupManager:true
+				usePopupManager: true
 			};
 
 			var webMapItemID = "20929a934fd24998ab0c1e4d770dff08";
@@ -104,18 +104,18 @@ require([
 				map.setTimeExtent(timeExtent);
 
 				droughtIntensityLayer = new FeatureLayer(response.itemInfo.itemData.operationalLayers[0].url, {
-					mode:FeatureLayer.MODE_SNAPSHOT,
-					outFields:["*"]
+					mode: FeatureLayer.MODE_SNAPSHOT,
+					outFields: ["*"]
 				});
 
 				dominantAreasOfImpactLayer = new FeatureLayer(response.itemInfo.itemData.operationalLayers[1].url, {
-					mode:FeatureLayer.MODE_SNAPSHOT,
-					outFields:["*"]
+					mode: FeatureLayer.MODE_SNAPSHOT,
+					outFields: ["*"]
 				});
 
 				countyLayer = new ArcGISDynamicMapServiceLayer(countyLayerUrl, {
-					useMapImage:true,
-					opacity:0.0
+					useMapImage: true,
+					opacity: 0.0
 				});
 				map.addLayer(countyLayer);
 
@@ -148,204 +148,32 @@ require([
 
 			function layerAddHandler(layer) {
 				$("#draggable2").draggable({
-					axis:"x",
-					containment:"#containment-wrapper",
-					scroll:false,
-					start:function () {
+					axis: "x",
+					containment: "#containment-wrapper",
+					scroll: false,
+					start: function () {
 						console.log("START");
 					},
-					drag:function () {
+					drag: function () {
 						console.log("DRAGGING");
 					},
-					stop:function (e) {
+					stop: function (e) {
 						console.log("STOP", e);
 						console.log(currentData);
+						selectedDate = new Date(currentData.x);
+						var day = selectedDate.getDate();
+						var month = monthNames[selectedDate.getMonth()];
+						var yr = selectedDate.getFullYear();
+
+						dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
+						var startDate = new Date(currentData.x);
+						var endDate = new Date(currentData.x);
+						var timeExtent = new TimeExtent(startDate, endDate);
+
+						map.setTimeExtent(timeExtent);
 					}
 				});
 				console.log("layer added");
-				/*selectedCountyName = "";
-				 selectedState = "";
-				 xAxis = ['x'];
-				 data0 = ['D0'];
-				 data1 = ['D1'];
-				 data2 = ['D2'];
-				 data3 = ['D3'];
-				 data4 = ['D4'];
-				 array.forEach(result.features, function (feature) {
-				 var utcSeconds = feature.attributes["CountyCategories_Date"];
-				 var d = new Date(parseFloat(utcSeconds)); // The 0 there is the key, which sets the date to the epoch
-				 xAxis.push(d);
-				 data0.push(feature.attributes["CountyCategories_D0"]);
-				 data1.push(feature.attributes["CountyCategories_D1"]);
-				 data2.push(feature.attributes["CountyCategories_D2"]);
-				 data3.push(feature.attributes["CountyCategories_D3"]);
-				 data4.push(feature.attributes["CountyCategories_D4"]);
-				 });
-				 columnData.push(xAxis);
-				 columnData.push(data0);
-				 columnData.push(data1);
-				 columnData.push(data2);
-				 columnData.push(data3);
-				 columnData.push(data4);/*
-
-				 /*chart = c3.generate({
-				 bindto:'#chart',
-				 data:{
-				 x:'x',
-				 colors:{
-				 D0:'rgb(255, 255, 0)',
-				 D1:'rgb(241, 202, 141)',
-				 D2:'rgb(255, 170, 0)',
-				 D3:'rgb(255, 85, 0)',
-				 D4:'rgb(168, 0, 0)'
-				 },
-				 columns:columnData,
-				 selection:{
-				 enabled:true,
-				 grouped:true,
-				 multiple:false
-				 },
-				 types:{
-				 D0:'area-spline',
-				 D1:'area-spline',
-				 D2:'area-spline',
-				 D3:'area-spline',
-				 D4:'area-spline'
-				 },
-				 groups:[
-				 ['data0', 'data1', 'data2', 'data3', 'data4']
-				 ],
-				 /*onclick:function (d, element) {
-				 console.log(element["cx"].baseVal.value);
-				 selectedDate = new Date(d.x);
-				 var day = selectedDate.getDate();
-				 var month = monthNames[selectedDate.getMonth()];
-				 var yr = selectedDate.getFullYear();
-
-				 dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
-				 console.log(d);
-				 var startDate = new Date(d.x);
-				 var endDate = new Date(d.x);
-				 var timeExtent = new TimeExtent(startDate, endDate);
-
-				 map.setTimeExtent(timeExtent);
-
-				 domConstruct.destroy("scrubber");
-				 scrubberLocation = element["cx"].baseVal.value;
-				 var anchorNode = dom.byId("chart");
-				 domConstruct.create("div", {
-				 id:"scrubber",
-				 style:{
-				 "height":150 + "px",
-				 "width":2 + "px",
-				 "background-color":"rgb(60, 60, 60)",
-				 "position":"absolute",
-				 "z-index":"1000",
-				 "left":scrubberLocation + "px",
-				 "top":0 + "px"
-				 },
-				 onmousedown:function (evt) {
-				 console.log(evt);
-				 },
-				 onmouseup:function (evt) {
-				 console.log(evt);
-				 },
-				 onmousemove:function (evt) {
-				 console.log(evt);
-				 }
-				 }, anchorNode);
-				 },*/
-				/*names:{
-				 D0:"Dry",
-				 D1:"Moderate",
-				 D2:"Severe",
-				 D3:"Extreme",
-				 D4:"Exceptional"
-				 }
-				 },
-				 size:{
-				 height:150
-				 },
-				 axis:{
-				 x:{
-				 type:"timeseries",
-				 tick:{
-				 count:15,
-				 format:"%Y"
-				 }
-				 },
-				 y:{
-				 show:false
-				 }
-				 },
-				 tooltip:{
-				 format:{
-				 title:function (d) {
-				 var day = d.getDate();
-				 var month = monthNames[d.getMonth()];
-				 var yr = d.getFullYear();
-				 return month + " " + day + ", " + yr;
-				 },
-				 value:function (value, ratio, id) {
-				 return value + "%";
-				 }
-				 }
-				 },
-				 legend:{
-				 show:false
-				 },
-				 point:{
-				 r:1,
-				 show:true
-				 }
-				 });
-				 chart.xgrids([
-				 {
-				 value:new Date("2000"), text:""
-				 },
-				 {
-				 value:new Date("2001"), text:""
-				 },
-				 {
-				 value:new Date("2002"), text:""
-				 },
-				 {
-				 value:new Date("2003"), text:""
-				 },
-				 {
-				 value:new Date("2004"), text:""
-				 },
-				 {
-				 value:new Date("2005"), text:""
-				 },
-				 {
-				 value:new Date("2006"), text:""
-				 },
-				 {
-				 value:new Date("2007"), text:""
-				 },
-				 {
-				 value:new Date("2008"), text:""
-				 },
-				 {
-				 value:new Date("2009"), text:""
-				 },
-				 {
-				 value:new Date("2010"), text:""
-				 },
-				 {
-				 value:new Date("2011"), text:""
-				 },
-				 {
-				 value:new Date("2012"), text:""
-				 },
-				 {
-				 value:new Date("2013"), text:""
-				 },
-				 {
-				 value:new Date("2014"), text:""
-				 }
-				 ]);*/
 			}
 
 			function doIdentify(event) {
@@ -390,33 +218,33 @@ require([
 								columnData.push(data4);
 
 								chart = c3.generate({
-									bindto:'#chart',
-									data:{
-										x:'x',
-										colors:{
-											D0:'rgb(255, 255, 0)',
-											D1:'rgb(241, 202, 141)',
-											D2:'rgb(255, 170, 0)',
-											D3:'rgb(255, 85, 0)',
-											D4:'rgb(168, 0, 0)'
+									bindto: '#chart',
+									data: {
+										x: 'x',
+										colors: {
+											D0: 'rgb(255, 255, 0)',
+											D1: 'rgb(241, 202, 141)',
+											D2: 'rgb(255, 170, 0)',
+											D3: 'rgb(255, 85, 0)',
+											D4: 'rgb(168, 0, 0)'
 										},
-										columns:columnData,
-										selection:{
-											enabled:true,
-											grouped:true,
-											multiple:false
+										columns: columnData,
+										selection: {
+											enabled: true,
+											grouped: true,
+											multiple: false
 										},
-										types:{
-											D0:'area-spline',
-											D1:'area-spline',
-											D2:'area-spline',
-											D3:'area-spline',
-											D4:'area-spline'
+										types: {
+											D0: 'area-spline',
+											D1: 'area-spline',
+											D2: 'area-spline',
+											D3: 'area-spline',
+											D4: 'area-spline'
 										},
-										groups:[
+										groups: [
 											['data0', 'data1', 'data2', 'data3', 'data4']
 										],
-										onclick:function (d, element) {
+										onclick: function (d, element) {
 											console.log(element);
 											console.log(element["cx"].baseVal.value);
 											selectedDate = new Date(d.x);
@@ -436,143 +264,143 @@ require([
 											scrubberLocation = element["cx"].baseVal.value;
 											var anchorNode = dom.byId("chart");
 											domConstruct.create("div", {
-												id:"scrubber",
-												style:{
-													"height":120 + "px",
-													"width":3 + "px",
-													"background-color":"rgb(60, 60, 60)",
-													"position":"absolute",
-													"z-index":"1000",
-													"left":scrubberLocation + "px",
-													"top":0 + "px"
+												id: "scrubber",
+												style: {
+													"height": 120 + "px",
+													"width": 3 + "px",
+													"background-color": "rgb(60, 60, 60)",
+													"position": "absolute",
+													"z-index": "1000",
+													"left": scrubberLocation + "px",
+													"top": 0 + "px"
 												},
-												onmousedown:function (evt) {
+												onmousedown: function (evt) {
 													console.log(evt);
 												},
-												onmouseup:function (evt) {
+												onmouseup: function (evt) {
 													console.log(evt);
 												},
-												onmousemove:function (evt) {
+												onmousemove: function (evt) {
 													console.log(evt);
 												}
 											}, anchorNode);
 										},
-										onmouseover:function (d) {
+										onmouseover: function (d) {
 											currentData = d;
 										},
-										names:{
-											D0:"Dry",
-											D1:"Moderate",
-											D2:"Severe",
-											D3:"Extreme",
-											D4:"Exceptional"
+										names: {
+											D0: "Dry",
+											D1: "Moderate",
+											D2: "Severe",
+											D3: "Extreme",
+											D4: "Exceptional"
 										}
 									},
-									size:{
-										height:150
+									size: {
+										height: 150
 									},
-									axis:{
-										x:{
-											type:"timeseries",
-											tick:{
-												count:15,
-												format:"%Y"
+									axis: {
+										x: {
+											type: "timeseries",
+											tick: {
+												count: 15,
+												format: "%Y"
 											}
 										},
-										y:{
-											show:false
+										y: {
+											show: false
 										}
 									},
-									tooltip:{
-										format:{
-											title:function (d) {
+									tooltip: {
+										format: {
+											title: function (d) {
 												var day = d.getDate();
 												var month = monthNames[d.getMonth()];
 												var yr = d.getFullYear();
 												return month + " " + day + ", " + yr;
 											},
-											value:function (value, ratio, id) {
+											value: function (value, ratio, id) {
 												return value + "%";
 											}
 										}
 									},
-									legend:{
-										show:false
+									legend: {
+										show: false
 									},
-									point:{
-										r:1,
-										show:true
+									point: {
+										r: 1,
+										show: true
 									}
 								});
 
 								chart.xgrids([
 									{
-										value:new Date("2000"), text:""
+										value: new Date("2000"), text: ""
 									},
 									{
-										value:new Date("2001"), text:""
+										value: new Date("2001"), text: ""
 									},
 									{
-										value:new Date("2002"), text:""
+										value: new Date("2002"), text: ""
 									},
 									{
-										value:new Date("2003"), text:""
+										value: new Date("2003"), text: ""
 									},
 									{
-										value:new Date("2004"), text:""
+										value: new Date("2004"), text: ""
 									},
 									{
-										value:new Date("2005"), text:""
+										value: new Date("2005"), text: ""
 									},
 									{
-										value:new Date("2006"), text:""
+										value: new Date("2006"), text: ""
 									},
 									{
-										value:new Date("2007"), text:""
+										value: new Date("2007"), text: ""
 									},
 									{
-										value:new Date("2008"), text:""
+										value: new Date("2008"), text: ""
 									},
 									{
-										value:new Date("2009"), text:""
+										value: new Date("2009"), text: ""
 									},
 									{
-										value:new Date("2010"), text:""
+										value: new Date("2010"), text: ""
 									},
 									{
-										value:new Date("2011"), text:""
+										value: new Date("2011"), text: ""
 									},
 									{
-										value:new Date("2012"), text:""
+										value: new Date("2012"), text: ""
 									},
 									{
-										value:new Date("2013"), text:""
+										value: new Date("2013"), text: ""
 									},
 									{
-										value:new Date("2014"), text:""
+										value: new Date("2014"), text: ""
 									}
 								]);
 
 								if (scrubberLocation > 0) {
 									var anchorNode = dom.byId("chart");
 									domConstruct.create("div", {
-										id:"scrubber",
-										style:{
-											"height":150 + "px",
-											"width":1 + "px",
-											"background-color":"rgb(60, 60, 60)",
-											"position":"absolute",
-											"z-index":"1000",
-											"left":scrubberLocation + "px",
-											"top":0 + "px"
+										id: "scrubber",
+										style: {
+											"height": 150 + "px",
+											"width": 1 + "px",
+											"background-color": "rgb(60, 60, 60)",
+											"position": "absolute",
+											"z-index": "1000",
+											"left": scrubberLocation + "px",
+											"top": 0 + "px"
 										},
-										onmousedown:function (evt) {
+										onmousedown: function (evt) {
 											console.log(evt);
 										},
-										onmouseup:function (evt) {
+										onmouseup: function (evt) {
 											console.log(evt);
 										},
-										onmousemove:function (evt) {
+										onmousemove: function (evt) {
 											console.log(evt);
 										}
 									}, anchorNode);
@@ -603,9 +431,9 @@ require([
 
 		function loadGeococder(map) {
 			var geocoder = new Geocoder({
-				map:map,
-				arcgisGeocoder:{
-					placeholder:"Search"
+				map: map,
+				arcgisGeocoder: {
+					placeholder: "Search"
 				}
 			}, "search");
 			geocoder.startup();
