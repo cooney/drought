@@ -65,6 +65,7 @@ require([
 					"July", "August", "September", "October", "November", "December" ],
 				deferred,
 				loadingIndicatorNode,
+				scrubberNode,
 				columnData = [],
 				currentData;
 
@@ -72,6 +73,7 @@ require([
 
 		function init() {
 			loadingIndicatorNode = dom.byId("loadingIndicator");
+			scrubberNode = dom.byId("draggable2");
 			//domStyle.set("loadingIndicator", "display", "none");
 
 			var radioCounty = new RadioButton({
@@ -278,6 +280,7 @@ require([
 										},*/
 										onmouseover: function (d) {
 											currentData = d;
+											console.log(currentData);
 										},
 										names: {
 											D0: "Dry",
@@ -399,9 +402,10 @@ require([
 
 								dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 							}).then(function (response) {
-										console.log(response);
-										domStyle.set(loadingIndicatorNode, "display", "none");
-									});
+								console.log(response);
+								domStyle.set(loadingIndicatorNode, "display", "none");
+								domStyle.set(scrubberNode, "display", "block");
+							});
 						}
 
 				);
