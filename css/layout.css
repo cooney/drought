@@ -104,12 +104,12 @@ body {
 
 .circle {
 	background-color: rgba(0, 0, 0, 0);
-	border: 5px solid rgba(0, 183, 229, 0.9);
+	border: 5px solid rgba(41, 41, 41, 0.89);
 	opacity: .9;
 	border-right: 5px solid rgba(0, 0, 0, 0);
 	border-left: 5px solid rgba(0, 0, 0, 0);
 	border-radius: 50px;
-	box-shadow: 0 0 35px #2187e7;
+	box-shadow: 0 0 35px #27252a;
 	width: 50px;
 	height: 50px;
 	margin: 0 auto;
@@ -119,12 +119,12 @@ body {
 
 .circle1 {
 	background-color: rgba(0, 0, 0, 0);
-	border: 5px solid rgba(0, 183, 229, 0.9);
+	border: 5px solid rgba(41, 41, 41, 0.89);
 	opacity: .9;
 	border-left: 5px solid rgba(0, 0, 0, 0);
 	border-right: 5px solid rgba(0, 0, 0, 0);
 	border-radius: 50px;
-	box-shadow: 0 0 15px #2187e7;
+	box-shadow: 0 0 15px #454545;
 	width: 30px;
 	height: 30px;
 	margin: 0 auto;
@@ -138,7 +138,7 @@ body {
 	0% {
 		-moz-transform: rotate(160deg);
 		opacity: 0;
-		box-shadow: 0 0 1px #2187e7;
+		box-shadow: 0 0 1px #098100;
 	}
 
 	50% {
@@ -166,7 +166,7 @@ body {
 	0% {
 		-webkit-transform: rotate(160deg);
 		opacity: 0;
-		box-shadow: 0 0 1px #2187e7;
+		box-shadow: 0 0 1px #098100;
 	}
 
 	50% {

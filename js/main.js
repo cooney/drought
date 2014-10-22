@@ -143,23 +143,15 @@ require([
 
 
 			function mapLoadedHandler(map) {
-				console.log("map loaded");
+
 			}
 
 			function layerAddHandler(layer) {
 				$("#draggable2").draggable({
 					axis: "x",
-					containment: "#chart",
+					containment: "#containment-wrapper",
 					scroll: false,
-					start: function () {
-						console.log("START");
-					},
-					drag: function () {
-						console.log("DRAGGING");
-					},
 					stop: function (e) {
-						console.log("STOP", e);
-						console.log(currentData);
 						selectedDate = new Date(currentData.x);
 						var day = selectedDate.getDate();
 						var month = monthNames[selectedDate.getMonth()];
@@ -173,7 +165,6 @@ require([
 						map.setTimeExtent(timeExtent);
 					}
 				});
-				console.log("layer added");
 			}
 
 			function doIdentify(event) {
