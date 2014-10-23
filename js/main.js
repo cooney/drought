@@ -116,7 +116,7 @@ require([
 
 				countyLayer = new ArcGISDynamicMapServiceLayer(boundaryUrl, {
 					useMapImage:true,
-					opacity:0.5
+					opacity:0.0
 				});
 				map.addLayer(countyLayer);
 
@@ -130,7 +130,7 @@ require([
 				identifyParams = new IdentifyParameters();
 				identifyParams.tolerance = 1;
 				identifyParams.returnGeometry = true;
-				identifyParams.layerIds = [4];
+				identifyParams.layerIds = [3];
 				identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
 				identifyParams.width = map.width;
 				identifyParams.height = map.height;
