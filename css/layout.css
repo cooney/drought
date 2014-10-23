@@ -216,3 +216,28 @@ body {
 	margin-left: -10px;
 	margin-top: -10px;
 }
+
+/* Tooltip */
+.customTooltip {
+	height: 130px;
+	width: 150px;
+	position: absolute;
+	z-index: 1000;
+	bottom: 5px;
+	background-color: rgb(82, 82, 82);
+	opacity: 0.85;
+	border-radius: 4px;
+	color: rgb(228, 228, 228);
+	font-size: 0.85em;
+	display: none;
+}
+
+#tooltipHeader {
+	margin-left: 3px;
+	margin-top: 3px;
+}
+
+.tooltipCategory {
+	margin-left: 3px;
+	margin-top: 3px;
+}

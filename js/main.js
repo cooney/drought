@@ -66,6 +66,8 @@ require([
 				loadingIndicatorNode,
 				scrubberNode,
 				noResultsNode,
+				tooltipNode,
+				mousePosition,
 				columnData = [],
 				currentData;
 
@@ -75,6 +77,44 @@ require([
 			loadingIndicatorNode = dom.byId("loadingIndicator");
 			scrubberNode = dom.byId("draggable2");
 			noResultsNode = dom.byId("no-results");
+
+			/*domConstruct.create("div", {
+			 id:"scrubber",
+			 style:{
+			 "height":130 + "px",
+			 "width":150 + "px",
+			 "position":"absolute",
+			 "z-index":1000,
+			 "bottom":5 + "px",
+			 "background-color":"rgb(63, 63, 63)",
+			 "opacity":0.9,
+			 "border-radius":4 + "px",
+			 "color":"white"
+			 },
+			 innerHTML:"<div id='tooltipHeader'>hi</div>" +
+			 "<div class='tooltipCategory' id='tooltipDry'></div>" +
+			 "<div class='tooltipCategory' id='tooltipModerate'></div>" +
+			 "<div class='tooltipCategory' id='tooltipSevere'></div>" +
+			 "<div class='tooltipCategory' id='tooltipExtreme'></div>" +
+			 "<div class='tooltipCategory' id='tooltipExceptional'></div>"
+			 }, dom.byId("map"));
+			 tooltipNode = dom.byId("scrubber");*/
+
+
+			$('#map').append(
+					$('<div/>')
+							.attr("id", "chartDataTooltip")
+							.addClass("customTooltip")
+							.html("<div id='tooltipHeader'>hi</div>" +
+							"<div class='tooltipCategory' id='tooltipDry'></div>" +
+							"<div class='tooltipCategory' id='tooltipModerate'></div>" +
+							"<div class='tooltipCategory' id='tooltipSevere'></div>" +
+							"<div class='tooltipCategory' id='tooltipExtreme'></div>" +
+							"<div class='tooltipCategory' id='tooltipExceptional'></div>")
+			);
+
+
+			window.onmousemove = handleMouseMove;
 
 			var radioCounty = new RadioButton({
 				checked:true,
@@ -139,6 +179,10 @@ require([
 				deferred.cancel();
 			});
 
+			function handleMouseMove(event) {
+				mousePosition = event || window.event;
+			}
+
 			function mapLoadedHandler(map) {
 
 			}
@@ -150,6 +194,7 @@ require([
 					containment:"#containment-wrapper",
 					scroll:false,
 					stop:function (e) {
+						console.log(e)
 						selectedDate = new Date(currentData.x);
 						var day = selectedDate.getDate();
 						var month = monthNames[selectedDate.getMonth()];
@@ -238,50 +283,56 @@ require([
 											groups:[
 												['data0', 'data1', 'data2', 'data3', 'data4']
 											],
-											/*onclick: function (d, element) {
-											 console.log(element);
-											 console.log(element["cx"].baseVal.value);
-											 selectedDate = new Date(d.x);
-											 var day = selectedDate.getDate();
-											 var month = monthNames[selectedDate.getMonth()];
-											 var yr = selectedDate.getFullYear();
+											onclick:function (d, element) {
+												console.log(element);
+												console.log(element["cx"].baseVal.value);
+												var _loc = element["cx"].baseVal.value;
 
-											 dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
-											 console.log(d);
-											 var startDate = new Date(d.x);
-											 var endDate = new Date(d.x);
-											 var timeExtent = new TimeExtent(startDate, endDate);
+												/*selectedDate = new Date(d.x);
+												var day = selectedDate.getDate();
+												var month = monthNames[selectedDate.getMonth()];
+												var yr = selectedDate.getFullYear();
 
-											 map.setTimeExtent(timeExtent);
+												dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
+												console.log(d);
+												var startDate = new Date(d.x);
+												var endDate = new Date(d.x);
+												var timeExtent = new TimeExtent(startDate, endDate);
 
-											 domConstruct.destroy("scrubber");
-											 scrubberLocation = element["cx"].baseVal.value;
-											 var anchorNode = dom.byId("chart");
-											 domConstruct.create("div", {
-											 id: "scrubber",
-											 style: {
-											 "height": 120 + "px",
-											 "width": 3 + "px",
-											 "background-color": "rgb(60, 60, 60)",
-											 "position": "absolute",
-											 "z-index": "1000",
-											 "left": scrubberLocation + "px",
-											 "top": 0 + "px"
-											 },
-											 onmousedown: function (evt) {
-											 console.log(evt);
-											 },
-											 onmouseup: function (evt) {
-											 console.log(evt);
-											 },
-											 onmousemove: function (evt) {
-											 console.log(evt);
-											 }
-											 }, anchorNode);
-											 },*/
+												map.setTimeExtent(timeExtent);
+
+												domConstruct.destroy("scrubber");
+												scrubberLocation = element["cx"].baseVal.value;
+												var anchorNode = dom.byId("chart");
+												domConstruct.create("div", {
+													id:"scrubber",
+													style:{
+														"height":120 + "px",
+														"width":3 + "px",
+														"background-color":"rgb(60, 60, 60)",
+														"position":"absolute",
+														"z-index":"1000",
+														"left":scrubberLocation + "px",
+														"top":0 + "px"
+													},
+													onmousedown:function (evt) {
+														console.log(evt);
+													},
+													onmouseup:function (evt) {
+														console.log(evt);
+													},
+													onmousemove:function (evt) {
+														console.log(evt);
+													}
+												}, anchorNode);*/
+											},
 											onmouseover:function (d) {
 												currentData = d;
-												console.log(currentData);
+												$("#chartDataTooltip").css("display", "block");
+											},
+											onmouseout:function (d) {
+												currentData = d;
+												$("#chartDataTooltip").css("display", "none");
 											},
 											names:{
 												D0:"Dry",
@@ -413,9 +464,9 @@ require([
 								});
 
 								/*domStyle.set(noResultsNode, "display", "block");
-								setTimeout(function () {
-									domStyle.set(noResultsNode, "display", "none");
-								}, 3000);*/
+								 setTimeout(function () {
+								 domStyle.set(noResultsNode, "display", "none");
+								 }, 3000);*/
 							}
 						}
 
