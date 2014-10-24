@@ -5129,6 +5129,7 @@
 		return that.nodeName === 'circle' ? $$.togglePoint : ($$.d3.select(that).classed(CLASS.bar) ? $$.toggleBar : $$.toggleArc);
 	};
 	c3_chart_internal_fn.toggleShape = function (that, d, i) {
+		//debugger
 		var $$ = this, d3 = $$.d3, config = $$.config,
 				shape = d3.select(that), isSelected = shape.classed(CLASS.SELECTED), isWithin, toggle;
 		if (that.nodeName === 'circle') {
@@ -5155,7 +5156,7 @@
 					});
 				}
 				shape.classed(CLASS.SELECTED, !isSelected);
-				toggle.call($$, !isSelected, shape, d, i);
+				//toggle.call($$, !isSelected, shape, d, i);
 			}
 			$$.config.data_onclick.call($$.api, d, that);
 		}

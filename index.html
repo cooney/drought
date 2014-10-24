@@ -90,8 +90,11 @@
 
 	<div id="centerPane" data-dojo-type="dijit.layout.BorderContainer" class="roundedCorners"
 		 data-dojo-props="region:'center', gutters:false">
-		<div id="map" data-dojo-type="dijit.layout.ContentPane" class="shadow" data-dojo-props="region:'center'"
-			 style="position:relative; overflow:hidden;"></div>
+
+		<div id="loadingIndicator">
+			<div class="circle"></div>
+			<div class="circle1"></div>
+		</div>
 
 		<div id="pieChartContianer">
 			<div id="pieChartHeader">
@@ -119,11 +122,6 @@
 
 		<div id="footer" class="roundedCorners" data-dojo-type="dijit.layout.ContentPane"
 			 data-dojo-props="region:'bottom'">
-			<div id="loadingIndicator">
-				<div class="circle"></div>
-				<div class="circle1"></div>
-			</div>
-
 			<div id="containment-wrapper">
 				<div id="draggable2" class="draggable ui-widget-content">
 					<div id="scrubberThumb"></div>
@@ -136,6 +134,10 @@
 
 			<div id="chart"></div>
 		</div>
+
+		<div id="map" data-dojo-type="dijit.layout.ContentPane" class="shadow" data-dojo-props="region:'center'"
+			 style="position:relative; overflow:hidden;"></div>
+
 	</div>
 </div>
 </body>

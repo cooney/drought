@@ -37,7 +37,8 @@ require([
 	"dojo/parser",
 	"dojo/ready",
 	"esri/IdentityManager"
-], function (BorderContainer, ContentPane, RadioButton, registry, array, declare, json, lang, win, date, Deferred, dom, domAttr, domConstruct, domStyle, json, number, on, query, arcgisUtils, Geocoder, Graphic, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request, SimpleFillSymbol, SimpleLineSymbol, TimeExtent, SimpleRenderer, Color, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
+], function (BorderContainer, ContentPane, RadioButton, registry, array, declare, json, lang, win, date, Deferred, dom,
+			 domAttr, domConstruct, domStyle, json, number, on, query, arcgisUtils, Geocoder, Graphic, Map, ArcGISDynamicMapServiceLayer, FeatureLayer, request, SimpleFillSymbol, SimpleLineSymbol, TimeExtent, SimpleRenderer, Color, IdentifyTask, IdentifyParameters, Query, QueryTask, parser, ready) {
 
 	parser.parse();
 
@@ -59,6 +60,7 @@ require([
 				selectedPoint,
 				selectedFIPS,
 				chart,
+				chartNode,
 				scrubberLocation = 0,
 				monthNames = [ "January", "February", "March", "April", "May", "June",
 					"July", "August", "September", "October", "November", "December" ],
@@ -72,6 +74,7 @@ require([
 		init();
 
 		function init() {
+			chartNode = dom.byId("chart");
 			loadingIndicatorNode = dom.byId("loadingIndicator");
 			scrubberNode = dom.byId("draggable2");
 			noResultsNode = dom.byId("no-results");
@@ -179,12 +182,19 @@ require([
 
 			function layerAddHandler(layer) {
 				console.log(layer);
+				$("#draggable2").css("left", 1173 + "px");
 				$("#draggable2").draggable({
 					axis:"x",
 					containment:"#containment-wrapper",
 					scroll:false,
+					drag:function (e) {
+						domStyle.set(scrubberNode, "z-index", "90");
+						domStyle.set(chartNode, "opacity", "0.75");
+					},
 					stop:function (e) {
-						console.log(e)
+						console.log(e.pageX)
+						domStyle.set(scrubberNode, "z-index", "101");
+						domStyle.set(chartNode, "opacity", "1.0");
 						selectedDate = new Date(currentData.x);
 						var day = selectedDate.getDate();
 						var month = monthNames[selectedDate.getMonth()];
@@ -344,7 +354,8 @@ require([
 												}
 											},
 											y:{
-												show:false
+												show:false,
+												max:100
 											}
 										},
 										tooltip:{
@@ -364,8 +375,14 @@ require([
 											show:false
 										},
 										point:{
-											r:1,
+											r:0,
 											show:true
+										},
+										onmouseover:function () {
+											//console.log("mouseover")
+										},
+										onmouseout:function () {
+											//console.log("mouseout")
 										}
 									});
 
@@ -417,36 +434,39 @@ require([
 										}
 									]);
 
-									if (scrubberLocation > 0) {
-										var anchorNode = dom.byId("chart");
-										domConstruct.create("div", {
-											id:"scrubber",
-											style:{
-												"height":150 + "px",
-												"width":1 + "px",
-												"background-color":"rgb(60, 60, 60)",
-												"position":"absolute",
-												"z-index":"1000",
-												"left":scrubberLocation + "px",
-												"top":0 + "px"
-											},
-											onmousedown:function (evt) {
-												console.log(evt);
-											},
-											onmouseup:function (evt) {
-												console.log(evt);
-											},
-											onmousemove:function (evt) {
-												console.log(evt);
-											}
-										}, anchorNode);
-									}
+									/*if (scrubberLocation > 0) {
+									 var anchorNode = dom.byId("chart");
+									 domConstruct.create("div", {
+									 id:"scrubber",
+									 style:{
+									 "height":150 + "px",
+									 "width":1 + "px",
+									 "background-color":"rgb(60, 60, 60)",
+									 "position":"absolute",
+									 "z-index":"1000",
+									 "left":scrubberLocation + "px",
+									 "top":0 + "px"
+									 },
+									 onmousedown:function (evt) {
+									 console.log(evt);
+									 },
+									 onmouseup:function (evt) {
+									 console.log(evt);
+									 },
+									 onmousemove:function (evt) {
+									 console.log(evt);
+									 }
+									 }, anchorNode);
+									 }*/
 
 									dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 								}).then(function (response) {
 											console.log(response);
 											domStyle.set(loadingIndicatorNode, "display", "none");
 											domStyle.set(scrubberNode, "display", "block");
+											//c3-event-rect
+											var nl = query(".c3-event-rect c3-event-rect-763");
+											console.log(nl);
 										});
 							} else {
 								$("#no-results").fadeIn("slow", function () {
@@ -469,7 +489,7 @@ require([
 			var highlightSymbol = new SimpleFillSymbol(
 					SimpleFillSymbol.STYLE_SOLID,
 					new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-							new Color([255, 0, 0, 0.95]), 1),
+							new Color([0, 0, 0, 0.95]), 1),
 					new Color([125, 125, 125, 0.30])
 			);
 			var highlightGraphic = new Graphic(geometry, highlightSymbol);
