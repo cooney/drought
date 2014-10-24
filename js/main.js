@@ -286,7 +286,7 @@ require([
 												console.log(element["cx"].baseVal.value);
 												var _loc = element["cx"].baseVal.value;
 												$("#draggable2").css("left", (_loc - 10) + "px");
-												/*selectedDate = new Date(d.x);
+												selectedDate = new Date(d.x);
 												var day = selectedDate.getDate();
 												var month = monthNames[selectedDate.getMonth()];
 												var yr = selectedDate.getFullYear();
@@ -299,7 +299,7 @@ require([
 
 												map.setTimeExtent(timeExtent);
 
-												domConstruct.destroy("scrubber");
+												/*domConstruct.destroy("scrubber");
 												scrubberLocation = element["cx"].baseVal.value;
 												var anchorNode = dom.byId("chart");
 												domConstruct.create("div", {
