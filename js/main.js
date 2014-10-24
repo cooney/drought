@@ -141,7 +141,7 @@ require([
 				var timeExtent = new TimeExtent(startDate, endDate);
 				map.setTimeExtent(timeExtent);
 
-				droughtIntensityLayer = new FeatureLayer(response.itemInfo.itemData.operationalLayers[0].url, {
+				/*droughtIntensityLayer = new FeatureLayer(response.itemInfo.itemData.operationalLayers[0].url, {
 					mode:FeatureLayer.MODE_SNAPSHOT,
 					outFields:["*"]
 				});
@@ -149,7 +149,7 @@ require([
 				dominantAreasOfImpactLayer = new FeatureLayer(response.itemInfo.itemData.operationalLayers[1].url, {
 					mode:FeatureLayer.MODE_SNAPSHOT,
 					outFields:["*"]
-				});
+				});*/
 
 				countyLayer = new ArcGISDynamicMapServiceLayer(boundaryUrl, {
 					useMapImage:true,
@@ -464,9 +464,6 @@ require([
 											console.log(response);
 											domStyle.set(loadingIndicatorNode, "display", "none");
 											domStyle.set(scrubberNode, "display", "block");
-											//c3-event-rect
-											var nl = query(".c3-event-rect c3-event-rect-763");
-											console.log(nl);
 										});
 							} else {
 								$("#no-results").fadeIn("slow", function () {
