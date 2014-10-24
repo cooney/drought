@@ -66,8 +66,6 @@ require([
 				loadingIndicatorNode,
 				scrubberNode,
 				noResultsNode,
-				tooltipNode,
-				mousePosition,
 				columnData = [],
 				currentData;
 
@@ -100,7 +98,7 @@ require([
 			 }, dom.byId("map"));
 			 tooltipNode = dom.byId("scrubber");*/
 
-			$('#map').append(
+			$("#map").append(
 					$('<div/>')
 							.attr("id", "chartDataTooltip")
 							.addClass("customTooltip")
@@ -111,8 +109,6 @@ require([
 							"<div class='tooltipCategory' id='tooltipExtreme'></div>" +
 							"<div class='tooltipCategory' id='tooltipExceptional'></div>")
 			);
-
-			//window.onmousemove = handleMouseMove;
 
 			var radioCounty = new RadioButton({
 				checked:true,
@@ -176,10 +172,6 @@ require([
 				console.log("Error: ", error.code, " Message: ", error.message);
 				deferred.cancel();
 			});
-
-			/*function handleMouseMove(event) {
-				mousePosition = event || window.event;
-			}*/
 
 			function mapLoadedHandler(map) {
 
@@ -300,29 +292,29 @@ require([
 												map.setTimeExtent(timeExtent);
 
 												/*domConstruct.destroy("scrubber");
-												scrubberLocation = element["cx"].baseVal.value;
-												var anchorNode = dom.byId("chart");
-												domConstruct.create("div", {
-													id:"scrubber",
-													style:{
-														"height":120 + "px",
-														"width":3 + "px",
-														"background-color":"rgb(60, 60, 60)",
-														"position":"absolute",
-														"z-index":"1000",
-														"left":scrubberLocation + "px",
-														"top":0 + "px"
-													},
-													onmousedown:function (evt) {
-														console.log(evt);
-													},
-													onmouseup:function (evt) {
-														console.log(evt);
-													},
-													onmousemove:function (evt) {
-														console.log(evt);
-													}
-												}, anchorNode);*/
+												 scrubberLocation = element["cx"].baseVal.value;
+												 var anchorNode = dom.byId("chart");
+												 domConstruct.create("div", {
+												 id:"scrubber",
+												 style:{
+												 "height":120 + "px",
+												 "width":3 + "px",
+												 "background-color":"rgb(60, 60, 60)",
+												 "position":"absolute",
+												 "z-index":"1000",
+												 "left":scrubberLocation + "px",
+												 "top":0 + "px"
+												 },
+												 onmousedown:function (evt) {
+												 console.log(evt);
+												 },
+												 onmouseup:function (evt) {
+												 console.log(evt);
+												 },
+												 onmousemove:function (evt) {
+												 console.log(evt);
+												 }
+												 }, anchorNode);*/
 											},
 											onmouseover:function (d) {
 												currentData = d;
