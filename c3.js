@@ -2327,7 +2327,8 @@
 					});
 				})
 				.on('mousemove', function (d) {
-					var selectedData, index = d.index,
+					var selectedData,
+							index = d.index,
 							eventRect = $$.svg.select('.' + CLASS.eventRect + '-' + index);
 
 					if ($$.dragging) {
@@ -2475,10 +2476,12 @@
 					if ($$.dist(closest, mouse) < 100) {
 						$$.svg.select('.' + CLASS.eventRect).style('cursor', 'pointer');
 						if (!$$.mouseover) {
+							console.log("112")
 							config.data_onmouseover.call($$, closest);
 							$$.mouseover = true;
 						}
 					} else if ($$.mouseover) {
+						console.log("2")
 						$$.svg.select('.' + CLASS.eventRect).style('cursor', null);
 						config.data_onmouseout.call($$, closest);
 						$$.mouseover = false;
@@ -4746,6 +4749,7 @@
 					this._current = d;
 				})
 				.on('mouseover', function (d) {
+					console.log(d)
 					var updated, arcData;
 					if ($$.transiting) { // skip while transiting
 						return;

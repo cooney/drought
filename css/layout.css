@@ -233,8 +233,9 @@ body {
 }
 
 #tooltipHeader {
-	margin-left: 3px;
-	margin-top: 3px;
+	background-color: white;
+	padding: 2px;
+	color: rgb(34, 34, 34);
 }
 
 .tooltipCategory {

@@ -100,7 +100,6 @@ require([
 			 }, dom.byId("map"));
 			 tooltipNode = dom.byId("scrubber");*/
 
-
 			$('#map').append(
 					$('<div/>')
 							.attr("id", "chartDataTooltip")
@@ -113,8 +112,7 @@ require([
 							"<div class='tooltipCategory' id='tooltipExceptional'></div>")
 			);
 
-
-			window.onmousemove = handleMouseMove;
+			//window.onmousemove = handleMouseMove;
 
 			var radioCounty = new RadioButton({
 				checked:true,
@@ -179,9 +177,9 @@ require([
 				deferred.cancel();
 			});
 
-			function handleMouseMove(event) {
+			/*function handleMouseMove(event) {
 				mousePosition = event || window.event;
-			}
+			}*/
 
 			function mapLoadedHandler(map) {
 
@@ -287,7 +285,7 @@ require([
 												console.log(element);
 												console.log(element["cx"].baseVal.value);
 												var _loc = element["cx"].baseVal.value;
-
+												$("#draggable2").css("left", (_loc - 10) + "px");
 												/*selectedDate = new Date(d.x);
 												var day = selectedDate.getDate();
 												var month = monthNames[selectedDate.getMonth()];
@@ -332,7 +330,7 @@ require([
 											},
 											onmouseout:function (d) {
 												currentData = d;
-												$("#chartDataTooltip").css("display", "none");
+												//$("#chartDataTooltip").css("display", "none");
 											},
 											names:{
 												D0:"Dry",
