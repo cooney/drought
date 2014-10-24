@@ -182,7 +182,7 @@ require([
 
 			function layerAddHandler(layer) {
 				console.log(layer);
-				$("#draggable2").css("left", 1173 + "px");
+				//$("#draggable2").css("left", 1173 + "px");
 				$("#draggable2").draggable({
 					axis:"x",
 					containment:"#containment-wrapper",
