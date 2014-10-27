@@ -229,15 +229,19 @@ require([
 											data2 = ['D2'],
 											data3 = ['D3'],
 											data4 = ['D4'];
+									//var count = 0;
 									array.forEach(result.features, function (feature) {
-										var utcSeconds = feature.attributes["CountyCategories_Date"];
-										var d = new Date(parseFloat(utcSeconds));
-										xAxis.push(d);
-										data0.push(feature.attributes["CountyCategories_D0"]);
-										data1.push(feature.attributes["CountyCategories_D1"]);
-										data2.push(feature.attributes["CountyCategories_D2"]);
-										data3.push(feature.attributes["CountyCategories_D3"]);
-										data4.push(feature.attributes["CountyCategories_D4"]);
+										//if (count < 100) {
+											var utcSeconds = feature.attributes["CountyCategories_Date"];
+											var d = new Date(parseFloat(utcSeconds));
+											xAxis.push(d);
+											data0.push(feature.attributes["CountyCategories_D0"]);
+											data1.push(feature.attributes["CountyCategories_D1"]);
+											data2.push(feature.attributes["CountyCategories_D2"]);
+											data3.push(feature.attributes["CountyCategories_D3"]);
+											data4.push(feature.attributes["CountyCategories_D4"]);
+											//count++;
+										//}
 									});
 									columnData.push(xAxis);
 									columnData.push(data0);

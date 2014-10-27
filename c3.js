@@ -5261,8 +5261,7 @@
 					.style('opacity', 0)
 					.attr('class', classChartLine);
 			// Lines for each data
-			contextLineEnter.append("g")
-					.attr("class", classLines);
+			contextLineEnter.append("g").attr("class", classLines);
 			// Area
 			contextLineEnter.append("g")
 					.attr("class", classAreas);
@@ -5634,7 +5633,7 @@
 		return this.classShape(d) + this.generateClass(CLASS.line, d.id);
 	};
 	c3_chart_internal_fn.classLines = function (d) {
-		return this.classShapes(d) + this.generateClass(CLASS.lines, d.id);
+		//return this.classShapes(d) + this.generateClass(CLASS.lines, d.id);
 	};
 	c3_chart_internal_fn.classCircle = function (d) {
 		return this.classShape(d) + this.generateClass(CLASS.circle, d.index);
