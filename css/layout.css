@@ -215,6 +215,7 @@ body {
 	z-index: 1000;
 }*/
 
+/* SCRUBBER */
 #scrubberThumb {
 	background-color: rgb(103, 103, 103);
 	border-radius: 30%;
@@ -224,6 +225,12 @@ body {
 	margin-top: 5px;
 }
 
+.ui-widget-content {
+	/*border: 1px !important;
+	background: transparent !important;
+	color: transparent !important;*/
+}
+
 /* Tooltip */
 .customTooltip {
 	height: 130px;
@@ -231,18 +238,18 @@ body {
 	position: absolute;
 	z-index: 1000;
 	bottom: 5px;
-	background-color: rgb(82, 82, 82);
+	background-color: rgb(247, 247, 247);
 	opacity: 0.85;
 	border-radius: 4px;
-	color: rgb(228, 228, 228);
-	font-size: 0.85em;
+	color: rgb(44, 44, 44);
+	font-size: 0.80em;
 	display: none;
 }
 
 #tooltipHeader {
-	background-color: white;
-	padding: 2px;
-	color: rgb(34, 34, 34);
+	background-color: rgb(231, 231, 231);
+	/*padding: 2px;
+	color: rgb(34, 34, 34);*/
 }
 
 .tooltipCategory {

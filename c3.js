@@ -31,6 +31,9 @@
 		$$.data = {};
 		$$.cache = {};
 		$$.axes = {};
+		$$.monthNames = [ "January", "February", "March", "April", "May", "June",
+					"July", "August", "September", "October", "November", "December" ];
+
 	}
 
 	c3.generate = function (config) {
@@ -3342,6 +3345,7 @@
 		var id = isString(d) ? d : d.id;
 		return this.config.data_types[id] === 'pie';
 	};
+
 	c3_chart_internal_fn.isGaugeType = function (d) {
 		var id = isString(d) ? d : d.id;
 		return this.config.data_types[id] === 'gauge';
@@ -3350,15 +3354,19 @@
 		var id = isString(d) ? d : d.id;
 		return this.config.data_types[id] === 'donut';
 	};
+
 	c3_chart_internal_fn.isArcType = function (d) {
 		return this.isPieType(d) || this.isDonutType(d) || this.isGaugeType(d);
 	};
+
 	c3_chart_internal_fn.lineData = function (d) {
 		return this.isLineType(d) ? [d] : [];
 	};
+
 	c3_chart_internal_fn.arcData = function (d) {
 		return this.isArcType(d.data) ? [d] : [];
 	};
+
 	/* not used
 	 function scatterData(d) {
 	 return isScatterType(d) ? d.values : [];
@@ -3367,9 +3375,11 @@
 	c3_chart_internal_fn.barData = function (d) {
 		return this.isBarType(d) ? d.values : [];
 	};
+
 	c3_chart_internal_fn.lineOrScatterData = function (d) {
 		return this.isLineType(d) || this.isScatterType(d) ? d.values : [];
 	};
+
 	c3_chart_internal_fn.barOrLineData = function (d) {
 		return this.isBarType(d) || this.isLineType(d) ? d.values : [];
 	};
@@ -3448,7 +3458,6 @@
 		$$.smoothLines($$.ygrid, 'grid');
 	};
 
-
 	c3_chart_internal_fn.redrawGrid = function (duration, withY) {
 		var $$ = this, main = $$.main, config = $$.config,
 				xgridLine, ygridLine, yv;
@@ -3521,6 +3530,7 @@
 					.remove();
 		}
 	};
+
 	c3_chart_internal_fn.addTransitionForGrid = function (transitions) {
 		var $$ = this, config = $$.config, xv = $$.xv.bind($$);
 		transitions.push($$.xgridLines.select('line').transition()
@@ -3537,6 +3547,7 @@
 				})
 				.style("opacity", 1));
 	};
+
 	c3_chart_internal_fn.showXGridFocus = function (selectedData) {
 		var $$ = this, config = $$.config,
 				dataToShow = selectedData.filter(function (d) {
@@ -3558,9 +3569,11 @@
 				.attr(config.axis_rotated ? 'y2' : 'x2', xx);
 		$$.smoothLines(focusEl, 'grid');
 	};
+
 	c3_chart_internal_fn.hideXGridFocus = function () {
 		this.main.select('line.' + CLASS.xgridFocus).style("visibility", "hidden");
 	};
+
 	c3_chart_internal_fn.updateXgridFocus = function () {
 		var $$ = this, config = $$.config;
 		$$.main.select('line.' + CLASS.xgridFocus)
@@ -3569,6 +3582,7 @@
 				.attr("y1", config.axis_rotated ? -10 : 0)
 				.attr("y2", config.axis_rotated ? -10 : $$.height);
 	};
+
 	c3_chart_internal_fn.generateGridData = function (type, scale) {
 		var $$ = this,
 				gridData = [], xDomain, firstYear, lastYear, i,
@@ -3590,6 +3604,7 @@
 		}
 		return gridData;
 	};
+
 	c3_chart_internal_fn.getGridFilterToRemove = function (params) {
 		return params ? function (line) {
 			var found = false;
@@ -3603,6 +3618,7 @@
 			return true;
 		};
 	};
+
 	c3_chart_internal_fn.removeGridLines = function (params, forX) {
 		var $$ = this, config = $$.config,
 				toRemove = $$.getGridFilterToRemove(params),
@@ -3649,6 +3665,7 @@
 					.style("display", "block");
 		}
 	};
+
 	c3_chart_internal_fn.getTooltipContent = function (d, defaultTitleFormat, defaultValueFormat, color) {
 		var $$ = this, config = $$.config,
 				titleFormat = config.tooltip_format_title || defaultTitleFormat,
@@ -3667,7 +3684,8 @@
 		if (mouseX < (_chartWidth - 150)) {
 			$( "#chartDataTooltip").css( "left", mouseX + "px" );
 		}
-		$( "#tooltipHeader").text(_month + " / " + _day + " / " + _year);
+		var month = this.monthNames[_month];
+		$( "#tooltipHeader").text(month + " " + _day + ", " + _year);
 		$( "#tooltipDry").text(valueFormat(d[0].value, d[0].ratio, d[0].id, d[0].index));
 		$( "#tooltipModerate").text(valueFormat(d[1].value, d[1].ratio, d[1].id, d[1].index));
 		$( "#tooltipSevere").text(valueFormat(d[2].value, d[2].ratio, d[2].id, d[2].index));
@@ -3696,6 +3714,7 @@
 		return text + "</table>";*/
 		return text;
 	};
+
 	c3_chart_internal_fn.showTooltip = function (selectedData, mouse) {
 		var $$ = this, config = $$.config;
 		var tWidth, tHeight, svgLeft, tooltipLeft, tooltipRight, tooltipTop, chartRight;
@@ -3742,6 +3761,7 @@
 				.style("top", tooltipTop + "px")
 				.style("left", tooltipLeft + 'px');
 	};
+
 	c3_chart_internal_fn.hideTooltip = function () {
 		this.tooltip.style("display", "none");
 	};

@@ -79,39 +79,39 @@ require([
 			scrubberNode = dom.byId("draggable2");
 			noResultsNode = dom.byId("no-results");
 
-			/*domConstruct.create("div", {
-			 id:"scrubber",
-			 style:{
-			 "height":130 + "px",
-			 "width":150 + "px",
-			 "position":"absolute",
-			 "z-index":1000,
-			 "bottom":5 + "px",
-			 "background-color":"rgb(63, 63, 63)",
-			 "opacity":0.9,
-			 "border-radius":4 + "px",
-			 "color":"white"
-			 },
-			 innerHTML:"<div id='tooltipHeader'>hi</div>" +
-			 "<div class='tooltipCategory' id='tooltipDry'></div>" +
-			 "<div class='tooltipCategory' id='tooltipModerate'></div>" +
-			 "<div class='tooltipCategory' id='tooltipSevere'></div>" +
-			 "<div class='tooltipCategory' id='tooltipExtreme'></div>" +
-			 "<div class='tooltipCategory' id='tooltipExceptional'></div>"
-			 }, dom.byId("map"));
-			 tooltipNode = dom.byId("scrubber");*/
-
 			$("#map").append(
 					$('<div/>')
 							.attr("id", "chartDataTooltip")
 							.addClass("customTooltip")
-							.html("<div id='tooltipHeader'>hi</div>" +
-							"<div class='tooltipCategory' id='tooltipDry'></div>" +
-							"<div class='tooltipCategory' id='tooltipModerate'></div>" +
-							"<div class='tooltipCategory' id='tooltipSevere'></div>" +
-							"<div class='tooltipCategory' id='tooltipExtreme'></div>" +
-							"<div class='tooltipCategory' id='tooltipExceptional'></div>")
-			);
+							.html("<div class='CSSTableGenerator'>" +
+							"<table>" +
+							"	<tr>" +
+							"		<th colspan='2'>" +
+							"			<div id='tooltipHeader'></div>" +
+							"		</th>" +
+							"	</tr>" +
+							"	<tr>" +
+							"		<td style='text-align: right;'>Dry</td>" +
+							"		<td style='text-align: left;' id='tooltipDry'></td>" +
+							"	</tr>" +
+							"	<tr>" +
+							"		<td style='text-align: right;'>Moderate</td>" +
+							"		<td style='text-align: left;' id='tooltipModerate'></td>" +
+							"	</tr>" +
+							"	<tr>" +
+							"		<td style='text-align: right;'>Severe</td>" +
+							"		<td style='text-align: left;' id='tooltipSevere'></td>" +
+							"	</tr>" +
+							"	<tr>" +
+							"		<td style='text-align: right;'>Extreme</td>" +
+							"		<td style='text-align: left;' id='tooltipExtreme'></td>" +
+							"	</tr>" +
+							"	<tr>" +
+							"		<td style='text-align: right;'>Exceptional</td>" +
+							"		<td style='text-align: left;' id='tooltipExceptional'></td>" +
+							"	</tr>" +
+							"</table>" +
+							"</div>"));
 
 			var radioCounty = new RadioButton({
 				checked:true,
@@ -397,31 +397,6 @@ require([
 											value:new Date("2014"), text:""
 										}
 									]);
-
-									/*if (scrubberLocation > 0) {
-									 var anchorNode = dom.byId("chart");
-									 domConstruct.create("div", {
-									 id:"scrubber",
-									 style:{
-									 "height":150 + "px",
-									 "width":1 + "px",
-									 "background-color":"rgb(60, 60, 60)",
-									 "position":"absolute",
-									 "z-index":"1000",
-									 "left":scrubberLocation + "px",
-									 "top":0 + "px"
-									 },
-									 onmousedown:function (evt) {
-									 console.log(evt);
-									 },
-									 onmouseup:function (evt) {
-									 console.log(evt);
-									 },
-									 onmousemove:function (evt) {
-									 console.log(evt);
-									 }
-									 }, anchorNode);
-									 }*/
 
 									dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 								}).then(function (response) {
