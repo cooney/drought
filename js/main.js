@@ -141,16 +141,6 @@ require([
 				var timeExtent = new TimeExtent(startDate, endDate);
 				map.setTimeExtent(timeExtent);
 
-				/*droughtIntensityLayer = new FeatureLayer(response.itemInfo.itemData.operationalLayers[0].url, {
-					mode:FeatureLayer.MODE_SNAPSHOT,
-					outFields:["*"]
-				});
-
-				dominantAreasOfImpactLayer = new FeatureLayer(response.itemInfo.itemData.operationalLayers[1].url, {
-					mode:FeatureLayer.MODE_SNAPSHOT,
-					outFields:["*"]
-				});*/
-
 				countyLayer = new ArcGISDynamicMapServiceLayer(boundaryUrl, {
 					useMapImage:true,
 					opacity:0.0
@@ -284,8 +274,8 @@ require([
 												['data0', 'data1', 'data2', 'data3', 'data4']
 											],
 											onclick:function (d, element) {
-												console.log(element);
-												console.log(element["cx"].baseVal.value);
+												//console.log(element);
+												//console.log(element["cx"].baseVal.value);
 												var _loc = element["cx"].baseVal.value;
 												$("#draggable2").css("left", (_loc - 10) + "px");
 												selectedDate = new Date(d.x);
@@ -294,37 +284,11 @@ require([
 												var yr = selectedDate.getFullYear();
 
 												dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
-												console.log(d);
 												var startDate = new Date(d.x);
 												var endDate = new Date(d.x);
 												var timeExtent = new TimeExtent(startDate, endDate);
 
 												map.setTimeExtent(timeExtent);
-
-												/*domConstruct.destroy("scrubber");
-												 scrubberLocation = element["cx"].baseVal.value;
-												 var anchorNode = dom.byId("chart");
-												 domConstruct.create("div", {
-												 id:"scrubber",
-												 style:{
-												 "height":120 + "px",
-												 "width":3 + "px",
-												 "background-color":"rgb(60, 60, 60)",
-												 "position":"absolute",
-												 "z-index":"1000",
-												 "left":scrubberLocation + "px",
-												 "top":0 + "px"
-												 },
-												 onmousedown:function (evt) {
-												 console.log(evt);
-												 },
-												 onmouseup:function (evt) {
-												 console.log(evt);
-												 },
-												 onmousemove:function (evt) {
-												 console.log(evt);
-												 }
-												 }, anchorNode);*/
 											},
 											onmouseover:function (d) {
 												currentData = d;
