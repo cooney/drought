@@ -153,7 +153,7 @@ require([
 				identifyParams = new IdentifyParameters();
 				identifyParams.tolerance = 1;
 				identifyParams.returnGeometry = true;
-				identifyParams.layerIds = [3];
+				identifyParams.layerIds = [3, 4];
 				identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
 				identifyParams.width = map.width;
 				identifyParams.height = map.height;
@@ -203,6 +203,11 @@ require([
 				identifyTask.execute(identifyParams, function (results) {
 							console.log(results);
 							if (results.length > 0) {
+								if (results.layerId === 4) {
+									//states
+								} else {
+									//counties
+								}
 								$("#no-results").fadeOut("slow", function () {
 
 								});
