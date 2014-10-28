@@ -46,7 +46,7 @@ require([
 
 		var map,
 				countyLayer,
-				boundaryUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Median_Household_Income/MapServer",
+				boundaryUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_1990-2000_Population_Change/MapServer",
 				identifyUrl = boundaryUrl,
 				identifyTask,
 				identifyParams,
