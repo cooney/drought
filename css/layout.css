@@ -100,7 +100,7 @@ body {
 #loadingIndicator {
 	display: none;
 	position: absolute;
-	padding-top: 35%;
+	/*padding-top: 35%;*/
 	z-index: 1000;
 	/* bottom: 80px; */
 	width: 100%;
@@ -110,6 +110,9 @@ body {
 }
 
 .circle {
+	position: fixed;
+	top: 50%;
+	left: 50%;
 	background-color: rgba(0, 0, 0, 0);
 	border: 5px solid rgba(41, 41, 41, 0.89);
 	opacity: .9;
@@ -125,6 +128,9 @@ body {
 }
 
 .circle1 {
+	position: fixed;
+	top: 51%;
+	left: 51%;
 	background-color: rgba(0, 0, 0, 0);
 	border: 5px solid rgba(41, 41, 41, 0.89);
 	opacity: .9;
@@ -135,8 +141,8 @@ body {
 	width: 30px;
 	height: 30px;
 	margin: 0 auto;
-	position: relative;
-	top: -50px;
+	/*position: relative;
+	top: -50px;*/
 	-moz-animation: spinoffPulse 1s infinite linear;
 	-webkit-animation: spinoffPulse 1s infinite linear;
 }
@@ -219,7 +225,7 @@ body {
 #scrubberThumb {
 	background-color: rgb(103, 103, 103);
 	border-radius: 30%;
-	width: 20px;
+	width: 21px;
 	height: 20px;
 	margin-left: -10px;
 	margin-top: 5px;

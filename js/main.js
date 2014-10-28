@@ -91,23 +91,23 @@ require([
 							"		</th>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: right;'>Dry</td>" +
+							"		<td style='text-align: left;'>Dry</td>" +
 							"		<td style='text-align: left;' id='tooltipDry'></td>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: right;'>Moderate</td>" +
+							"		<td style='text-align: left;'>Moderate</td>" +
 							"		<td style='text-align: left;' id='tooltipModerate'></td>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: right;'>Severe</td>" +
+							"		<td style='text-align: left;'>Severe</td>" +
 							"		<td style='text-align: left;' id='tooltipSevere'></td>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: right;'>Extreme</td>" +
+							"		<td style='text-align: left;'>Extreme</td>" +
 							"		<td style='text-align: left;' id='tooltipExtreme'></td>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: right;'>Exceptional</td>" +
+							"		<td style='text-align: left;'>Exceptional</td>" +
 							"		<td style='text-align: left;' id='tooltipExceptional'></td>" +
 							"	</tr>" +
 							"</table>" +
@@ -300,7 +300,7 @@ require([
 											},
 											onmouseout:function (d) {
 												currentData = d;
-												//$("#chartDataTooltip").css("display", "none");
+												$("#chartDataTooltip").css("display", "none");
 											},
 											names:{
 												D0:"Dry",
