@@ -49,9 +49,7 @@ require([
 				identifyUrl = boundaryUrl,
 				identifyTask,
 				identifyParams,
-				selectedCountyName,
-				xAxis, data0, data1, data2, data3, data4,
-				selectedState,
+				data0, data1, data2, data3, data4,
 				selectedDate,
 				selectedPoint,
 				selectedFIPS,
@@ -64,8 +62,7 @@ require([
 				scrubberNode,
 				noResultsNode,
 				columnData = [],
-				currentData,
-				allowClick = true;
+				currentData;
 
 		init();
 
@@ -162,7 +159,6 @@ require([
 			});
 
 			function layerAddHandler(layer) {
-				//$("#draggable2").css("left", 1173 + "px");
 				$("#draggable2").draggable({
 					axis:"x",
 					containment:"#containment-wrapper",
@@ -188,7 +184,7 @@ require([
 						map.setTimeExtent(timeExtent);
 					}
 				});
-				dom.byId("selectedDateRange").innerHTML = "September 12, 2014";
+				dom.byId("selectedDateRange").innerHTML = "September 01, 2014";
 			}
 
 			function mapClickHandler(event) {
@@ -197,37 +193,31 @@ require([
 				identifyParams.mapExtent = map.extent;
 				identifyTask.execute(identifyParams, function (results) {
 					if (results.length > 0) {
-						$("#no-results").fadeOut("slow", function () {
-						});
-						// loading indicator
-						domStyle.set(loadingIndicatorNode, "display", "block");
+						var _selectedFIPS = results[0].feature.attributes.ID;
+						var _geometry = results[0].feature.geometry;
+						addHighlightGraphic(map, _geometry);
 
-						// FIPS
-						selectedFIPS = results[0].feature.attributes.ID;
+						$("#no-results").fadeOut("slow");
+						domStyle.set(loadingIndicatorNode, "display", "block");
+						domConstruct.create("div", {
+							id: "maskingDiv",
+							style: {
+								"width" : "100%",
+								"height": "100%",
+								"top": 0,
+								"left": 0,
+								"background-color" : "red",
+								"position": "absolute",
+								"opacity" : 0.0,
+								"z-index" : 100
+							}
+						}, dom.byId("centerPane"));
 
 						var query = new Query();
 						query.returnGeometry = false;
 						query.outFields = ["*"];
-
-						/*{
-						 "x" : -9645848.0472,
-						 "y" : 3783664.9805999994
-						 }*/
-
-						// county / state
-						if (results.layerId === 4) {
-							//states
-							query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
-						} else {
-							//counties
-							query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
-							//query.where = "ID = " + selectedFIPS;
-						}
-
-						addHighlightGraphic(map, results[0].feature.geometry);
-
+						query.where = "CountyCategories_ADMIN_FIPS = " + _selectedFIPS;
 						var qt = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/CntyDroughtTime/FeatureServer/0");
-						//var qt = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1");
 						qt.execute(query,function (result) {
 							columnData = [];
 							var xAxis = ['x'],
@@ -418,12 +408,12 @@ require([
 
 							dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
 						}).then(function (response) {
-									domStyle.set(loadingIndicatorNode, "display", "none");
-									domStyle.set(scrubberNode, "display", "block");
-								});
-					} else {
-						$("#no-results").fadeIn("slow", function () {
+							domStyle.set(loadingIndicatorNode, "display", "none");
+							domStyle.set(scrubberNode, "display", "block");
+							domConstruct.destroy("maskingDiv");
 						});
+					} else {
+						$("#no-results").fadeIn("slow");
 						dom.byId("countyName").innerHTML = "";
 						map.graphics.clear();
 					}
