@@ -64,7 +64,8 @@ require([
 				scrubberNode,
 				noResultsNode,
 				columnData = [],
-				currentData;
+				currentData,
+				allowClick = true;
 
 		init();
 
@@ -142,8 +143,7 @@ require([
 				});
 				map.addLayer(countyLayer);
 
-				map.on("click", doIdentify);
-				map.on("load", mapLoadedHandler);
+				map.on("click", mapClickHandler);
 				map.on("layer-add", layerAddHandler);
 
 				loadGeococder(map);
@@ -161,12 +161,7 @@ require([
 				deferred.cancel();
 			});
 
-			function mapLoadedHandler(map) {
-
-			}
-
 			function layerAddHandler(layer) {
-				console.log(layer);
 				//$("#draggable2").css("left", 1173 + "px");
 				$("#draggable2").draggable({
 					axis:"x",
@@ -196,252 +191,246 @@ require([
 				dom.byId("selectedDateRange").innerHTML = "September 12, 2014";
 			}
 
-			function doIdentify(event) {
+			function mapClickHandler(event) {
 				selectedPoint = event.mapPoint;
 				identifyParams.geometry = selectedPoint;
 				identifyParams.mapExtent = map.extent;
 				identifyTask.execute(identifyParams, function (results) {
-							console.log(results);
-							if (results.length > 0) {
-								// loading indicator
-								$("#no-results").fadeOut("slow", function () { });
-								domStyle.set(loadingIndicatorNode, "display", "block");
+					if (results.length > 0) {
+						$("#no-results").fadeOut("slow", function () {
+						});
+						// loading indicator
+						domStyle.set(loadingIndicatorNode, "display", "block");
 
-								// FIPS
-								selectedFIPS = results[0].feature.attributes.ID;
+						// FIPS
+						selectedFIPS = results[0].feature.attributes.ID;
 
-								var query = new Query();
-								query.returnGeometry = false;
-								query.outFields = ["*"];
+						var query = new Query();
+						query.returnGeometry = false;
+						query.outFields = ["*"];
 
-								/*{
-        							"x" : -9645848.0472,
-							        "y" : 3783664.9805999994
-							    }*/
+						/*{
+						 "x" : -9645848.0472,
+						 "y" : 3783664.9805999994
+						 }*/
 
-								// county / state
-								if (results.layerId === 4) {
-									//states
-									query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
-								} else {
-									//counties
-									query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
-									//query.where = "ID = " + selectedFIPS;
-								}
-
-								addHighlightGraphic(map, results[0].feature.geometry);
-
-								var qt = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/CntyDroughtTime/FeatureServer/0");
-								//var qt = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1");
-								qt.execute(query,function (result) {
-									var xAxis = ['x'],
-											data0 = ['D0'],
-											data1 = ['D1'],
-											data2 = ['D2'],
-											data3 = ['D3'],
-											data4 = ['D4'],
-											selectedCountyName = "",
-											selectedState = "";
-									if (results.layerId === 4) {
-										// State
-										selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
-									} else {
-										// County and State
-										selectedCountyName = result.features[0].attributes["CountyCategories_name"];
-										selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
-									}
-
-									//var count = 0;
-									array.forEach(result.features, function (feature) {
-										//if (count < 200) {
-											var utcSeconds = feature.attributes["CountyCategories_Date"];
-											var d = new Date(parseFloat(utcSeconds));
-											xAxis.push(d);
-											data0.push(feature.attributes["CountyCategories_D0"]);
-											data1.push(feature.attributes["CountyCategories_D1"]);
-											data2.push(feature.attributes["CountyCategories_D2"]);
-											data3.push(feature.attributes["CountyCategories_D3"]);
-											data4.push(feature.attributes["CountyCategories_D4"]);
-											//count++;
-										//}
-									});
-									columnData.push(xAxis);
-									columnData.push(data0);
-									columnData.push(data1);
-									columnData.push(data2);
-									columnData.push(data3);
-									columnData.push(data4);
-									console.log(columnData);
-									chart = c3.generate({
-										bindto:'#chart',
-										data:{
-											x:'x',
-											colors:{
-												D0:'rgb(255, 255, 0)',
-												D1:'rgb(241, 202, 141)',
-												D2:'rgb(255, 170, 0)',
-												D3:'rgb(255, 85, 0)',
-												D4:'rgb(168, 0, 0)'
-											},
-											columns:columnData,
-											selection:{
-												enabled:true,
-												grouped:true,
-												multiple:false
-											},
-											types:{
-												D0:'area-spline',
-												D1:'area-spline',
-												D2:'area-spline',
-												D3:'area-spline',
-												D4:'area-spline'
-											},
-											groups:[
-												['data0', 'data1', 'data2', 'data3', 'data4']
-											],
-											onclick:function (d, element) {
-												//console.log(element);
-												//console.log(element["cx"].baseVal.value);
-												var _loc = element["cx"].baseVal.value;
-												$("#draggable2").css("left", (_loc - 10) + "px");
-												selectedDate = new Date(d.x);
-												var day = selectedDate.getDate();
-												var month = monthNames[selectedDate.getMonth()];
-												var yr = selectedDate.getFullYear();
-
-												dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
-												var startDate = new Date(d.x);
-												var endDate = new Date(d.x);
-												var timeExtent = new TimeExtent(startDate, endDate);
-
-												map.setTimeExtent(timeExtent);
-											},
-											onmouseover:function (d) {
-												currentData = d;
-												$("#chartDataTooltip").css("display", "block");
-											},
-											onmouseout:function (d) {
-												currentData = d;
-												$("#chartDataTooltip").css("display", "none");
-											},
-											names:{
-												D0:"Dry",
-												D1:"Moderate",
-												D2:"Severe",
-												D3:"Extreme",
-												D4:"Exceptional"
-											}
-										},
-										size:{
-											height:150
-										},
-										axis:{
-											x:{
-												type:"timeseries",
-												tick:{
-													count:5,
-													format:"%Y"
-												}
-											},
-											y:{
-												show:false,
-												max:100
-											}
-										},
-										tooltip:{
-											format:{
-												title:function (d) {
-													var day = d.getDate();
-													var month = monthNames[d.getMonth()];
-													var yr = d.getFullYear();
-													return month + " " + day + ", " + yr;
-												},
-												value:function (value, ratio, id) {
-													return value + "%";
-												}
-											}
-										},
-										legend:{
-											show:false
-										},
-										point:{
-											r:0,
-											show:true
-										},
-										onmouseover:function () {
-											//console.log("mouseover")
-										},
-										onmouseout:function () {
-											//console.log("mouseout")
-										}
-									});
-
-									chart.xgrids([
-										{
-											value:new Date("2000"), text:"2000"
-										},
-										{
-											value:new Date("2001"), text:""
-										},
-										{
-											value:new Date("2002"), text:"2002"
-										},
-										{
-											value:new Date("2003"), text:""
-										},
-										{
-											value:new Date("2004"), text:"2004"
-										},
-										{
-											value:new Date("2005"), text:""
-										},
-										{
-											value:new Date("2006"), text:"2006"
-										},
-										{
-											value:new Date("2007"), text:""
-										},
-										{
-											value:new Date("2008"), text:"2008"
-										},
-										{
-											value:new Date("2009"), text:""
-										},
-										{
-											value:new Date("2010"), text:"2010"
-										},
-										{
-											value:new Date("2011"), text:""
-										},
-										{
-											value:new Date("2012"), text:"2012"
-										},
-										{
-											value:new Date("2013"), text:""
-										},
-										{
-											value:new Date("2014"), text:"2014"
-										}
-									]);
-
-									dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
-								}).then(function (response) {
-											console.log(response);
-											domStyle.set(loadingIndicatorNode, "display", "none");
-											domStyle.set(scrubberNode, "display", "block");
-										});
-							} else {
-								$("#no-results").fadeIn("slow", function () {
-									// Animation complete
-								});
-								dom.byId("countyName").innerHTML = "";
-								map.graphics.clear();
-							}
+						// county / state
+						if (results.layerId === 4) {
+							//states
+							query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
+						} else {
+							//counties
+							query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
+							//query.where = "ID = " + selectedFIPS;
 						}
 
-				);
+						addHighlightGraphic(map, results[0].feature.geometry);
+
+						var qt = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/CntyDroughtTime/FeatureServer/0");
+						//var qt = new QueryTask("http://services.arcgis.com/nGt4QxSblgDfeJn9/arcgis/rest/services/USADroughtOverlayNew/FeatureServer/1");
+						qt.execute(query,function (result) {
+							columnData = [];
+							var xAxis = ['x'],
+									data0 = ['D0'],
+									data1 = ['D1'],
+									data2 = ['D2'],
+									data3 = ['D3'],
+									data4 = ['D4'],
+									selectedCountyName = "",
+									selectedState = "";
+							if (results.layerId === 4) {
+								// State
+								selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
+							} else {
+								// County and State
+								selectedCountyName = result.features[0].attributes["CountyCategories_name"];
+								selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
+							}
+
+							array.forEach(result.features, function (feature) {
+								var utcSeconds = feature.attributes["CountyCategories_Date"];
+								var d = new Date(parseFloat(utcSeconds));
+								xAxis.push(d);
+								data0.push(feature.attributes["CountyCategories_D0"]);
+								data1.push(feature.attributes["CountyCategories_D1"]);
+								data2.push(feature.attributes["CountyCategories_D2"]);
+								data3.push(feature.attributes["CountyCategories_D3"]);
+								data4.push(feature.attributes["CountyCategories_D4"]);
+							});
+							columnData.push(xAxis);
+							columnData.push(data0);
+							columnData.push(data1);
+							columnData.push(data2);
+							columnData.push(data3);
+							columnData.push(data4);
+							console.log(columnData);
+							chart = c3.generate({
+								bindto:'#chart',
+								data:{
+									x:'x',
+									colors:{
+										D0:'rgb(255, 255, 0)',
+										D1:'rgb(241, 202, 141)',
+										D2:'rgb(255, 170, 0)',
+										D3:'rgb(255, 85, 0)',
+										D4:'rgb(168, 0, 0)'
+									},
+									columns:columnData,
+									selection:{
+										enabled:true,
+										grouped:true,
+										multiple:false
+									},
+									types:{
+										D0:'area-spline',
+										D1:'area-spline',
+										D2:'area-spline',
+										D3:'area-spline',
+										D4:'area-spline'
+									},
+									groups:[
+										['data0', 'data1', 'data2', 'data3', 'data4']
+									],
+									onclick:function (d, element) {
+										//console.log(element);
+										//console.log(element["cx"].baseVal.value);
+										var _loc = element["cx"].baseVal.value;
+										$("#draggable2").css("left", (_loc - 10) + "px");
+										selectedDate = new Date(d.x);
+										var day = selectedDate.getDate();
+										var month = monthNames[selectedDate.getMonth()];
+										var yr = selectedDate.getFullYear();
+
+										dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
+										var startDate = new Date(d.x);
+										var endDate = new Date(d.x);
+										var timeExtent = new TimeExtent(startDate, endDate);
+
+										map.setTimeExtent(timeExtent);
+									},
+									onmouseover:function (d) {
+										currentData = d;
+										$("#chartDataTooltip").css("display", "block");
+									},
+									onmouseout:function (d) {
+										currentData = d;
+										$("#chartDataTooltip").css("display", "none");
+									},
+									names:{
+										D0:"Dry",
+										D1:"Moderate",
+										D2:"Severe",
+										D3:"Extreme",
+										D4:"Exceptional"
+									}
+								},
+								size:{
+									height:150
+								},
+								axis:{
+									x:{
+										type:"timeseries",
+										tick:{
+											count:5,
+											format:"%Y"
+										}
+									},
+									y:{
+										show:false,
+										max:100
+									}
+								},
+								tooltip:{
+									format:{
+										title:function (d) {
+											var day = d.getDate();
+											var month = monthNames[d.getMonth()];
+											var yr = d.getFullYear();
+											return month + " " + day + ", " + yr;
+										},
+										value:function (value, ratio, id) {
+											return value + "%";
+										}
+									}
+								},
+								legend:{
+									show:false
+								},
+								point:{
+									r:0,
+									show:true
+								},
+								onmouseover:function () {
+									//console.log("mouseover")
+								},
+								onmouseout:function () {
+									//console.log("mouseout")
+								}
+							});
+
+							chart.xgrids([
+								{
+									value:new Date("2000"), text:"2000"
+								},
+								{
+									value:new Date("2001"), text:""
+								},
+								{
+									value:new Date("2002"), text:"2002"
+								},
+								{
+									value:new Date("2003"), text:""
+								},
+								{
+									value:new Date("2004"), text:"2004"
+								},
+								{
+									value:new Date("2005"), text:""
+								},
+								{
+									value:new Date("2006"), text:"2006"
+								},
+								{
+									value:new Date("2007"), text:""
+								},
+								{
+									value:new Date("2008"), text:"2008"
+								},
+								{
+									value:new Date("2009"), text:""
+								},
+								{
+									value:new Date("2010"), text:"2010"
+								},
+								{
+									value:new Date("2011"), text:""
+								},
+								{
+									value:new Date("2012"), text:"2012"
+								},
+								{
+									value:new Date("2013"), text:""
+								},
+								{
+									value:new Date("2014"), text:"2014"
+								}
+							]);
+
+							dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
+						}).then(function (response) {
+									domStyle.set(loadingIndicatorNode, "display", "none");
+									domStyle.set(scrubberNode, "display", "block");
+								});
+					} else {
+						$("#no-results").fadeIn("slow", function () {
+						});
+						dom.byId("countyName").innerHTML = "";
+						map.graphics.clear();
+					}
+				});
 			}
 		}
+
 
 		function addHighlightGraphic(map, geometry) {
 			map.graphics.clear();
