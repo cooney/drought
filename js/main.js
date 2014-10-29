@@ -199,7 +199,6 @@ require([
 			function doIdentify(event) {
 				selectedPoint = event.mapPoint;
 				identifyParams.geometry = selectedPoint;
-				console.log(selectedPoint)
 				identifyParams.mapExtent = map.extent;
 				identifyTask.execute(identifyParams, function (results) {
 							console.log(results);
@@ -223,6 +222,7 @@ require([
 								// county / state
 								if (results.layerId === 4) {
 									//states
+									query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
 								} else {
 									//counties
 									query.where = "CountyCategories_ADMIN_FIPS = " + selectedFIPS;
@@ -251,15 +251,19 @@ require([
 										selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
 									}
 
+									//var count = 0;
 									array.forEach(result.features, function (feature) {
-										var utcSeconds = feature.attributes["CountyCategories_Date"];
-										var d = new Date(parseFloat(utcSeconds));
-										xAxis.push(d);
-										data0.push(feature.attributes["CountyCategories_D0"]);
-										data1.push(feature.attributes["CountyCategories_D1"]);
-										data2.push(feature.attributes["CountyCategories_D2"]);
-										data3.push(feature.attributes["CountyCategories_D3"]);
-										data4.push(feature.attributes["CountyCategories_D4"]);
+										//if (count < 200) {
+											var utcSeconds = feature.attributes["CountyCategories_Date"];
+											var d = new Date(parseFloat(utcSeconds));
+											xAxis.push(d);
+											data0.push(feature.attributes["CountyCategories_D0"]);
+											data1.push(feature.attributes["CountyCategories_D1"]);
+											data2.push(feature.attributes["CountyCategories_D2"]);
+											data3.push(feature.attributes["CountyCategories_D3"]);
+											data4.push(feature.attributes["CountyCategories_D4"]);
+											//count++;
+										//}
 									});
 									columnData.push(xAxis);
 									columnData.push(data0);
@@ -267,7 +271,7 @@ require([
 									columnData.push(data2);
 									columnData.push(data3);
 									columnData.push(data4);
-
+									console.log(columnData);
 									chart = c3.generate({
 										bindto:'#chart',
 										data:{
@@ -335,7 +339,7 @@ require([
 											x:{
 												type:"timeseries",
 												tick:{
-													count:15,
+													count:5,
 													format:"%Y"
 												}
 											},
@@ -374,49 +378,49 @@ require([
 
 									chart.xgrids([
 										{
-											value:new Date("2000"), text:""
+											value:new Date("2000"), text:"2000"
 										},
 										{
 											value:new Date("2001"), text:""
 										},
 										{
-											value:new Date("2002"), text:""
+											value:new Date("2002"), text:"2002"
 										},
 										{
 											value:new Date("2003"), text:""
 										},
 										{
-											value:new Date("2004"), text:""
+											value:new Date("2004"), text:"2004"
 										},
 										{
 											value:new Date("2005"), text:""
 										},
 										{
-											value:new Date("2006"), text:""
+											value:new Date("2006"), text:"2006"
 										},
 										{
 											value:new Date("2007"), text:""
 										},
 										{
-											value:new Date("2008"), text:""
+											value:new Date("2008"), text:"2008"
 										},
 										{
 											value:new Date("2009"), text:""
 										},
 										{
-											value:new Date("2010"), text:""
+											value:new Date("2010"), text:"2010"
 										},
 										{
 											value:new Date("2011"), text:""
 										},
 										{
-											value:new Date("2012"), text:""
+											value:new Date("2012"), text:"2012"
 										},
 										{
 											value:new Date("2013"), text:""
 										},
 										{
-											value:new Date("2014"), text:""
+											value:new Date("2014"), text:"2014"
 										}
 									]);
 

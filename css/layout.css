@@ -257,3 +257,8 @@ body {
 	margin-left: 3px;
 	margin-top: 3px;
 }
+
+/* x-axis ticks */
+.c3-axis-x .tick {
+	opacity: 0 !important;
+}
