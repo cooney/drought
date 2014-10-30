@@ -215,11 +215,11 @@ require([
 				name:"level"
 			}, "radioCounty").startup();
 
-			var radioState = new RadioButton({
+			/*var radioState = new RadioButton({
 				checked:false,
 				value:"state",
 				name:"level"
-			}, "radioState").startup();
+			}, "radioState").startup();*/
 
 			var createMapOptions = {
 				mapOptions:{
@@ -308,20 +308,7 @@ require([
 
 						$("#no-results").fadeOut("slow");
 						domStyle.set(loadingIndicatorNode, "display", "block");
-						$("#test").css("display", "block");
-						/*domConstruct.create("div", {
-							id:"maskingDiv",
-							style:{
-								"width":"100%",
-								"height":"100%",
-								"top":0,
-								"left":0,
-								"background-color":"red",
-								"position":"absolute",
-								"opacity":0.0,
-								"z-index":100
-							}
-						}, dom.byId("centerPane"));*/
+						$("#mask").css("display", "block");
 
 						var query = new Query();
 						query.returnGeometry = false;
@@ -521,7 +508,7 @@ require([
 									domStyle.set(loadingIndicatorNode, "display", "none");
 									domStyle.set(scrubberNode, "display", "block");
 									setTimeout(function() {
-										$("#test").css("display", "none");
+										$("#mask").css("display", "none");
 									}, 1000);
 								});
 					} else {
