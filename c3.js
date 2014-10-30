@@ -3465,21 +3465,14 @@
 		if (config.grid_x_show) {
 			$$.updateXGrid();
 		}
-		$$.xgridLines = main.select('.' + CLASS.xgridLines).selectAll('.' + CLASS.xgridLine)
-				.data(config.grid_x_lines);
+		$$.xgridLines = main.select('.' + CLASS.xgridLines).selectAll('.' + CLASS.xgridLine).data(config.grid_x_lines);
 		// enter
 		xgridLine = $$.xgridLines.enter().append('g')
 				.attr("class", function (d) {
 					return CLASS.xgridLine + (d.class ? ' ' + d.class : '');
 				});
-		xgridLine.append('line')
-				.style("opacity", 0);
-		xgridLine.append('text')
-				.attr("text-anchor", "end")
-				.attr("transform", config.axis_rotated ? "" : "rotate(-90)")
-				.attr('dx', config.axis_rotated ? 0 : -$$.margin.top)
-				.attr('dy', -5)
-				.style("opacity", 0);
+		xgridLine.append('line').style("opacity", 0);
+		xgridLine.append('text').attr("text-anchor", "end").attr("transform", config.axis_rotated ? "" : "rotate(-90)").attr('dx', config.axis_rotated ? 0 : -$$.margin.top).attr('dy', -5).style("opacity", 0);
 		// udpate
 		// done in d3.transition() of the end of this function
 		// exit
@@ -6551,12 +6544,19 @@
 	// 1. category axis
 	// 2. ceil values of translate/x/y to int for half pixel antialiasing
 	function c3_axis(d3, isCategory) {
-		var scale = d3.scale.linear(), orient = "bottom", innerTickSize = 6, outerTickSize = 6, tickPadding = 3, tickValues = null, tickFormat, tickArguments;
+		var scale = d3.scale.linear(),
+				orient = "bottom",
+				innerTickSize = 6,
+				outerTickSize = 6,
+				tickPadding = 3,
+				tickValues = null, tickFormat, tickArguments;
 
 		var tickOffset = 0, tickCulling = true, tickCentered;
 
 		function axisX(selection, x) {
 			selection.attr("transform", function (d) {
+				//var tmpShit = Math.ceil(x(d) + tickOffset);
+				//console.log(tmpShit)
 				return "translate(" + Math.ceil(x(d) + tickOffset) + ", 0)";
 			});
 		}

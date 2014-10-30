@@ -40,6 +40,7 @@ body {
 	margin-right: 5px;
 	height: 150px;
 	font-size: 0.8em;
+	overflow: hidden;
 }
 
 /* PIE chart */
@@ -67,7 +68,7 @@ body {
 	z-index: 100;
 	opacity: 1.0;
 	position: absolute !important;
-	bottom: 5px;
+	/*bottom: 5px;*/
 }
 
 #countyName {
@@ -206,11 +207,15 @@ body {
 /* vertical grid lines */
 .c3-grid line {
 	stroke: #808080 !important;
-	opacity: 0.5 !important;
+	opacity: 0.9 !important;
 }
 
 .c3 path, .c3 line {
 	/*stroke: white !important;*/
+}
+
+.c3-grid text {
+	fill: #000 !important;
 }
 
 
@@ -261,21 +266,25 @@ body {
 	opacity: 0 !important;
 }
 
+.c3-xgrid-line {
+
+}
+
 /* */
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D0 > g.c3-shapes.c3-shapes-D0.c3-areas.c3-areas-D0 > path {
-	opacity: 0.7 !important;
+	opacity: 0.5 !important;
 }
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D1 > g.c3-shapes.c3-shapes-D1.c3-areas.c3-areas-D1 > path {
-	opacity: 0.5 !important;
+	opacity: 0.3 !important;
 }
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D2 > g.c3-shapes.c3-shapes-D2.c3-areas.c3-areas-D2 > path {
-	opacity: 0.5 !important;
+	opacity: 0.3 !important;
 }
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D3 > g.c3-shapes.c3-shapes-D3.c3-areas.c3-areas-D3 > path {
-	opacity: 0.5 !important;
+	opacity: 0.3 !important;
 }
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D4 > g.c3-shapes.c3-shapes-D4.c3-areas.c3-areas-D4 > path {
