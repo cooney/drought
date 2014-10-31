@@ -209,12 +209,12 @@ require([
 							"</div>"));
 
 			/*var radioCounty = new RadioButton({
-				checked:true,
-				value:"county",
-				name:"level"
-			}, "radioCounty").startup();
+			 checked:true,
+			 value:"county",
+			 name:"level"
+			 }, "radioCounty").startup();
 
-			var radioState = new RadioButton({
+			 var radioState = new RadioButton({
 			 checked:false,
 			 value:"state",
 			 name:"level"
@@ -358,12 +358,33 @@ require([
 								data:{
 									x:'x',
 									colors:{
-										D0:'rgb(255, 255, 0)',
-										D1:'rgb(241, 202, 141)',
-										D2:'rgb(255, 170, 0)',
-										D3:'rgb(255, 85, 0)',
-										D4:'rgb(168, 0, 0)'
+									 D0:'rgb(255, 255, 0)',
+									 D1:'rgb(241, 202, 141)',
+									 D2:'rgb(255, 170, 0)',
+									 D3:'rgb(255, 85, 0)',
+									 D4:'rgb(168, 0, 0)'
+									 },
+									/*colors:{
+										D0:'rgb(254, 244, 174)',
+										D1:'rgb(248, 228, 198)',
+										D2:'rgb(246, 205, 163)',
+										D3:'rgb(255, 170, 127)',
+										D4:'rgb(211, 127, 127)'
 									},
+									colors:{
+									 D0:'rgb(214, 192, 221)',
+									 D1:'rgb(255, 212, 210)',
+									 D2:'rgb(252, 225, 237)',
+									 D3:'rgb(255, 241, 247)',
+									 D4:'rgb(254, 244, 174)'
+									 },*/
+									/*colors:{
+									 D0:'rgb(253, 237, 151)',
+									 D1:'rgb(252, 223, 236)',
+									 D2:'rgb(253, 198, 138)',
+									 D3:'rgb(255, 150, 87)',
+									 D4:'rgb(168, 40, 42)'
+									 },*/
 									columns:columnData,
 									selection:{
 										enabled:true,
@@ -457,7 +478,6 @@ require([
 									//console.log("mouseout")
 								}
 							});
-
 							chart.xgrids([
 								{
 									value:new Date("2000"), text:"2000"

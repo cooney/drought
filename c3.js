@@ -3465,11 +3465,11 @@
 		}
 		$$.xgridLines = main.select('.' + CLASS.xgridLines).selectAll('.' + CLASS.xgridLine).data(config.grid_x_lines);
 		// enter
-		xgridLine = $$.xgridLines.enter().append('g')
-				.attr("class", function (d) {
+		xgridLine = $$.xgridLines.enter().append('g').attr("class", function (d) {
 					return CLASS.xgridLine + (d.class ? ' ' + d.class : '');
 				});
 		xgridLine.append('line').style("opacity", 0);
+		// xgrid line style
 		xgridLine.append('text').attr("text-anchor", "end").attr("transform", config.axis_rotated ? "" : "rotate(-90)").attr('dx', config.axis_rotated ? 0 : -$$.margin.top).attr('dy', -5).style("opacity", 0);
 		// udpate
 		// done in d3.transition() of the end of this function
