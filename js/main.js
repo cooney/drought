@@ -301,7 +301,8 @@ require([
 				identifyParams.geometry = selectedPoint;
 				identifyParams.mapExtent = map.extent;
 				identifyTask.execute(identifyParams, function (results) {
-					if (results.length > 0) {
+					console.log(results);
+					if (results.length > 0 && (results[0].layerId == 3)) {
 						var _selectedFIPS = results[0].feature.attributes.ID;
 						var _geometry = results[0].feature.geometry;
 						addHighlightGraphic(map, _geometry);
@@ -357,14 +358,14 @@ require([
 								bindto:'#chart',
 								data:{
 									x:'x',
-									colors:{
+									/*colors:{
 									 D0:'rgb(255, 255, 0)',
 									 D1:'rgb(241, 202, 141)',
 									 D2:'rgb(255, 170, 0)',
 									 D3:'rgb(255, 85, 0)',
 									 D4:'rgb(168, 0, 0)'
 									 },
-									/*colors:{
+									colors:{
 										D0:'rgb(254, 244, 174)',
 										D1:'rgb(248, 228, 198)',
 										D2:'rgb(246, 205, 163)',
@@ -378,13 +379,13 @@ require([
 									 D3:'rgb(255, 241, 247)',
 									 D4:'rgb(254, 244, 174)'
 									 },*/
-									/*colors:{
+									colors:{
 									 D0:'rgb(253, 237, 151)',
 									 D1:'rgb(252, 223, 236)',
 									 D2:'rgb(253, 198, 138)',
 									 D3:'rgb(255, 150, 87)',
 									 D4:'rgb(168, 40, 42)'
-									 },*/
+									 },
 									columns:columnData,
 									selection:{
 										enabled:true,
