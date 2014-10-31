@@ -98,111 +98,6 @@ body {
 	background-color: #989898;
 }
 
-#loadingIndicator {
-	display: none;
-	position: absolute;
-	z-index: 100;
-	width: 100%;
-	height: 100%;
-	opacity: 0.7;
-	/*background-color: rgb(255, 255, 255);*/
-}
-
-.circle {
-	display:none
-
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	background-color: rgba(0, 0, 0, 0);
-	border: 5px solid rgba(41, 41, 41, 0.89);
-	opacity: .9;
-	border-right: 5px solid rgba(0, 0, 0, 0);
-	border-left: 5px solid rgba(0, 0, 0, 0);
-	border-radius: 50px;
-	box-shadow: 0 0 35px #27252a;
-	width: 50px;
-	height: 50px;
-	margin: 0 auto;
-	-moz-animation: spinPulse 1s infinite ease-in-out;
-	-webkit-animation: spinPulse 1s infinite linear;
-}
-
-.circle1 {
-	position: fixed;
-	top: 51%;
-	left: 51%;
-	background-color: rgba(0, 0, 0, 0);
-	border: 5px solid rgba(41, 41, 41, 0.89);
-	opacity: .9;
-	border-left: 5px solid rgba(0, 0, 0, 0);
-	border-right: 5px solid rgba(0, 0, 0, 0);
-	border-radius: 50px;
-	box-shadow: 0 0 15px #454545;
-	width: 30px;
-	height: 30px;
-	margin: 0 auto;
-	/*position: relative;
-	top: -50px;*/
-	-moz-animation: spinoffPulse 1s infinite linear;
-	-webkit-animation: spinoffPulse 1s infinite linear;
-}
-
-@-moz-keyframes spinPulse {
-	0% {
-		-moz-transform: rotate(160deg);
-		opacity: 0;
-		box-shadow: 0 0 1px #098100;
-	}
-
-	50% {
-		-moz-transform: rotate(145deg);
-		opacity: 1;
-	}
-
-	100% {
-		-moz-transform: rotate(-320deg);
-		opacity: 0;
-	}
-}
-
-@-moz-keyframes spinoffPulse {
-	0% {
-		-moz-transform: rotate(0deg);
-	}
-
-	100% {
-		-moz-transform: rotate(360deg);
-	}
-}
-
-@-webkit-keyframes spinPulse {
-	0% {
-		-webkit-transform: rotate(160deg);
-		opacity: 0;
-		box-shadow: 0 0 1px #098100;
-	}
-
-	50% {
-		-webkit-transform: rotate(145deg);
-		opacity: 1;
-	}
-
-	100% {
-		-webkit-transform: rotate(-320deg);
-		opacity: 0;
-	}
-}
-
-@-webkit-keyframes spinoffPulse {
-	0% {
-		-webkit-transform: rotate(0deg);
-	}
-
-	100% {
-		-webkit-transform: rotate(360deg);
-	}
-}
 
 /* vertical grid lines */
 .c3-grid line {
@@ -219,48 +114,6 @@ body {
 }
 
 
-/* SCRUBBER */
-#scrubberThumb {
-	background-color: rgb(103, 103, 103);
-	border-radius: 30%;
-	width: 21px;
-	height: 20px;
-	margin-left: -10px;
-	margin-top: 5px;
-}
-
-.ui-widget-content {
-	/*border: 1px !important;
-	background: transparent !important;
-	color: transparent !important;*/
-}
-
-/* Tooltip */
-.customTooltip {
-	height: 130px;
-	width: 150px;
-	position: absolute;
-	z-index: 1000;
-	bottom: 5px;
-	background-color: rgb(247, 247, 247);
-	opacity: 0.85;
-	border-radius: 4px;
-	color: rgb(44, 44, 44);
-	font-size: 0.80em;
-	display: none;
-}
-
-#tooltipHeader {
-	background-color: rgb(231, 231, 231);
-	/*padding: 2px;
-	color: rgb(34, 34, 34);*/
-}
-
-.tooltipCategory {
-	margin-left: 3px;
-	margin-top: 3px;
-}
-
 /* x-axis ticks */
 .c3-axis-x .tick {
 	opacity: 0 !important;
@@ -272,11 +125,11 @@ body {
 
 /* */
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D0 > g.c3-shapes.c3-shapes-D0.c3-areas.c3-areas-D0 > path {
-	opacity: 0.5 !important;
+	opacity: 0.4 !important;
 }
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D1 > g.c3-shapes.c3-shapes-D1.c3-areas.c3-areas-D1 > path {
-	opacity: 0.3 !important;
+	opacity: 0.4 !important;
 }
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D2 > g.c3-shapes.c3-shapes-D2.c3-areas.c3-areas-D2 > path {
@@ -288,5 +141,5 @@ body {
 }
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D4 > g.c3-shapes.c3-shapes-D4.c3-areas.c3-areas-D4 > path {
-	opacity: 0.7 !important;
+	opacity: 0.6 !important;
 }
