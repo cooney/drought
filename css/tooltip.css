@@ -1,0 +1,24 @@
+.customTooltip {
+	height: 130px;
+	width: 150px;
+	position: absolute;
+	z-index: 1000;
+	bottom: 5px;
+	background-color: rgb(247, 247, 247);
+	opacity: 0.85;
+	border-radius: 4px;
+	color: rgb(44, 44, 44);
+	font-size: 0.80em;
+	display: none;
+}
+
+#tooltipHeader {
+	background-color: rgb(231, 231, 231);
+	/*padding: 2px;
+	color: rgb(34, 34, 34);*/
+}
+
+.tooltipCategory {
+	margin-left: 3px;
+	margin-top: 3px;
+}
