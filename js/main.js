@@ -186,35 +186,35 @@ require([
 							"		</th>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: left;'>Dry</td>" +
-							"		<td style='text-align: left;' id='tooltipDry'></td>" +
+							"		<td class='tooltip-label'>Dry</td>" +
+							"		<td class='tooltip-label' id='tooltipDry'></td>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: left;'>Moderate</td>" +
-							"		<td style='text-align: left;' id='tooltipModerate'></td>" +
+							"		<td class='tooltip-label'>Moderate</td>" +
+							"		<td class='tooltip-label' id='tooltipModerate'></td>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: left;'>Severe</td>" +
-							"		<td style='text-align: left;' id='tooltipSevere'></td>" +
+							"		<td class='tooltip-label'>Severe</td>" +
+							"		<td class='tooltip-label' id='tooltipSevere'></td>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: left;'>Extreme</td>" +
-							"		<td style='text-align: left;' id='tooltipExtreme'></td>" +
+							"		<td class='tooltip-label'>Extreme</td>" +
+							"		<td class='tooltip-label' id='tooltipExtreme'></td>" +
 							"	</tr>" +
 							"	<tr>" +
-							"		<td style='text-align: left;'>Exceptional</td>" +
-							"		<td style='text-align: left;' id='tooltipExceptional'></td>" +
+							"		<td class='tooltip-label'>Exceptional</td>" +
+							"		<td class='tooltip-label' id='tooltipExceptional'></td>" +
 							"	</tr>" +
 							"</table>" +
 							"</div>"));
 
-			var radioCounty = new RadioButton({
+			/*var radioCounty = new RadioButton({
 				checked:true,
 				value:"county",
 				name:"level"
 			}, "radioCounty").startup();
 
-			/*var radioState = new RadioButton({
+			var radioState = new RadioButton({
 			 checked:false,
 			 value:"state",
 			 name:"level"
@@ -259,6 +259,7 @@ require([
 				identifyParams.height = map.height;
 			}, function (error) {
 				console.log("Error: ", error.code, " Message: ", error.message);
+				domStyle.set(loadingIndicatorNode, "display", "none");
 				deferred.cancel();
 			});
 

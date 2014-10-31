@@ -99,24 +99,25 @@ body {
 }
 
 
-/* vertical grid lines */
+/* VERTICAL GRID LINES */
 .c3-grid line {
-	stroke: #808080 !important;
+	stroke: #949494 !important;
 	opacity: 0.9 !important;
 }
 
+/* line */
 .c3 path, .c3 line {
 	/*stroke: white !important;*/
 }
 
+/* vertical grid line text */
 .c3-grid text {
-	fill: #000 !important;
+	fill: #666666 !important;
 }
 
-
-/* x-axis ticks */
+/* X-AXIS TICKS */
 .c3-axis-x .tick {
-	opacity: 0 !important;
+	opacity: 0.0 !important;
 }
 
 .c3-xgrid-line {

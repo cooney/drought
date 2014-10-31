@@ -15,7 +15,6 @@
 <link rel="stylesheet" type="text/css" href="css/spinner.css">
 <link rel="stylesheet" type="text/css" href="css/scrubber.css">
 <link rel="stylesheet" type="text/css" href="css/tooltip.css">
-<link rel="stylesheet" type="text/css" href="css/charts.css">
 <link rel="stylesheet" type="text/css" href="c3.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 
@@ -27,41 +26,6 @@
 <script src="js/main.js"></script>
 
 <style>
-	.draggable {
-		width: 1px;
-		height: 120px;
-		float: left;
-		/*border-left: 20px solid transparent;
-		border-right: 20px solid transparent;
-		border-top: 20px solid #f00;*/
-	}
-
-	#draggable, #draggable2 {
-		margin-bottom: 0px;
-		/*position: relative;*/
-		position: absolute;
-		right: 5px;
-		z-index: 1000;
-		background-color: rgb(89, 89, 89) !important;
-	}
-
-	#draggable {
-		cursor: n-resize;
-	}
-
-	#draggable2 {
-		cursor: ew-resize;
-		display: none;
-	}
-
-	#containment-wrapper {
-		width: 98%;
-		height: 150px;
-		position: absolute;
-		background-color: transparent;
-		margin-left: 10px;
-		margin-right: 10px;
-	}
 
 	#no-results {
 		width: 100%;
@@ -82,151 +46,6 @@
 		margin-top: 30px;
 		border-radius: 4px;
 	}
-
-	.arrow-left {
-		width: 0;
-		height: 0;
-		border-top: 7px solid transparent;
-		border-bottom: 7px solid transparent;
-		border-right: 7px solid white;
-		position: absolute;
-		right: 2px;
-		top: 8px;
-	}
-
-	.arrow-right {
-		width: 0;
-		height: 0;
-		border-top: 7px solid transparent;
-		border-bottom: 7px solid transparent;
-		border-left: 7px solid white;
-		position: absolute;
-		left: 2px;
-		top: 8px;3
-	}
-
-	.CSSTableGenerator {
-		margin: 0px;
-		padding: 0px;
-		width: 100%;
-		/*box-shadow: 5px 5px 5px #E0E0E0;*/
-		border: 1px solid #b2b2b2;
-		-moz-border-radius-bottomleft: 4px;
-		-webkit-border-bottom-left-radius: 4px;
-		border-bottom-left-radius: 4px;
-		-moz-border-radius-bottomright: 4px;
-		-webkit-border-bottom-right-radius: 4px;
-		border-bottom-right-radius: 4px;
-		-moz-border-radius-topright: 4px;
-		-webkit-border-top-right-radius: 4px;
-		border-top-right-radius: 4px;
-		-moz-border-radius-topleft: 4px;
-		-webkit-border-top-left-radius: 4px;
-		border-top-left-radius: 4px;
-	}
-
-	.CSSTableGenerator table {
-		border-collapse: collapse;
-		border-spacing: 0;
-		width: 100%;
-		height: 100%;
-		margin: 0px;
-		padding: 0px;
-	}
-
-	.CSSTableGenerator tr:last-child td:last-child {
-		-moz-border-radius-bottomright: 4px;
-		-webkit-border-bottom-right-radius: 4px;
-		border-bottom-right-radius: 4px;
-	}
-
-	.CSSTableGenerator table tr:first-child td:first-child {
-		-moz-border-radius-topleft: 4px;
-		-webkit-border-top-left-radius: 4px;
-		border-top-left-radius: 4px;
-	}
-
-	.CSSTableGenerator table tr:first-child td:last-child {
-		-moz-border-radius-topright: 4px;
-		-webkit-border-top-right-radius: 4px;
-		border-top-right-radius: 4px;
-	}
-
-	.CSSTableGenerator tr:last-child td:first-child {
-		-moz-border-radius-bottomleft: 4px;
-		-webkit-border-bottom-left-radius: 4px;
-		border-bottom-left-radius: 4px;
-	}
-
-	.CSSTableGenerator tr:hover td {
-
-	}
-
-	.CSSTableGenerator tr:nth-child(odd) {
-		/*background-color: #e5e5e5;*/
-	}
-
-	.CSSTableGenerator tr:nth-child(even) {
-		/*background-color: #ffffff;*/
-	}
-
-	.CSSTableGenerator td {
-		vertical-align: middle;
-		border: 1px solid #b2b2b2;
-		border-width: 0px 1px 1px 0px;
-		padding: 2px;
-		/* font-size: 10px; */
-		/* font-family: Arial; */
-		/* font-weight: normal; */
-		/* color: #000000; */
-	}
-
-	.CSSTableGenerator tr:last-child td {
-		border-width: 0px 1px 0px 0px;
-	}
-
-	.CSSTableGenerator tr td:last-child {
-		border-width: 0px 0px 1px 0px;
-	}
-
-	.CSSTableGenerator tr:last-child td:last-child {
-		border-width: 0px 0px 0px 0px;
-	}
-
-	.CSSTableGenerator tr:first-child td {
-		background: -o-linear-gradient(bottom, #cccccc 5%, #b2b2b2 100%);
-		/* background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #b2b2b2)); */
-		background: -moz-linear-gradient(center top, #cccccc 5%, #b2b2b2 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#cccccc", endColorstr = "#b2b2b2");
-		background: -o-linear-gradient(top, #cccccc, b2b2b2);
-		/* background-color: #cccccc; */
-		/* border: 0px solid #b2b2b2; */
-		/* text-align: center; */
-		border-width: 0px 0px 1px 1px;
-		/* font-size: 14px; */
-		/* font-family: Arial; */
-		/* font-weight: bold; */
-		/* color: #000000; */
-	}
-
-	.CSSTableGenerator tr:first-child:hover td {
-		background: -o-linear-gradient(bottom, #cccccc 5%, #b2b2b2 100%);
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #b2b2b2));
-		background: -moz-linear-gradient(center top, #cccccc 5%, #b2b2b2 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#cccccc", endColorstr = "#b2b2b2");
-		background: -o-linear-gradient(top, #cccccc, b2b2b2);
-
-		background-color: #cccccc;
-	}
-
-	.CSSTableGenerator tr:first-child td:first-child {
-		border-width: 0px 0px 1px 0px;
-	}
-
-	.CSSTableGenerator tr:first-child td:last-child {
-		border-width: 0px 0px 1px 1px;
-	}
-
 </style>
 </head>
 
@@ -248,12 +67,11 @@
 			</div>
 
 			<div id="instructions">
-				Choose a
+				<!--Choose a
 				<input type="radio" name="level" id="radioCounty" checked value="county"/>
 				<label for="radioCounty">county</label>
-				<!--<input type="radio" name="level" id="radioState" checked value="state"/>
+				<input type="radio" name="level" id="radioState" checked value="state"/>
 				<label for="radioState">state</label>-->
-
 				<div id="search"></div>
 			</div>
 			<div id="countyName"></div>

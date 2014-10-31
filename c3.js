@@ -1093,7 +1093,8 @@
 			grid_focus_show:true,
 			// point - point of each data
 			point_show:true,
-			point_r:2.5,
+			//point_r:2.5,
+			point_r:0,
 			point_focus_expand_enabled:true,
 			point_focus_expand_r:undefined,
 			point_select_r:undefined,
@@ -2479,12 +2480,10 @@
 					if ($$.dist(closest, mouse) < 100) {
 						$$.svg.select('.' + CLASS.eventRect).style('cursor', 'pointer');
 						if (!$$.mouseover) {
-							console.log("112")
 							config.data_onmouseover.call($$, closest);
 							$$.mouseover = true;
 						}
 					} else if ($$.mouseover) {
-						console.log("2")
 						$$.svg.select('.' + CLASS.eventRect).style('cursor', null);
 						config.data_onmouseout.call($$, closest);
 						$$.mouseover = false;
@@ -2725,10 +2724,9 @@
 		mainLineEnter.append('g')
 				.attr('class', classAreas);
 		// Circles for each data point on lines
-		mainLineEnter.append('g')
-				.attr("class", function (d) {
-					return $$.generateClass(CLASS.selectedCircles, d.id);
-				});
+		mainLineEnter.append('g').attr("class", function (d) {
+				return $$.generateClass(CLASS.selectedCircles, d.id);
+		});
 		mainLineEnter.append('g')
 				.attr("class", classCircles)
 				.style("cursor", function (d) {
@@ -4762,7 +4760,6 @@
 					this._current = d;
 				})
 				.on('mouseover', function (d) {
-					console.log(d)
 					var updated, arcData;
 					if ($$.transiting) { // skip while transiting
 						return;
@@ -6555,8 +6552,11 @@
 
 		function axisX(selection, x) {
 			selection.attr("transform", function (d) {
-				//var tmpShit = Math.ceil(x(d) + tickOffset);
-				//console.log(tmpShit)
+				/*console.log(d);
+				console.log(x(d));
+				console.log(Math.ceil(x(d)));
+				console.log(tickOffset);
+				var tmpShit = Math.ceil(x(d) + tickOffset);*/
 				return "translate(" + Math.ceil(x(d) + tickOffset) + ", 0)";
 			});
 		}

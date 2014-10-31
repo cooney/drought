@@ -12,3 +12,62 @@
 	background: transparent !important;
 	color: transparent !important;*/
 }
+
+.draggable {
+	width: 1px;
+	height: 120px;
+	float: left;
+	/*border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+	border-top: 20px solid #f00;*/
+}
+
+#draggable, #draggable2 {
+	margin-bottom: 0px;
+	/*position: relative;*/
+	position: absolute;
+	right: 5px;
+	z-index: 1000;
+	background-color: rgb(89, 89, 89) !important;
+}
+
+#draggable {
+	cursor: n-resize;
+}
+
+#draggable2 {
+	cursor: ew-resize;
+	display: none;
+}
+
+#containment-wrapper {
+	width: 98%;
+	height: 150px;
+	position: absolute;
+	background-color: transparent;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.arrow-left {
+	width: 0;
+	height: 0;
+	border-top: 7px solid transparent;
+	border-bottom: 7px solid transparent;
+	border-right: 7px solid white;
+	position: absolute;
+	right: 2px;
+	top: 8px;
+}
+
+.arrow-right {
+	width: 0;
+	height: 0;
+	border-top: 7px solid transparent;
+	border-bottom: 7px solid transparent;
+	border-left: 7px solid white;
+	position: absolute;
+	left: 2px;
+	top: 8px;
+	3
+}
