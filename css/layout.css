@@ -126,7 +126,7 @@ body {
 
 /* */
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D0 > g.c3-shapes.c3-shapes-D0.c3-areas.c3-areas-D0 > path {
-	opacity: 0.4 !important;
+	opacity: 0.3 !important;
 }
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D1 > g.c3-shapes.c3-shapes-D1.c3-areas.c3-areas-D1 > path {
@@ -142,5 +142,5 @@ body {
 }
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D4 > g.c3-shapes.c3-shapes-D4.c3-areas.c3-areas-D4 > path {
-	opacity: 0.6 !important;
+	opacity: 0.5 !important;
 }
