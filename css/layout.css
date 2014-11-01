@@ -36,10 +36,10 @@ body {
 
 #footer {
 	/*border: solid 1px #80a8c1;*/
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 5px;
+	margin-right: 5px;
 	height: 150px;
-	/*font-size: 0.8em;*/
+	font-size: 0.8em;
 	overflow: hidden;
 }
 
