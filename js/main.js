@@ -425,7 +425,7 @@ console.log(columnData);
 										localtime:false,
 										tick:{
 											count:15,
-											format: "%Y-%m-%d",
+											format: "%Y",
 											values: [new Date("2000"), new Date("2001"), new Date("2002"), new Date("2003"), new Date("2004"), new Date("2005"), new Date("2006"), new Date("2007"), new Date("2008"), new Date("2000"), new Date("2009"), new Date("2010"), new Date("2011"), new Date("2012"), new Date("2013"), new Date("2014")]
 										}
 									},
@@ -463,49 +463,49 @@ console.log(columnData);
 							});
 							chart.xgrids([
 								{
-									value:new Date("2000"), text:"2000"
+									value:new Date("2000"), text:""
 								},
 								{
 									value:new Date("2001"), text:""
 								},
 								{
-									value:new Date("2002"), text:"2002"
+									value:new Date("2002"), text:""
 								},
 								{
 									value:new Date("2003"), text:""
 								},
 								{
-									value:new Date("2004"), text:"2004"
+									value:new Date("2004"), text:""
 								},
 								{
 									value:new Date("2005"), text:""
 								},
 								{
-									value:new Date("2006"), text:"2006"
+									value:new Date("2006"), text:""
 								},
 								{
 									value:new Date("2007"), text:""
 								},
 								{
-									value:new Date("2008"), text:"2008"
+									value:new Date("2008"), text:""
 								},
 								{
 									value:new Date("2009"), text:""
 								},
 								{
-									value:new Date("2010"), text:"2010"
+									value:new Date("2010"), text:""
 								},
 								{
 									value:new Date("2011"), text:""
 								},
 								{
-									value:new Date("2012"), text:"2012"
+									value:new Date("2012"), text:""
 								},
 								{
 									value:new Date("2013"), text:""
 								},
 								{
-									value:new Date("2014"), text:"2014"
+									value:new Date("2014"), text:""
 								}
 							]);
 
