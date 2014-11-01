@@ -335,17 +335,19 @@ require([
 								selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
 							}
 
+							//var count = 0;
 							array.forEach(result.features, function (feature) {
-								var utcSeconds = feature.attributes["CountyCategories_Date"];
-								var d = new Date(parseFloat(utcSeconds));
-
-								xAxis.push(d);
-								data0.push(feature.attributes["CountyCategories_D0"]);
-								data1.push(feature.attributes["CountyCategories_D1"]);
-								data2.push(feature.attributes["CountyCategories_D2"]);
-								data3.push(feature.attributes["CountyCategories_D3"]);
-								data4.push(feature.attributes["CountyCategories_D4"]);
-
+								//if (count < 100) {
+									var utcSeconds = feature.attributes["CountyCategories_Date"];
+									var d = new Date(parseFloat(utcSeconds));
+									xAxis.push(d);
+									data0.push(feature.attributes["CountyCategories_D0"]);
+									data1.push(feature.attributes["CountyCategories_D1"]);
+									data2.push(feature.attributes["CountyCategories_D2"]);
+									data3.push(feature.attributes["CountyCategories_D3"]);
+									data4.push(feature.attributes["CountyCategories_D4"]);
+								//	count++;
+								//}
 							});
 							columnData.push(xAxis);
 							columnData.push(data0);
@@ -353,39 +355,18 @@ require([
 							columnData.push(data2);
 							columnData.push(data3);
 							columnData.push(data4);
-
+console.log(columnData);
 							chart = c3.generate({
 								bindto:'#chart',
 								data:{
 									x:'x',
-									/*colors:{
-									 D0:'rgb(255, 255, 0)',
-									 D1:'rgb(241, 202, 141)',
-									 D2:'rgb(255, 170, 0)',
-									 D3:'rgb(255, 85, 0)',
-									 D4:'rgb(168, 0, 0)'
-									 },
 									colors:{
-										D0:'rgb(254, 244, 174)',
-										D1:'rgb(248, 228, 198)',
-										D2:'rgb(246, 205, 163)',
-										D3:'rgb(255, 170, 127)',
-										D4:'rgb(211, 127, 127)'
+										D0:'rgb(253, 237, 151)',
+										D1:'rgb(252, 223, 236)',
+										D2:'rgb(253, 198, 138)',
+										D3:'rgb(255, 150, 87)',
+										D4:'rgb(168, 40, 42)'
 									},
-									colors:{
-									 D0:'rgb(214, 192, 221)',
-									 D1:'rgb(255, 212, 210)',
-									 D2:'rgb(252, 225, 237)',
-									 D3:'rgb(255, 241, 247)',
-									 D4:'rgb(254, 244, 174)'
-									 },*/
-									colors:{
-									 D0:'rgb(253, 237, 151)',
-									 D1:'rgb(252, 223, 236)',
-									 D2:'rgb(253, 198, 138)',
-									 D3:'rgb(255, 150, 87)',
-									 D4:'rgb(168, 40, 42)'
-									 },
 									columns:columnData,
 									selection:{
 										enabled:true,
@@ -444,7 +425,8 @@ require([
 										localtime:false,
 										tick:{
 											count:15,
-											format:"%Y"
+											format: "%Y-%m-%d",
+											values: [new Date("2000"), new Date("2001"), new Date("2002"), new Date("2003"), new Date("2004"), new Date("2005"), new Date("2006"), new Date("2007"), new Date("2008"), new Date("2000"), new Date("2009"), new Date("2010"), new Date("2011"), new Date("2012"), new Date("2013"), new Date("2014")]
 										}
 									},
 									y:{

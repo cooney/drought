@@ -36,10 +36,10 @@ body {
 
 #footer {
 	/*border: solid 1px #80a8c1;*/
-	margin-left: 5px;
-	margin-right: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
 	height: 150px;
-	font-size: 0.8em;
+	/*font-size: 0.8em;*/
 	overflow: hidden;
 }
 
@@ -67,7 +67,7 @@ body {
 	background-color: #f4f4f4;
 	z-index: 100;
 	opacity: 1.0;
-	position: absolute !important;
+	/*position: absolute !important;*/
 	/*bottom: 5px;*/
 }
 
@@ -117,7 +117,7 @@ body {
 
 /* X-AXIS TICKS */
 .c3-axis-x .tick {
-	opacity: 0.0 !important;
+	opacity: 0.7 !important;
 }
 
 .c3-xgrid-line {
