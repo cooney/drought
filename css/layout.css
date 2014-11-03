@@ -98,7 +98,6 @@ body {
 	background-color: #989898;
 }
 
-
 /* VERTICAL GRID LINES */
 .c3-grid line {
 	stroke: #949494 !important;
@@ -107,7 +106,7 @@ body {
 
 /* line */
 .c3 path, .c3 line {
-	/*stroke: white !important;*/
+	stroke: #B2B2B2 !important;
 }
 
 /* vertical grid line text */
@@ -143,4 +142,25 @@ body {
 
 .c3-chart > g.c3-chart-lines > g.c3-chart-line.c3-target.c3-target-D4 > g.c3-shapes.c3-shapes-D4.c3-areas.c3-areas-D4 > path {
 	opacity: 0.61 !important;
+}
+
+/* RESULTS */
+#no-results {
+	width: 100%;
+	height: 99%;
+	position: absolute;
+	background-color: #444444;
+	color: #d4d4d4;
+	opacity: 0.85;
+	/* margin-left: 10px; */
+	/* margin-right: 10px; */
+	display: none;
+	z-index: 1000;
+}
+
+#no-results-text {
+	font-size: 2.7em;
+	text-align: center;
+	margin-top: 30px;
+	border-radius: 4px;
 }
