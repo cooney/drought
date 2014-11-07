@@ -121,6 +121,14 @@ require([
 				init();
 
 				function init() {
+					$('#promoIMG').splashScreen({
+						textLayers: [
+							'img/thinner.png',
+							'img/more_elegant.png',
+							'img/our_new.png'
+						]
+					});
+
 					var info = new ArcGISOAuthInfo({
 						appId: "VI85OZ4Xu459uon0",
 						// Uncomment this line to prevent the user's signed in state from being shared
