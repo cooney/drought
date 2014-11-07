@@ -186,10 +186,8 @@ body {
 
 #sign-out:hover {
 	color: #ffffff;
-	font-weight: bold;
 	cursor: pointer;
 	position: absolute;
-	color: #D7D7D7;
 	bottom: 5px;
 }
 
