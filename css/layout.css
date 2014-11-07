@@ -164,3 +164,8 @@ body {
 	margin-top: 30px;
 	border-radius: 4px;
 }
+
+/* SIGN IN */
+#sign-in:hover {
+	color: red;
+}

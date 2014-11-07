@@ -152,6 +152,10 @@ require([
 						esriId.destroyCredentials();
 						window.location.reload();
 					});
+
+					//on(dom.byId("sign-in"), "mouseover", function () {
+
+					//});
 				}
 
 				function run() {
