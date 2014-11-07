@@ -178,4 +178,23 @@ body {
 
 }
 
+#sign-out {
+	position: absolute;
+	margin-left: 10px;
+	color: #D7D7D7;
+	font-size: 0.85em;
+	bottom: 5px;
+}
+
+#sign-out:hover {
+	color: #ffffff;
+	font-weight: bold;
+	cursor: pointer;
+	position: absolute;
+	margin-left: 10px;
+	color: #D7D7D7;
+	font-size: 0.85em;
+	bottom: 5px;
+}
+
 /* SPLASH SCREEN */
