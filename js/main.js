@@ -135,6 +135,7 @@ require([
 							}
 					).otherwise(
 							function () {
+								console.log("---");
 								// Anonymous view
 								//domStyle.set("anonymousPanel", "display", "block");
 								//domStyle.set("personalizedPanel", "display", "none");
