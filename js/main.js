@@ -137,8 +137,8 @@ require([
 							function () {
 								console.log("---");
 								// Anonymous view
-								//domStyle.set("anonymousPanel", "display", "block");
-								//domStyle.set("personalizedPanel", "display", "none");
+								domStyle.set("anonymousPanel", "display", "block");
+								domStyle.set("personalizedPanel", "display", "none");
 							}
 					);
 
