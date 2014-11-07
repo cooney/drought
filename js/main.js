@@ -122,7 +122,7 @@ require([
 
 				function init() {
 					var info = new ArcGISOAuthInfo({
-						appId: "4cAxVh7JUz5LssIi",
+						appId: "VI85OZ4Xu459uon0",
 						// Uncomment this line to prevent the user's signed in state from being shared
 						// with other apps on the same domain with the same authNamespace value.
 						//authNamespace: "portal_oauth_inline",
