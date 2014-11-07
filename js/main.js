@@ -155,6 +155,8 @@ require([
 				}
 
 				function run() {
+					domStyle.set("personalizedPanel", "display", "block");
+
 					chartNode = dom.byId("chart");
 					loadingIndicatorNode = dom.byId("loadingIndicator");
 					scrubberNode = dom.byId("draggable2");
