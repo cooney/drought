@@ -147,6 +147,11 @@ require([
 						// user will be redirected to OAuth Sign In page
 						esriId.getCredential(info.portalUrl);
 					});
+
+					on(dom.byId("sign-out"), "click", function () {
+						esriId.destroyCredentials();
+						window.location.reload();
+					});
 				}
 
 				function run() {
