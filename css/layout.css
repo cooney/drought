@@ -168,11 +168,13 @@ body {
 /* SIGN IN */
 #sign-in {
 	color: #d8d8d8;
+	font-weight: bold;
 }
 
 #sign-in:hover {
 	color: #ffffff;
 	font-weight: bold;
+	cursor: pointer;
 
 }
 
