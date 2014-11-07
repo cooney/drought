@@ -141,6 +141,12 @@ require([
 								//domStyle.set("personalizedPanel", "display", "none");
 							}
 					);
+
+					on(dom.byId("sign-in"), "click", function () {
+						console.log("click", arguments);
+						// user will be redirected to OAuth Sign In page
+						esriId.getCredential(info.portalUrl);
+					});
 				}
 
 				function run() {
