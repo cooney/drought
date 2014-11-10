@@ -135,19 +135,19 @@ require([
 							}
 					).otherwise(
 							function () {
-								console.log("---");
-								// Anonymous view
-								domStyle.set("anonymousPanel", "display", "block");
-								domStyle.set("personalizedPanel", "display", "none");
+								domStyle.set("sign-in-container", "display", "block");
+								domStyle.set("sign-out-container", "display", "none");
 							}
 					);
 
+					// sign in
 					on(dom.byId("sign-in"), "click", function () {
-						console.log("click", arguments);
+						//console.log("click", arguments);
 						// user will be redirected to OAuth Sign In page
 						esriId.getCredential(info.portalUrl);
 					});
 
+					// sign out
 					on(dom.byId("sign-out"), "click", function () {
 						esriId.destroyCredentials();
 						window.location.reload();
@@ -155,11 +155,11 @@ require([
 				}
 
 				function run() {
-					domStyle.set("personalizedPanel", "display", "block");
+					domStyle.set("sign-out-container", "display", "block");
 
 					chartNode = dom.byId("chart");
-					loadingIndicatorNode = dom.byId("loadingIndicator");
-					scrubberNode = dom.byId("draggable2");
+					loadingIndicatorNode = dom.byId("loading-indicator");
+					scrubberNode = dom.byId("scrubber");
 					noResultsNode = dom.byId("no-results");
 
 					$("#map").append(
@@ -232,7 +232,6 @@ require([
 						map.addLayer(countyLayer);
 
 						map.on("click", mapClickHandler);
-						//map.on("extent-change", mapExtentChangeHandler);
 						map.on("layer-add", layerAddHandler);
 
 						loadGeococder(map);
@@ -251,21 +250,16 @@ require([
 						deferred.cancel();
 					});
 
-					/*function mapExtentChangeHandler(extent) {
-					 console.log(extent);
-					 }*/
-
 					function layerAddHandler(layer) {
-						$("#draggable2").draggable({
+						$("#scrubber").draggable({
 							axis: "x",
-							containment: "#containment-wrapper",
+							containment: "#scrubber-container",
 							scroll: false,
 							drag: function (e) {
 								domStyle.set(scrubberNode, "z-index", "90");
 								domStyle.set(chartNode, "opacity", "0.75");
 							},
 							stop: function (e) {
-								console.log(e.pageX)
 								domStyle.set(scrubberNode, "z-index", "101");
 								domStyle.set(chartNode, "opacity", "1.0");
 								selectedDate = new Date(currentData.x);
@@ -273,7 +267,7 @@ require([
 								var month = monthNames[selectedDate.getMonth()];
 								var yr = selectedDate.getFullYear();
 
-								dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
+								dom.byId("selected-date").innerHTML = month + " " + day + ", " + yr;
 								var startDate = new Date(currentData.x);
 								var endDate = new Date(currentData.x);
 								var timeExtent = new TimeExtent(startDate, endDate);
@@ -281,7 +275,7 @@ require([
 								map.setTimeExtent(timeExtent);
 							}
 						});
-						dom.byId("selectedDateRange").innerHTML = "September 01, 2014";
+						dom.byId("selected-date").innerHTML = "September 01, 2014";
 					}
 
 					function mapClickHandler(event) {
@@ -289,8 +283,7 @@ require([
 						identifyParams.geometry = selectedPoint;
 						identifyParams.mapExtent = map.extent;
 						identifyTask.execute(identifyParams, function (results) {
-							console.log(results);
-							if (results.length > 0 && (results[0].layerId == 3)) {
+							if (results.length > 0 && (results[0].layerId === 3)) {
 								var _selectedFIPS = results[0].feature.attributes.ID;
 								var _geometry = results[0].feature.geometry;
 								addHighlightGraphic(map, _geometry);
@@ -375,13 +368,13 @@ require([
 												//console.log(element);
 												//console.log(element["cx"].baseVal.value);
 												var _loc = element["cx"].baseVal.value;
-												$("#draggable2").css("left", (_loc - 10) + "px");
+												$("#scrubber").css("left", (_loc - 10) + "px");
 												selectedDate = new Date(d.x);
 												var day = selectedDate.getDate();
 												var month = monthNames[selectedDate.getMonth()];
 												var yr = selectedDate.getFullYear();
 
-												dom.byId("selectedDateRange").innerHTML = month + " " + day + ", " + yr;
+												dom.byId("selected-date").innerHTML = month + " " + day + ", " + yr;
 												var startDate = new Date(d.x);
 												var endDate = new Date(d.x);
 												var timeExtent = new TimeExtent(startDate, endDate);

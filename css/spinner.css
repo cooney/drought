@@ -1,4 +1,4 @@
-#loadingIndicator {
+#loading-indicator {
 	display: none;
 	position: absolute;
 	z-index: 100;
@@ -28,7 +28,7 @@
 	-webkit-animation: spinPulse 1s infinite linear;
 }
 
-.circle1 {
+.indicator {
 	position: fixed;
 	top: 51%;
 	left: 51%;

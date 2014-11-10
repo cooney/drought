@@ -27,12 +27,10 @@
 </head>
 
 <body class="nihilo">
-<div id="mainWindow" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="design:'headline', gutters:false"
-	 style="width:100%; height:100%;">
-
-	<div id="centerPane" data-dojo-type="dijit.layout.BorderContainer" class="roundedCorners"
-		 data-dojo-props="region:'center', gutters:false">
-
+<div id="main-window" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="design:'headline', gutters:false">
+	<!-- -->
+	<div id="center-pane" data-dojo-type="dijit.layout.BorderContainer" class="roundedCorners" data-dojo-props="region:'center', gutters:false">
+		<!-- -->
 		<div id="pieChartContianer">
 			<div id="pieChartHeader">
 				<img src="esri-logo.jpg" style="height:80%; margin-top: 5px;">
@@ -44,11 +42,11 @@
 			</div>
 
 			<div id="instructions">
-				<div id="anonymousPanel" style="display: none;">
+				<div id="sign-in-container" style="display: none;">
 					<span id="sign-in" class="action">Sign In</span> to explore droughts in the US
 				</div>
 
-				<div id="personalizedPanel" style="display: none;">
+				<div id="sign-out-container" style="display: none;">
 					<span id="sign-out" class="action">Sign Out</span>
 				</div>
 
@@ -60,20 +58,20 @@
 				<div id="search"></div>
 			</div>
 			<div id="countyName"></div>
-			<div id="selectedDateRange"></div>
+			<div id="selected-date"></div>
 			<div id="pieChart"></div>
 		</div>
 
-		<div id="loadingIndicator">
+		<!-- Loading Indicator -->
+		<div id="loading-indicator">
 			<!--<div class="circle"></div>-->
-			<div class="circle1"></div>
+			<div class="indicator"></div>
 		</div>
 
-		<div id="footer" class="roundedCorners" data-dojo-type="dijit.layout.ContentPane"
-			 data-dojo-props="region:'bottom'">
-			<div id="containment-wrapper">
-				<div id="draggable2" class="draggable ui-widget-content">
-					<div id="scrubberThumb">
+		<div id="chart-container" class="roundedCorners" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'bottom'">
+			<div id="scrubber-container">
+				<div id="scrubber" class="draggable ui-widget-content">
+					<div id="scrubber-thumb">
 						<div class="arrow-left"></div>
 						<div class="arrow-right"></div>
 					</div>
@@ -87,12 +85,9 @@
 			<div id="chart"></div>
 		</div>
 
-		<div id="map" data-dojo-type="dijit.layout.ContentPane" class="shadow" data-dojo-props="region:'center'"
-			 style="position:relative; overflow:hidden;"></div>
+		<div id="map" data-dojo-type="dijit.layout.ContentPane" class="shadow" data-dojo-props="region:'center'"></div>
 
-		<div id="mask"
-			 style="display: none; width: 100%; height: 100%; position: absolute; left: 0; top: 0; background-color: white; opacity: 0.0; z-index: 1000;"></div>
-
+		<div id="mask"></div>
 	</div>
 </div>
 </body>

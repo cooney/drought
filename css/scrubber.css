@@ -1,4 +1,4 @@
-#scrubberThumb {
+#scrubber-thumb {
 	background-color: rgb(103, 103, 103);
 	border-radius: 30%;
 	width: 21px;
@@ -22,7 +22,7 @@
 	border-top: 20px solid #f00;*/
 }
 
-#draggable, #draggable2 {
+#draggable, #scrubber {
 	margin-bottom: 0px;
 	/*position: relative;*/
 	position: absolute;
@@ -35,12 +35,12 @@
 	cursor: n-resize;
 }
 
-#draggable2 {
+#scrubber {
 	cursor: ew-resize;
 	display: none;
 }
 
-#containment-wrapper {
+#scrubber-container {
 	width: 98%;
 	height: 150px;
 	position: absolute;

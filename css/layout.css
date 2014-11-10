@@ -12,35 +12,40 @@ body {
 	overflow: hidden;
 }
 
-#header {
-	height: 30px;
-	overflow: auto;
-	padding: 0.5em;
-	font-size: 1.2em;
+#main-window {
+	width:100%; height:100%;
 }
 
-#leftPane {
-	border: solid 1px #80a8c1;
-	margin: 5px;
-}
-
-#centerPane {
+#center-pane {
 	border: none;
 }
 
 #map {
 	margin-left: 0px;
 	margin-right: 0px;
-	/*border: solid 1px #80a8c1;*/
+	position: relative;
+	overflow: hidden;
 }
 
-#footer {
-	/*border: solid 1px #80a8c1;*/
+#chart-container {
 	margin-left: 5px;
 	margin-right: 5px;
 	height: 150px;
 	font-size: 0.8em;
 	overflow: hidden;
+}
+
+/* NO RESULTS MASK */
+#mask {
+	display: none;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background-color: white;
+	opacity: 0.0;
+	z-index: 1000;
 }
 
 /* PIE chart */
@@ -67,8 +72,6 @@ body {
 	background-color: #f4f4f4;
 	z-index: 100;
 	opacity: 1.0;
-	/*position: absolute !important;*/
-	/*bottom: 5px;*/
 }
 
 #countyName {
@@ -77,7 +80,7 @@ body {
 	color: white;
 }
 
-#selectedDateRange {
+#selected-date {
 	margin-left: 10px;
 	margin-top: 5px;
 	font-size: 0.90em;
