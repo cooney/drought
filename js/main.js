@@ -53,8 +53,8 @@ require([
 						identifyParams,
 						data0, data1, data2, data3, data4,
 						selectedDate,
+						selectedDateNode,
 						selectedPoint,
-						selectedFIPS,
 						chart,
 						chartNode,
 						monthNames = [ "January", "February", "March", "April", "May", "June",
@@ -63,70 +63,146 @@ require([
 						loadingIndicatorNode,
 						scrubberNode,
 						noResultsNode,
+						countyNameNode,
 						columnData = [],
 						currentData,
 						customLods = [
 							{
-								"level": 0,
-								"resolution": 156543.03392800014,
-								"scale": 5.91657527591555E8
+								"level":0,
+								"resolution":156543.03392800014,
+								"scale":5.91657527591555E8
 							},
 							{
-								"level": 1,
-								"resolution": 78271.51696399994,
-								"scale": 2.95828763795777E8
+								"level":1,
+								"resolution":78271.51696399994,
+								"scale":2.95828763795777E8
 							},
 							{
-								"level": 2,
-								"resolution": 39135.75848200009,
-								"scale": 1.47914381897889E8
+								"level":2,
+								"resolution":39135.75848200009,
+								"scale":1.47914381897889E8
 							},
 							{
-								"level": 3,
-								"resolution": 19567.87924099992,
-								"scale": 7.3957190948944E7
+								"level":3,
+								"resolution":19567.87924099992,
+								"scale":7.3957190948944E7
 							},
 							{
-								"level": 4,
-								"resolution": 9783.93962049996,
-								"scale": 3.6978595474472E7
+								"level":4,
+								"resolution":9783.93962049996,
+								"scale":3.6978595474472E7
 							},
 							{
-								"level": 5,
-								"resolution": 4891.96981024998,
-								"scale": 1.8489297737236E7
+								"level":5,
+								"resolution":4891.96981024998,
+								"scale":1.8489297737236E7
 							},
 							{
-								"level": 6,
-								"resolution": 2445.98490512499,
-								"scale": 9244648.868618
+								"level":6,
+								"resolution":2445.98490512499,
+								"scale":9244648.868618
 							},
 							{
-								"level": 7,
-								"resolution": 1222.992452562495,
-								"scale": 4622324.434309
+								"level":7,
+								"resolution":1222.992452562495,
+								"scale":4622324.434309
 							},
 							{
-								"level": 8,
-								"resolution": 611.4962262813797,
-								"scale": 2311162.217155
+								"level":8,
+								"resolution":611.4962262813797,
+								"scale":2311162.217155
 							},
 							{
-								"level": 9,
-								"resolution": 305.74811314055756,
-								"scale": 1155581.108577
+								"level":9,
+								"resolution":305.74811314055756,
+								"scale":1155581.108577
 							}
-						];
+						],
+						chartColors = {
+							D0:'rgb(253, 237, 151)',
+							D1:'rgb(251, 222, 215)',
+							D2:'rgb(253, 198, 138)',
+							D3:'rgb(255, 150, 87)',
+							D4:'rgb(168, 40, 42)'
+						},
+						chartTypes = {
+							D0:'area-spline',
+							D1:'area-spline',
+							D2:'area-spline',
+							D3:'area-spline',
+							D4:'area-spline'
+						},
+						chartGroups = [
+							['data0', 'data1', 'data2', 'data3', 'data4']
+						],
+						tooltipNames = {
+							D0:"Dry",
+							D1:"Moderate",
+							D2:"Severe",
+							D3:"Extreme",
+							D4:"Exceptional"
+						},
+						X_AXIS_TICK_COUNT = 15,
+						X_AXIS_TICK_FORMAT = "%Y",
+						X_AXIS_TICK_VALUES = [new Date("2000"), new Date("2001"), new Date("2002"), new Date("2003"), new Date("2004"), new Date("2005"), new Date("2006"), new Date("2007"), new Date("2008"), new Date("2000"), new Date("2009"), new Date("2010"), new Date("2011"), new Date("2012"), new Date("2013"), new Date("2014")],
+						X_AXIS_GRID_LINES = [
+							{
+								value:new Date("2000"), text:""
+							},
+							{
+								value:new Date("2001"), text:""
+							},
+							{
+								value:new Date("2002"), text:""
+							},
+							{
+								value:new Date("2003"), text:""
+							},
+							{
+								value:new Date("2004"), text:""
+							},
+							{
+								value:new Date("2005"), text:""
+							},
+							{
+								value:new Date("2006"), text:""
+							},
+							{
+								value:new Date("2007"), text:""
+							},
+							{
+								value:new Date("2008"), text:""
+							},
+							{
+								value:new Date("2009"), text:""
+							},
+							{
+								value:new Date("2010"), text:""
+							},
+							{
+								value:new Date("2011"), text:""
+							},
+							{
+								value:new Date("2012"), text:""
+							},
+							{
+								value:new Date("2013"), text:""
+							},
+							{
+								value:new Date("2014"), text:""
+							}
+						],
+						Y_AXIS_MAX_VALUE = 100;
 
 				init();
 
 				function init() {
 					var info = new ArcGISOAuthInfo({
-						appId: "VI85OZ4Xu459uon0",
+						appId:"VI85OZ4Xu459uon0",
 						// Uncomment this line to prevent the user's signed in state from being shared
 						// with other apps on the same domain with the same authNamespace value.
 						//authNamespace: "portal_oauth_inline",
-						popup: false
+						popup:false
 					});
 					esriId.registerOAuthInfos([info]);
 					esriId.checkSignInStatus(info.portalUrl).then(
@@ -161,40 +237,42 @@ require([
 					loadingIndicatorNode = dom.byId("loading-indicator");
 					scrubberNode = dom.byId("scrubber");
 					noResultsNode = dom.byId("no-results");
+					selectedDateNode = dom.byId("selected-date");
+					countyNameNode = dom.byId("countyName");
 
 					$("#map").append(
 							$('<div/>')
 									.attr("id", "chartDataTooltip")
 									.addClass("customTooltip")
 									.html("<div class='CSSTableGenerator'>" +
-											"<table>" +
-											"	<tr>" +
-											"		<th colspan='2'>" +
-											"			<div id='tooltipHeader'></div>" +
-											"		</th>" +
-											"	</tr>" +
-											"	<tr>" +
-											"		<td class='tooltip-label'>Dry</td>" +
-											"		<td class='tooltip-label' id='tooltipDry'></td>" +
-											"	</tr>" +
-											"	<tr>" +
-											"		<td class='tooltip-label'>Moderate</td>" +
-											"		<td class='tooltip-label' id='tooltipModerate'></td>" +
-											"	</tr>" +
-											"	<tr>" +
-											"		<td class='tooltip-label'>Severe</td>" +
-											"		<td class='tooltip-label' id='tooltipSevere'></td>" +
-											"	</tr>" +
-											"	<tr>" +
-											"		<td class='tooltip-label'>Extreme</td>" +
-											"		<td class='tooltip-label' id='tooltipExtreme'></td>" +
-											"	</tr>" +
-											"	<tr>" +
-											"		<td class='tooltip-label'>Exceptional</td>" +
-											"		<td class='tooltip-label' id='tooltipExceptional'></td>" +
-											"	</tr>" +
-											"</table>" +
-											"</div>"));
+									"<table>" +
+									"	<tr>" +
+									"		<th colspan='2'>" +
+									"			<div id='tooltipHeader'></div>" +
+									"		</th>" +
+									"	</tr>" +
+									"	<tr>" +
+									"		<td class='tooltip-label'>Dry</td>" +
+									"		<td class='tooltip-label' id='tooltipDry'></td>" +
+									"	</tr>" +
+									"	<tr>" +
+									"		<td class='tooltip-label'>Moderate</td>" +
+									"		<td class='tooltip-label' id='tooltipModerate'></td>" +
+									"	</tr>" +
+									"	<tr>" +
+									"		<td class='tooltip-label'>Severe</td>" +
+									"		<td class='tooltip-label' id='tooltipSevere'></td>" +
+									"	</tr>" +
+									"	<tr>" +
+									"		<td class='tooltip-label'>Extreme</td>" +
+									"		<td class='tooltip-label' id='tooltipExtreme'></td>" +
+									"	</tr>" +
+									"	<tr>" +
+									"		<td class='tooltip-label'>Exceptional</td>" +
+									"		<td class='tooltip-label' id='tooltipExceptional'></td>" +
+									"	</tr>" +
+									"</table>" +
+									"</div>"));
 
 					/*var radioCounty = new RadioButton({
 					 checked:true,
@@ -209,11 +287,11 @@ require([
 					 }, "radioState").startup();*/
 
 					var createMapOptions = {
-						mapOptions: {
-							slider: true,
-							lods: customLods
+						mapOptions:{
+							slider:true,
+							lods:customLods
 						},
-						usePopupManager: true
+						usePopupManager:true
 					};
 
 					var webMapItemID = "20929a934fd24998ab0c1e4d770dff08";
@@ -226,8 +304,8 @@ require([
 						map.setTimeExtent(timeExtent);
 
 						countyLayer = new ArcGISDynamicMapServiceLayer(boundaryUrl, {
-							useMapImage: true,
-							opacity: 0.0
+							useMapImage:true,
+							opacity:0.0
 						});
 						map.addLayer(countyLayer);
 
@@ -245,21 +323,21 @@ require([
 						identifyParams.width = map.width;
 						identifyParams.height = map.height;
 					}, function (error) {
-						console.log("Error: ", error.code, " Message: ", error.message);
+						//console.log("Error: ", error.code, " Message: ", error.message);
 						domStyle.set(loadingIndicatorNode, "display", "none");
 						deferred.cancel();
 					});
 
 					function layerAddHandler(layer) {
 						$("#scrubber").draggable({
-							axis: "x",
-							containment: "#scrubber-container",
-							scroll: false,
-							drag: function (e) {
+							axis:"x",
+							containment:"#scrubber-container",
+							scroll:false,
+							drag:function (e) {
 								domStyle.set(scrubberNode, "z-index", "90");
 								domStyle.set(chartNode, "opacity", "0.75");
 							},
-							stop: function (e) {
+							stop:function (e) {
 								domStyle.set(scrubberNode, "z-index", "101");
 								domStyle.set(chartNode, "opacity", "1.0");
 								selectedDate = new Date(currentData.x);
@@ -267,7 +345,7 @@ require([
 								var month = monthNames[selectedDate.getMonth()];
 								var yr = selectedDate.getFullYear();
 
-								dom.byId("selected-date").innerHTML = month + " " + day + ", " + yr;
+								selectedDateNode.innerHTML = month + " " + day + ", " + yr;
 								var startDate = new Date(currentData.x);
 								var endDate = new Date(currentData.x);
 								var timeExtent = new TimeExtent(startDate, endDate);
@@ -275,7 +353,7 @@ require([
 								map.setTimeExtent(timeExtent);
 							}
 						});
-						dom.byId("selected-date").innerHTML = "September 01, 2014";
+						selectedDateNode.innerHTML = "September 01, 2014";
 					}
 
 					function mapClickHandler(event) {
@@ -316,9 +394,7 @@ require([
 										selectedState = result.features[0].attributes["CountyCategories_stateAbb"];
 									}
 
-									//var count = 0;
 									array.forEach(result.features, function (feature) {
-										//if (count < 100) {
 										var utcSeconds = feature.attributes["CountyCategories_Date"];
 										var d = new Date(parseFloat(utcSeconds));
 										xAxis.push(d);
@@ -327,8 +403,6 @@ require([
 										data2.push(feature.attributes["CountyCategories_D2"]);
 										data3.push(feature.attributes["CountyCategories_D3"]);
 										data4.push(feature.attributes["CountyCategories_D4"]);
-										//	count++;
-										//}
 									});
 									columnData.push(xAxis);
 									columnData.push(data0);
@@ -338,159 +412,85 @@ require([
 									columnData.push(data4);
 
 									chart = c3.generate({
-										bindto: '#chart',
-										data: {
-											x: 'x',
-											colors: {
-												D0: 'rgb(253, 237, 151)',
-												D1: 'rgb(251, 222, 215)',
-												D2: 'rgb(253, 198, 138)',
-												D3: 'rgb(255, 150, 87)',
-												D4: 'rgb(168, 40, 42)'
+										bindto:'#chart',
+										data:{
+											x:'x',
+											colors:chartColors,
+											columns:columnData,
+											selection:{
+												enabled:true,
+												grouped:true,
+												multiple:false
 											},
-											columns: columnData,
-											selection: {
-												enabled: true,
-												grouped: true,
-												multiple: false
-											},
-											types: {
-												D0: 'area-spline',
-												D1: 'area-spline',
-												D2: 'area-spline',
-												D3: 'area-spline',
-												D4: 'area-spline'
-											},
-											groups: [
-												['data0', 'data1', 'data2', 'data3', 'data4']
-											],
-											onclick: function (d, element) {
-												//console.log(element);
-												//console.log(element["cx"].baseVal.value);
-												var _loc = element["cx"].baseVal.value;
-												$("#scrubber").css("left", (_loc - 10) + "px");
+											types:chartTypes,
+											groups:chartGroups,
+											onclick:function (d, element) {
+												$("#scrubber").css("left", (element["cx"].baseVal.value - 10) + "px");
 												selectedDate = new Date(d.x);
-												var day = selectedDate.getDate();
-												var month = monthNames[selectedDate.getMonth()];
-												var yr = selectedDate.getFullYear();
-
-												dom.byId("selected-date").innerHTML = month + " " + day + ", " + yr;
-												var startDate = new Date(d.x);
-												var endDate = new Date(d.x);
-												var timeExtent = new TimeExtent(startDate, endDate);
-
+												var day = selectedDate.getDate(),
+														month = monthNames[selectedDate.getMonth()],
+														yr = selectedDate.getFullYear();
+												selectedDateNode.innerHTML = month + " " + day + ", " + yr;
+												var startDate = new Date(d.x),
+														endDate = new Date(d.x),
+														timeExtent = new TimeExtent(startDate, endDate);
 												map.setTimeExtent(timeExtent);
 											},
-											onmouseover: function (d) {
+											onmouseover:function (d) {
 												currentData = d;
 												$("#chartDataTooltip").css("display", "block");
 											},
-											onmouseout: function (d) {
+											onmouseout:function (d) {
 												currentData = d;
 												$("#chartDataTooltip").css("display", "none");
 											},
-											names: {
-												D0: "Dry",
-												D1: "Moderate",
-												D2: "Severe",
-												D3: "Extreme",
-												D4: "Exceptional"
-											}
+											names:tooltipNames
 										},
-										size: {
-											height: 150
+										size:{
+											height:150
 										},
-										axis: {
-											x: {
-												type: "timeseries",
-												localtime: false,
-												tick: {
-													count: 15,
-													format: "%Y",
-													values: [new Date("2000"), new Date("2001"), new Date("2002"), new Date("2003"), new Date("2004"), new Date("2005"), new Date("2006"), new Date("2007"), new Date("2008"), new Date("2000"), new Date("2009"), new Date("2010"), new Date("2011"), new Date("2012"), new Date("2013"), new Date("2014")]
+										axis:{
+											x:{
+												type:"timeseries",
+												localtime:false,
+												tick:{
+													count:X_AXIS_TICK_COUNT,
+													format:X_AXIS_TICK_FORMAT,
+													values:X_AXIS_TICK_VALUES
 												}
 											},
-											y: {
-												show: false,
-												max: 100
+											y:{
+												show:false,
+												max:Y_AXIS_MAX_VALUE
 											}
 										},
-										tooltip: {
-											format: {
-												title: function (d) {
-													var day = d.getDate();
-													var month = monthNames[d.getMonth()];
-													var yr = d.getFullYear();
-													return month + " " + day + ", " + yr;
+										tooltip:{
+											format:{
+												title:function (d) {
+													return monthNames[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
 												},
-												value: function (value, ratio, id) {
+												value:function (value, ratio, id) {
 													return value + "%";
 												}
 											}
 										},
-										legend: {
-											show: false
+										legend:{
+											show:false
 										},
-										point: {
-											r: 0,
-											show: true
+										point:{
+											r:0,
+											show:true
 										},
-										onmouseover: function () {
+										onmouseover:function () {
 											//console.log("mouseover")
 										},
-										onmouseout: function () {
+										onmouseout:function () {
 											//console.log("mouseout")
 										}
 									});
-									chart.xgrids([
-										{
-											value: new Date("2000"), text: ""
-										},
-										{
-											value: new Date("2001"), text: ""
-										},
-										{
-											value: new Date("2002"), text: ""
-										},
-										{
-											value: new Date("2003"), text: ""
-										},
-										{
-											value: new Date("2004"), text: ""
-										},
-										{
-											value: new Date("2005"), text: ""
-										},
-										{
-											value: new Date("2006"), text: ""
-										},
-										{
-											value: new Date("2007"), text: ""
-										},
-										{
-											value: new Date("2008"), text: ""
-										},
-										{
-											value: new Date("2009"), text: ""
-										},
-										{
-											value: new Date("2010"), text: ""
-										},
-										{
-											value: new Date("2011"), text: ""
-										},
-										{
-											value: new Date("2012"), text: ""
-										},
-										{
-											value: new Date("2013"), text: ""
-										},
-										{
-											value: new Date("2014"), text: ""
-										}
-									]);
+									chart.xgrids(X_AXIS_GRID_LINES);
 
-									dom.byId("countyName").innerHTML = selectedCountyName + ", " + selectedState;
+									countyNameNode.innerHTML = selectedCountyName + ", " + selectedState;
 								}).then(function (response) {
 											domStyle.set(loadingIndicatorNode, "display", "none");
 											domStyle.set(scrubberNode, "display", "block");
@@ -500,7 +500,7 @@ require([
 										});
 							} else {
 								$("#no-results").fadeIn("slow");
-								dom.byId("countyName").innerHTML = "";
+								countyNameNode.innerHTML = "";
 								map.graphics.clear();
 							}
 						});
@@ -522,9 +522,9 @@ require([
 
 				function loadGeococder(map) {
 					var geocoder = new Geocoder({
-						map: map,
-						arcgisGeocoder: {
-							placeholder: "Search"
+						map:map,
+						arcgisGeocoder:{
+							placeholder:"Search"
 						}
 					}, "search");
 					geocoder.startup();
