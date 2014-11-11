@@ -47,8 +47,8 @@ require([
 
 				var map,
 						countyLayer,
-						boundaryUrl = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_1990-2000_Population_Change/MapServer",
-						identifyUrl = boundaryUrl,
+						BOUNDARY_URL = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_1990-2000_Population_Change/MapServer",
+						IDENTIFY_URL = BOUNDARY_URL,
 						identifyTask,
 						identifyParams,
 						data0, data1, data2, data3, data4,
@@ -57,7 +57,7 @@ require([
 						selectedPoint,
 						chart,
 						chartNode,
-						monthNames = [ "January", "February", "March", "April", "May", "June",
+						MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
 							"July", "August", "September", "October", "November", "December" ],
 						deferred,
 						loadingIndicatorNode,
@@ -66,7 +66,7 @@ require([
 						countyNameNode,
 						columnData = [],
 						currentData,
-						customLods = [
+						CUSTOM_LODS = [
 							{
 								"level":0,
 								"resolution":156543.03392800014,
@@ -118,30 +118,31 @@ require([
 								"scale":1155581.108577
 							}
 						],
-						chartColors = {
+						CHART_COLORS = {
 							D0:'rgb(253, 237, 151)',
 							D1:'rgb(251, 222, 215)',
 							D2:'rgb(253, 198, 138)',
 							D3:'rgb(255, 150, 87)',
 							D4:'rgb(168, 40, 42)'
 						},
-						chartTypes = {
+						CHART_TYPES = {
 							D0:'area-spline',
 							D1:'area-spline',
 							D2:'area-spline',
 							D3:'area-spline',
 							D4:'area-spline'
 						},
-						chartGroups = [
+						CHART_GROUPS = [
 							['data0', 'data1', 'data2', 'data3', 'data4']
 						],
-						tooltipNames = {
+						TOOL_TIP_NAMES = {
 							D0:"Dry",
 							D1:"Moderate",
 							D2:"Severe",
 							D3:"Extreme",
 							D4:"Exceptional"
 						},
+						CHART_HEIGHT = 150,
 						X_AXIS_TICK_COUNT = 15,
 						X_AXIS_TICK_FORMAT = "%Y",
 						X_AXIS_TICK_VALUES = [new Date("2000"), new Date("2001"), new Date("2002"), new Date("2003"), new Date("2004"), new Date("2005"), new Date("2006"), new Date("2007"), new Date("2008"), new Date("2000"), new Date("2009"), new Date("2010"), new Date("2011"), new Date("2012"), new Date("2013"), new Date("2014")],
@@ -289,7 +290,7 @@ require([
 					var createMapOptions = {
 						mapOptions:{
 							slider:true,
-							lods:customLods
+							lods:CUSTOM_LODS
 						},
 						usePopupManager:true
 					};
@@ -303,7 +304,7 @@ require([
 						var timeExtent = new TimeExtent(startDate, endDate);
 						map.setTimeExtent(timeExtent);
 
-						countyLayer = new ArcGISDynamicMapServiceLayer(boundaryUrl, {
+						countyLayer = new ArcGISDynamicMapServiceLayer(BOUNDARY_URL, {
 							useMapImage:true,
 							opacity:0.0
 						});
@@ -314,7 +315,7 @@ require([
 
 						loadGeococder(map);
 
-						identifyTask = new IdentifyTask(identifyUrl);
+						identifyTask = new IdentifyTask(IDENTIFY_URL);
 						identifyParams = new IdentifyParameters();
 						identifyParams.tolerance = 1;
 						identifyParams.returnGeometry = true;
@@ -342,7 +343,7 @@ require([
 								domStyle.set(chartNode, "opacity", "1.0");
 								selectedDate = new Date(currentData.x);
 								var day = selectedDate.getDate();
-								var month = monthNames[selectedDate.getMonth()];
+								var month = MONTH_NAMES[selectedDate.getMonth()];
 								var yr = selectedDate.getFullYear();
 
 								selectedDateNode.innerHTML = month + " " + day + ", " + yr;
@@ -415,20 +416,20 @@ require([
 										bindto:'#chart',
 										data:{
 											x:'x',
-											colors:chartColors,
+											colors:CHART_COLORS,
 											columns:columnData,
 											selection:{
 												enabled:true,
 												grouped:true,
 												multiple:false
 											},
-											types:chartTypes,
-											groups:chartGroups,
+											types:CHART_TYPES,
+											groups:CHART_GROUPS,
 											onclick:function (d, element) {
 												$("#scrubber").css("left", (element["cx"].baseVal.value - 10) + "px");
 												selectedDate = new Date(d.x);
 												var day = selectedDate.getDate(),
-														month = monthNames[selectedDate.getMonth()],
+														month = MONTH_NAMES[selectedDate.getMonth()],
 														yr = selectedDate.getFullYear();
 												selectedDateNode.innerHTML = month + " " + day + ", " + yr;
 												var startDate = new Date(d.x),
@@ -444,10 +445,10 @@ require([
 												currentData = d;
 												$("#chartDataTooltip").css("display", "none");
 											},
-											names:tooltipNames
+											names:TOOL_TIP_NAMES
 										},
 										size:{
-											height:150
+											height:CHART_HEIGHT
 										},
 										axis:{
 											x:{
@@ -467,7 +468,7 @@ require([
 										tooltip:{
 											format:{
 												title:function (d) {
-													return monthNames[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+													return MONTH_NAMES[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
 												},
 												value:function (value, ratio, id) {
 													return value + "%";
