@@ -135,7 +135,7 @@ require([
 						CHART_GROUPS = [
 							['data0', 'data1', 'data2', 'data3', 'data4']
 						],
-						TOOL_TIP_NAMES = {
+						CHART_NAMES = {
 							D0:"Dry",
 							D1:"Moderate",
 							D2:"Severe",
@@ -193,7 +193,8 @@ require([
 								value:new Date("2014"), text:""
 							}
 						],
-						Y_AXIS_MAX_VALUE = 100;
+						Y_AXIS_MAX_VALUE = 100,
+						GEOCODER_PLACEHOLDER_TEXT = "Search";
 
 				init();
 
@@ -253,23 +254,23 @@ require([
 									"		</th>" +
 									"	</tr>" +
 									"	<tr>" +
-									"		<td class='tooltip-label'>Dry</td>" +
+									"		<td class='tooltip-label'>" + CHART_NAMES.D0 + "</td>" +
 									"		<td class='tooltip-label' id='tooltipDry'></td>" +
 									"	</tr>" +
 									"	<tr>" +
-									"		<td class='tooltip-label'>Moderate</td>" +
+									"		<td class='tooltip-label'>" + CHART_NAMES.D1 + "</td>" +
 									"		<td class='tooltip-label' id='tooltipModerate'></td>" +
 									"	</tr>" +
 									"	<tr>" +
-									"		<td class='tooltip-label'>Severe</td>" +
+									"		<td class='tooltip-label'>" + CHART_NAMES.D2 + "</td>" +
 									"		<td class='tooltip-label' id='tooltipSevere'></td>" +
 									"	</tr>" +
 									"	<tr>" +
-									"		<td class='tooltip-label'>Extreme</td>" +
+									"		<td class='tooltip-label'>" + CHART_NAMES.D3 + "</td>" +
 									"		<td class='tooltip-label' id='tooltipExtreme'></td>" +
 									"	</tr>" +
 									"	<tr>" +
-									"		<td class='tooltip-label'>Exceptional</td>" +
+									"		<td class='tooltip-label'>" + CHART_NAMES.D4 + "</td>" +
 									"		<td class='tooltip-label' id='tooltipExceptional'></td>" +
 									"	</tr>" +
 									"</table>" +
@@ -313,7 +314,7 @@ require([
 						map.on("click", mapClickHandler);
 						map.on("layer-add", layerAddHandler);
 
-						loadGeococder(map);
+						loadGeococder(map, GEOCODER_PLACEHOLDER_TEXT);
 
 						identifyTask = new IdentifyTask(IDENTIFY_URL);
 						identifyParams = new IdentifyParameters();
@@ -445,7 +446,7 @@ require([
 												currentData = d;
 												$("#chartDataTooltip").css("display", "none");
 											},
-											names:TOOL_TIP_NAMES
+											names:CHART_NAMES
 										},
 										size:{
 											height:CHART_HEIGHT
@@ -521,11 +522,11 @@ require([
 					map.graphics.add(highlightGraphic);
 				}
 
-				function loadGeococder(map) {
+				function loadGeococder(map, placeholderText) {
 					var geocoder = new Geocoder({
 						map:map,
 						arcgisGeocoder:{
-							placeholder:"Search"
+							placeholder: placeholderText
 						}
 					}, "search");
 					geocoder.startup();
