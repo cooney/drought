@@ -46,7 +46,6 @@ require([
 	ready(function () {
 
 				var map,
-						countyLayer,
 						BOUNDARY_URL = "http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_1990-2000_Population_Change/MapServer",
 						IDENTIFY_URL = BOUNDARY_URL,
 						identifyTask,
@@ -57,8 +56,7 @@ require([
 						selectedPoint,
 						chart,
 						chartNode,
-						MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
-							"July", "August", "September", "October", "November", "December" ],
+						MONTH_NAMES = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
 						deferred,
 						loadingIndicatorNode,
 						scrubberNode,
@@ -243,10 +241,7 @@ require([
 					countyNameNode = dom.byId("countyName");
 
 					$("#map").append(
-							$('<div/>')
-									.attr("id", "chartDataTooltip")
-									.addClass("customTooltip")
-									.html("<div class='CSSTableGenerator'>" +
+							$("<div/>").attr("id", "chartDataTooltip").addClass("customTooltip").html("<div class='CSSTableGenerator'>" +
 									"<table>" +
 									"	<tr>" +
 									"		<th colspan='2'>" +
@@ -305,12 +300,11 @@ require([
 						var timeExtent = new TimeExtent(startDate, endDate);
 						map.setTimeExtent(timeExtent);
 
-						countyLayer = new ArcGISDynamicMapServiceLayer(BOUNDARY_URL, {
+						var countyLayer = new ArcGISDynamicMapServiceLayer(BOUNDARY_URL, {
 							useMapImage:true,
 							opacity:0.0
 						});
 						map.addLayer(countyLayer);
-
 						map.on("click", mapClickHandler);
 						map.on("layer-add", layerAddHandler);
 
@@ -325,7 +319,7 @@ require([
 						identifyParams.width = map.width;
 						identifyParams.height = map.height;
 					}, function (error) {
-						//console.log("Error: ", error.code, " Message: ", error.message);
+						console.log("Error: ", error.code, " Message: ", error.message);
 						domStyle.set(loadingIndicatorNode, "display", "none");
 						deferred.cancel();
 					});
@@ -343,15 +337,10 @@ require([
 								domStyle.set(scrubberNode, "z-index", "101");
 								domStyle.set(chartNode, "opacity", "1.0");
 								selectedDate = new Date(currentData.x);
-								var day = selectedDate.getDate();
-								var month = MONTH_NAMES[selectedDate.getMonth()];
-								var yr = selectedDate.getFullYear();
-
-								selectedDateNode.innerHTML = month + " " + day + ", " + yr;
-								var startDate = new Date(currentData.x);
-								var endDate = new Date(currentData.x);
-								var timeExtent = new TimeExtent(startDate, endDate);
-
+								selectedDateNode.innerHTML = MONTH_NAMES[selectedDate.getMonth()] + " " + selectedDate.getDate() + ", " + selectedDate.getFullYear();
+								var startDate = new Date(currentData.x),
+										endDate = new Date(currentData.x),
+										timeExtent = new TimeExtent(startDate, endDate);
 								map.setTimeExtent(timeExtent);
 							}
 						});
@@ -364,8 +353,8 @@ require([
 						identifyParams.mapExtent = map.extent;
 						identifyTask.execute(identifyParams, function (results) {
 							if (results.length > 0 && (results[0].layerId === 3)) {
-								var _selectedFIPS = results[0].feature.attributes.ID;
-								var _geometry = results[0].feature.geometry;
+								var _selectedFIPS = results[0].feature.attributes.ID,
+									_geometry = results[0].feature.geometry;
 								addHighlightGraphic(map, _geometry);
 
 								$("#no-results").fadeOut("slow");
@@ -429,10 +418,7 @@ require([
 											onclick:function (d, element) {
 												$("#scrubber").css("left", (element["cx"].baseVal.value - 10) + "px");
 												selectedDate = new Date(d.x);
-												var day = selectedDate.getDate(),
-														month = MONTH_NAMES[selectedDate.getMonth()],
-														yr = selectedDate.getFullYear();
-												selectedDateNode.innerHTML = month + " " + day + ", " + yr;
+												selectedDateNode.innerHTML = MONTH_NAMES[selectedDate.getMonth()] + " " + selectedDate.getDate() + ", " + selectedDate.getFullYear();
 												var startDate = new Date(d.x),
 														endDate = new Date(d.x),
 														timeExtent = new TimeExtent(startDate, endDate);
@@ -526,7 +512,7 @@ require([
 					var geocoder = new Geocoder({
 						map:map,
 						arcgisGeocoder:{
-							placeholder: placeholderText
+							placeholder:placeholderText
 						}
 					}, "search");
 					geocoder.startup();
